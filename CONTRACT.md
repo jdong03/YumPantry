@@ -33,7 +33,7 @@ Saturday 1:30 pm - 2:00 pm (tentative)
 
 ## [GitHub Repository](https://github.coecis.cornell.edu/sl2658/cs3110-final-project)
 
-![Image of GitHub Repository](github.png)
+![Image of GitHub Repository](assets/github.png)
 
 ## Pitches
 
