@@ -1,4 +1,4 @@
-# CamlCrusaders Contract
+# CamlCrusaders Milestone 1
 
 ## Team Name
 
