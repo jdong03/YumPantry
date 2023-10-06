@@ -6,3 +6,7 @@
 | Jason Dong    | jd876  |
 | Dalton Luce   | dcl252 |
 | Su Yean Leong | sl2658 |
+
+## [Team Contract](/CONTRACT.md)
+
+## [Roadmap](/ROADMAP.md)
