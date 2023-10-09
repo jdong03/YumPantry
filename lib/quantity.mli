@@ -62,17 +62,17 @@ type volume_units =
   | Quart
   | Gallon
 
+module Volume : Measurement
 (** Simple implementation of volume measurements *)
-module Volume :
-  Measurement
-    with type units = volume_units
-     and type measure = float * volume_units
+(* Measurement
+   with type units = volume_units
+    and type measure = float * volume_units *)
 
 type mass_units = Ounce | Pound
 
+module Mass : Measurement
 (** Simple implementation of mass measurements *)
-module Mass :
-  Measurement with type units = mass_units and type measure = float * mass_units
+(* Measurement with type units = mass_units and type measure = float * mass_units *)
 
 type amount =
   | Volume of Volume.measure

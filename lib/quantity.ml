@@ -101,16 +101,18 @@ let rec compare_units units_list a b =
       | x when x == b -> 1 (*a is larger than b*)
       | _ -> compare_units t a b)
 
+type volume_units =
+  | Teaspoon
+  | Tablespoon
+  | QuarterCup
+  | HalfCup
+  | Cup
+  | Pint
+  | Quart
+  | Gallon
+
 module Volume = MakeSimpleMeasurement (struct
-  type units =
-    | Teaspoon
-    | Tablespoon
-    | QuarterCup
-    | HalfCup
-    | Cup
-    | Pint
-    | Quart
-    | Gallon
+  type units = volume_units
 
   let sizes =
     [ Teaspoon; Tablespoon; QuarterCup; HalfCup; Cup; Pint; Quart; Gallon ]
@@ -131,8 +133,10 @@ module Volume = MakeSimpleMeasurement (struct
     |> UnitMap.add Gallon 256.0
 end)
 
+type mass_units = Ounce | Pound
+
 module Mass = MakeSimpleMeasurement (struct
-  type units = Ounce | Pound
+  type units = mass_units
 
   let sizes = [ Ounce; Pound ]
 
@@ -148,3 +152,8 @@ module Mass = MakeSimpleMeasurement (struct
   let conversion_map =
     UnitMap.empty |> UnitMap.add Ounce 1.0 |> UnitMap.add Pound 16.0
 end)
+
+type amount =
+  | Volume of Volume.measure
+  | Weight of Mass.measure
+  | Count of float

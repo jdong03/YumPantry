@@ -1,0 +1,4 @@
+(library
+ (name yum)
+ (public_name Yum)
+ (libraries str))
