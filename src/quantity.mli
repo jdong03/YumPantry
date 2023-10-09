@@ -1,4 +1,23 @@
-(** Manage quantities of ingredients. *)
+(** Manage quantities of ingredients.
+    
+    Usage:
+    The primary use of this compilation unit is the [type amount] defined
+    at the bottom of this file.
+      * For example, say you need to represent three bell peppers:
+        [Count 3.0] 
+      * Say you need five tablespoons of milk:
+        [Volume (5.0, Tablespoon)]
+      * Or, say you need two pounds of chicken breast:
+        [Mass (2.0, Pound)]
+
+    The [Measurement] module provides arithmetic for complicated cooking units.
+      * For example, [
+          let recipe_requirement = Volume (1.0, HalfCup);;
+          let fridge = Volume (2.0, Cup);;
+          let remaining = fridge - recipe_requirement
+        ]
+      * [remaining] should evaluate to [Volume (3.0, HalfCup)]
+    *)
 
 (** Represent a measured quantity*)
 module type Measurement = sig
@@ -55,4 +74,7 @@ type mass_units = Ounce | Pound
 module Mass :
   Measurement with type units = mass_units and type measure = float * mass_units
 
-type amount = Volume of Volume.measure | Weight of Mass.measure | Count of int
+type amount =
+  | Volume of Volume.measure
+  | Weight of Mass.measure
+  | Count of float
