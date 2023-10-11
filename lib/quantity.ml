@@ -11,6 +11,14 @@ module type Measurement = sig
   val ( == ) : measure -> measure -> bool
 end
 
+(** Signature for Measurement implementations using a conversion map *)
+module type SimpleMeasurement = sig
+  include Measurement
+  module UnitMap : Map.S with type key = units
+
+  val conversion_map : float UnitMap.t
+end
+
 module type MeasurementType = sig
   type units
   (** Possible units *)
@@ -32,8 +40,6 @@ module MakeSimpleMeasurement (M : MeasurementType) : Measurement = struct
   let conversion_map = M.conversion_map
 
   module UnitMap = M.UnitMap
-
-  let finest_unit = UnitMap.min_binding conversion_map
 
   let convert (m, units) new_units =
     let volume_in_teaspons = m *. UnitMap.find units conversion_map in
@@ -135,7 +141,9 @@ end)
 
 type mass_units = Ounce | Pound
 
-module Mass = MakeSimpleMeasurement (struct
+module Mass :
+  Measurement with type units = mass_units and type measure = float * mass_units =
+MakeSimpleMeasurement (struct
   type units = mass_units
 
   let sizes = [ Ounce; Pound ]
