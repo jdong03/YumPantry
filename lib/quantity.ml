@@ -1,3 +1,17 @@
+(** Redefine types from .mli *)
+
+type volume_units =
+  | Teaspoon
+  | Tablespoon
+  | QuarterCup
+  | HalfCup
+  | Cup
+  | Pint
+  | Quart
+  | Gallon
+
+type mass_units = Ounce | Pound
+
 module type Measurement = sig
   type units
   type measure
@@ -11,15 +25,8 @@ module type Measurement = sig
   val ( == ) : measure -> measure -> bool
 end
 
-(** Signature for Measurement implementations using a conversion map *)
-module type SimpleMeasurement = sig
-  include Measurement
-  module UnitMap : Map.S with type key = units
-
-  val conversion_map : float UnitMap.t
-end
-
-module type MeasurementType = sig
+(** Define a set of related units *)
+module type MeasurementUnits = sig
   type units
   (** Possible units *)
 
@@ -33,13 +40,13 @@ module type MeasurementType = sig
   (** Map converting a unit to an equivalent number in the finest unit *)
 end
 
-module MakeSimpleMeasurement (M : MeasurementType) : Measurement = struct
-  type units = M.units
-  type measure = float * M.units
+module MakeSimpleMeasurement (U : MeasurementUnits) : Measurement with type units = U.units and type measure= float * U.units = struct
+  type units = U.units
+  type measure = float * U.units
 
-  let conversion_map = M.conversion_map
+  let conversion_map = U.conversion_map
 
-  module UnitMap = M.UnitMap
+  module UnitMap = U.UnitMap
 
   let convert (m, units) new_units =
     let volume_in_teaspons = m *. UnitMap.find units conversion_map in
@@ -107,16 +114,6 @@ let rec compare_units units_list a b =
       | x when x == b -> 1 (*a is larger than b*)
       | _ -> compare_units t a b)
 
-type volume_units =
-  | Teaspoon
-  | Tablespoon
-  | QuarterCup
-  | HalfCup
-  | Cup
-  | Pint
-  | Quart
-  | Gallon
-
 module Volume = MakeSimpleMeasurement (struct
   type units = volume_units
 
@@ -126,7 +123,6 @@ module Volume = MakeSimpleMeasurement (struct
   (** Map with volume_unit as keys *)
   module UnitMap = Map.Make (struct
     type t = units
-
     (** Some sneaky stuff *)
     let compare = compare_units sizes
   end)
@@ -141,9 +137,7 @@ end)
 
 type mass_units = Ounce | Pound
 
-module Mass :
-  Measurement with type units = mass_units and type measure = float * mass_units =
-MakeSimpleMeasurement (struct
+module Mass : Measurement with type units = mass_units and type measure = float * mass_units = MakeSimpleMeasurement (struct
   type units = mass_units
 
   let sizes = [ Ounce; Pound ]
