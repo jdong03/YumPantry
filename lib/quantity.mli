@@ -62,8 +62,8 @@ module type Measurement = sig
   val ( < ) : measure -> measure -> bool
   (** [m1 < vol2] is [true] if m1 is a lesser quantity than m2. *)
 
-  val ( == ) : measure -> measure -> bool
-  (** [m1 == m2] is [true] if m1 is the same quantity as m2. *)
+  val ( = ) : measure -> measure -> bool
+  (** [m1 = m2] is [true] if m1 is the same quantity as m2. *)
 end
 
 (** Volume measurements *)
@@ -76,7 +76,4 @@ module Volume :
 module Mass :
   Measurement with type units = mass_units and type measure = float * mass_units
 
-type amount =
-  | Volume of Volume.measure
-  | Weight of Mass.measure
-  | Count of float
+type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
