@@ -24,6 +24,11 @@ See [team contract](/contract.md)
 
 1. Ability to add food items (_most likely variants (?)_) to a "pantry" (food
    that the current user has)
+   * [x] [Quantity](/lib/quantity.mli) representation
+   * [ ] Ingredient representation
+   * [ ] Pantry representation
+   * [ ] Command line interface
+
 2. Simple algorithm to match a recipe to the user (only factor in essential
    variables)
 
