@@ -6,9 +6,9 @@ module type Measurement = sig
   val convert : measure -> units -> measure
   val ( + ) : measure -> measure -> measure
   val ( - ) : measure -> measure -> measure
-  val ( > ) : measure -> measure -> bool
-  val ( < ) : measure -> measure -> bool
-  val ( = ) : measure -> measure -> bool
+  val greater_than : measure -> measure -> bool
+  val less_than : measure -> measure -> bool
+  val equivalent : measure -> measure -> bool
 end
 
 (** Define a set of related units *)
@@ -57,6 +57,7 @@ struct
         (fun _ value -> is_mult value measure_in_finest_units)
         conversion_map
     in
+    (* FIXME: filtered_map is empty sometimes! *)
     match UnitMap.max_binding filtered_map with
     | largest_unit, _ -> convert (m, units) largest_unit
 
@@ -84,35 +85,28 @@ struct
       let m_a_converted = m1 *. (a /. b) in
       simplify (m_a_converted -. m2, units2)
 
-  let ( > ) (m1, units1) (m2, units2) =
+  let greater_than (m1, units1) (m2, units2) =
     match (m1, units1) - (m2, units2) with
     | new_m, _ -> if new_m > 0.0 then true else false
 
-  let ( < ) (m1, units1) (m1, units2) =
+  let less_than (m1, units1) (m1, units2) =
     match (m1, units2) - (m1, units2) with
     | new_m, _ -> if new_m < 0.0 then true else false
 
-  (* FIXME: why is this wrong? *)
-  let ( = ) (m1, units1) (m2, units2) =
+  let equivalent (m1, units1) (m2, units2) =
     (* Convert both measurements to equivalent measurements in the finest unit
        and see if they are the same *)
-    let finest_binding = UnitMap.min_binding conversion_map in
-    match finest_binding with
-    | finest_unit, _ -> (
-        let m1_with_finest_units = convert (m1, units1) finest_unit in
-        let m2_with_finest_units = convert (m2, units2) finest_unit in
-        match m1_with_finest_units with
-        | m1_converted, _ -> (
-            match m2_with_finest_units with
-            | m2_converted, _ ->
-                if m1_converted = m2_converted then true else false))
+    let finest_unit, _ = UnitMap.min_binding conversion_map in
+    let m1_converted, _ = convert (m1, units1) finest_unit in
+    let m2_converted, _ = convert (m2, units2) finest_unit in
+    if m1_converted = m2_converted then true else false
 end
 
 let rec compare_units units_list a b =
   if a = b then 0
   else
     match units_list with
-    | [] -> 0
+    | [] -> failwith "unit not in size list!"
     | h :: t -> (
         match h with
         | x when x = a -> -1 (*a is smaller than b*)

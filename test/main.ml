@@ -14,21 +14,19 @@ let quantity_tests =
       assert_equal ~cmp:compare_amounts
         (Volume (1.0, Tablespoon))
         (Volume (Volume.convert (3.0, Teaspoon) Tablespoon)) );
-    ( "Convert 2" >:: fun _ ->
+    ( "Convert 3" >:: fun _ ->
       assert_equal ~cmp:compare_amounts
         (Volume (1.0, Gallon))
         (Volume (Volume.convert (16.0, Cup) Gallon)) );
     ( "Simplify 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (3.0, Teaspoon))
-        (Volume (1.0, Tablespoon)) );
+      assert_equal ~cmp:compare_amounts (1.0, Tablespoon)
+        (Volume.simplify (3.0, Teaspoon)) );
     ( "Simplify 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (16.0, Cup))
-        (Volume (1.0, Gallon)) );
+      assert_equal ~cmp:compare_amounts (1.0, Gallon)
+        (Volume.simplify (16.0, Cup)) );
     ( "Simplify 3" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts (Mass (16.0, Ounce)) (Mass (1.0, Pound))
-    );
+      assert_equal ~cmp:compare_amounts (1.0, Pound)
+        (Mass.simplify (16.0, Ounce)) );
     ( "Equality operator 1" >:: fun _ ->
       assert_equal true (Volume (1.0, Teaspoon) = Volume (1.0, Teaspoon)) );
     ( "Equality operator 2" >:: fun _ ->

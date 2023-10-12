@@ -56,14 +56,14 @@ module type Measurement = sig
   (** [m1 - m2 ] is the subtraction of the measurements in the largest possible 
         unit representation. Requires [m1 >= m2]. Returned in simplest form *)
 
-  val ( > ) : measure -> measure -> bool
-  (** [m1 > m2] is [true] if m1 is a greater quantity than m2. *)
+  val greater_than : measure -> measure -> bool
+  (** [greater_than m1 m2] is [true] if m1 is a greater quantity than m2. *)
 
-  val ( < ) : measure -> measure -> bool
-  (** [m1 < vol2] is [true] if m1 is a lesser quantity than m2. *)
+  val less_than : measure -> measure -> bool
+  (** [less_than m1 m2] is [true] if m1 is a lesser quantity than m2. *)
 
-  val ( = ) : measure -> measure -> bool
-  (** [m1 = m2] is [true] if m1 is the same quantity as m2. *)
+  val equivalent : measure -> measure -> bool
+  (** [equivalent m1 m2] is [true] if m1 is the same quantity as m2. *)
 end
 
 (** Volume measurements *)
