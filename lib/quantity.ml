@@ -145,12 +145,12 @@ module Volume = MakeSimpleMeasurement (struct
     UnitMap.empty
     |> UnitMap.add Teaspoon 1.0
     |> UnitMap.add Tablespoon 3.0
-    |> UnitMap.add QuarterCup 4.0
-    |> UnitMap.add HalfCup 8.0
-    |> UnitMap.add Cup 16.0
-    |> UnitMap.add Pint 32.0
-    |> UnitMap.add Quart 64.0
-    |> UnitMap.add Gallon 256.0
+    |> UnitMap.add QuarterCup 12.0
+    |> UnitMap.add HalfCup 24.0
+    |> UnitMap.add Cup 48.0
+    |> UnitMap.add Pint 96.0
+    |> UnitMap.add Quart 192.0
+    |> UnitMap.add Gallon 768.0
     ) [@ocamlformat "disable"]
 end)
 
