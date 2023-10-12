@@ -14,7 +14,7 @@
       * For example, [
           let recipe_requirement = Volume (1.0, HalfCup);;
           let fridge = Volume (2.0, Cup);;
-          let remaining = fridge - recipe_requirement;;
+          let remaining = Volume.subtract fridge recipe_requirement;;
         ]
       * [remaining] should evaluate to [Volume (3.0, HalfCup)]
 *)

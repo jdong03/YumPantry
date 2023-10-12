@@ -49,20 +49,21 @@ struct
 
   let simplify (m, units) =
     assert (UnitMap.mem units conversion_map);
-    let measure_in_finest_units = m *. UnitMap.find units conversion_map in
+    let measure_in_finest_units = UnitMap.find units conversion_map in
     let filtered_map =
       let is_mult x y =
-        match modf (x /. y) with remainder, _ -> remainder == 0.0
+        match modf (x /. y) with remainder, _ -> remainder = 0.0
       in
       UnitMap.filter
         (fun _ value -> is_mult value measure_in_finest_units)
         conversion_map
     in
-    (* FIXME: filtered_map is empty sometimes! *)
     match UnitMap.max_binding filtered_map with
     | largest_unit, _ -> convert (m, units) largest_unit
 
   let add (m1, units1) (m2, units2) =
+    assert (UnitMap.mem units1 conversion_map);
+    assert (UnitMap.mem units2 conversion_map);
     let a = UnitMap.find units1 conversion_map in
     let b = UnitMap.find units2 conversion_map in
     if a < b then
@@ -75,6 +76,8 @@ struct
       (m_a_converted +. m2, units2)
 
   let subtract (m1, units1) (m2, units2) =
+    assert (UnitMap.mem units1 conversion_map);
+    assert (UnitMap.mem units2 conversion_map);
     let a = UnitMap.find units1 conversion_map in
     let b = UnitMap.find units2 conversion_map in
     if a < b then
@@ -89,14 +92,20 @@ struct
   let scale f (m, units) = (f *. m, units)
 
   let greater_than (m1, units1) (m2, units2) =
+    assert (UnitMap.mem units1 conversion_map);
+    assert (UnitMap.mem units2 conversion_map);
     match subtract (m1, units1) (m2, units2) with
     | new_m, _ -> if new_m > 0.0 then true else false
 
   let less_than (m1, units1) (m1, units2) =
+    assert (UnitMap.mem units1 conversion_map);
+    assert (UnitMap.mem units2 conversion_map);
     match subtract (m1, units2) (m1, units2) with
     | new_m, _ -> if new_m < 0.0 then true else false
 
   let equivalent (m1, units1) (m2, units2) =
+    assert (UnitMap.mem units1 conversion_map);
+    assert (UnitMap.mem units2 conversion_map);
     (* Convert both measurements to equivalent measurements in the finest unit
        and see if they are the same *)
     let finest_unit, _ = UnitMap.min_binding conversion_map in
