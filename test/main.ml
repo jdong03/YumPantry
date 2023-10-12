@@ -6,6 +6,18 @@ let compare_amounts a1 a2 = a1 = a2
 
 let quantity_tests =
   [
+    ( "Convert 1" >:: fun _ ->
+      assert_equal ~cmp:compare_amounts
+        (Volume (1.0, Teaspoon))
+        (Volume (Volume.convert (1.0, Teaspoon) Teaspoon)) );
+    ( "Convert 2" >:: fun _ ->
+      assert_equal ~cmp:compare_amounts
+        (Volume (1.0, Tablespoon))
+        (Volume (Volume.convert (3.0, Teaspoon) Tablespoon)) );
+    ( "Convert 2" >:: fun _ ->
+      assert_equal ~cmp:compare_amounts
+        (Volume (1.0, Gallon))
+        (Volume (Volume.convert (16.0, Cup) Gallon)) );
     ( "Simplify 1" >:: fun _ ->
       assert_equal ~cmp:compare_amounts
         (Volume (3.0, Teaspoon))

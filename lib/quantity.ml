@@ -12,7 +12,7 @@ module type Measurement = sig
 end
 
 (** Define a set of related units *)
-module type MeasurementUnits = sig
+module type RelatedUnits = sig
   type units
   (** Possible units *)
 
@@ -26,21 +26,23 @@ module type MeasurementUnits = sig
   (** Map converting a unit to an equivalent number in the finest unit *)
 end
 
-(** A simple-"ish" implementation of [Measurement] using a conversion map*)
-module MakeSimpleMeasurement (U : MeasurementUnits) :
-  Measurement with type units = U.units and type measure = float * U.units =
+(** A "simple-ish" implementation of [Measurement] using a conversion map*)
+module MakeSimpleMeasurement (M : RelatedUnits) :
+  Measurement with type units = M.units and type measure = float * M.units =
 struct
-  type units = U.units
-  type measure = float * U.units
+  type units = M.units
+  type measure = float * M.units
 
-  let conversion_map = U.conversion_map
+  let conversion_map = M.conversion_map
 
-  module UnitMap = U.UnitMap
+  module UnitMap = M.UnitMap
 
   let convert (m, units) new_units =
+    assert (UnitMap.mem units conversion_map);
+    assert (UnitMap.mem new_units conversion_map);
     let measure_in_finest_units = m *. UnitMap.find units conversion_map in
     let new_measure =
-      measure_in_finest_units /. UnitMap.find new_units conversion_map
+      measure_in_finest_units /. UnitMap.find units conversion_map
     in
     (new_measure, new_units)
 
@@ -95,13 +97,15 @@ struct
 end
 
 let rec compare_units units_list a b =
-  match units_list with
-  | [] -> 0
-  | h :: t -> (
-      match h with
-      | x when x = a -> -1 (*a is smaller than b*)
-      | x when x = b -> 1 (*a is larger than b*)
-      | _ -> compare_units t a b)
+  if a = b then 0
+  else
+    match units_list with
+    | [] -> 0
+    | h :: t -> (
+        match h with
+        | x when x = a -> -1 (*a is smaller than b*)
+        | x when x = b -> 1 (*a is larger than b*)
+        | _ -> compare_units t a b)
 
 (* Volume *)
 
