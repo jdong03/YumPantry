@@ -42,11 +42,12 @@ struct
     assert (UnitMap.mem new_units conversion_map);
     let measure_in_finest_units = m *. UnitMap.find units conversion_map in
     let new_measure =
-      measure_in_finest_units /. UnitMap.find units conversion_map
+      measure_in_finest_units /. UnitMap.find new_units conversion_map
     in
     (new_measure, new_units)
 
   let simplify (m, units) =
+    assert (UnitMap.mem units conversion_map);
     let measure_in_finest_units = m *. UnitMap.find units conversion_map in
     let filtered_map =
       let is_mult x y =
@@ -91,9 +92,20 @@ struct
     match (m1, units2) - (m1, units2) with
     | new_m, _ -> if new_m < 0.0 then true else false
 
+  (* FIXME: why is this wrong? *)
   let ( = ) (m1, units1) (m2, units2) =
-    match (m1, units1) - (m2, units2) with
-    | new_m, _ -> if new_m = 0.0 then true else false
+    (* Convert both measurements to equivalent measurements in the finest unit
+       and see if they are the same *)
+    let finest_binding = UnitMap.min_binding conversion_map in
+    match finest_binding with
+    | finest_unit, _ -> (
+        let m1_with_finest_units = convert (m1, units1) finest_unit in
+        let m2_with_finest_units = convert (m2, units2) finest_unit in
+        match m1_with_finest_units with
+        | m1_converted, _ -> (
+            match m2_with_finest_units with
+            | m2_converted, _ ->
+                if m1_converted = m2_converted then true else false))
 end
 
 let rec compare_units units_list a b =
