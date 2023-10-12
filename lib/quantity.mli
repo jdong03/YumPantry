@@ -48,13 +48,15 @@ module type Measurement = sig
   val convert : measure -> units -> measure
   (** Convert a measurement in one unit to a volume in another unit *)
 
-  val ( + ) : measure -> measure -> measure
-  (** [m1 + m2 ] is the addition of the measurements in the largest possible 
-        unit representation. Returned in simplest form *)
+  val add : measure -> measure -> measure
+  (** [add m1 m2] is the addition of the measurements [m1 + m2]. *)
 
-  val ( - ) : measure -> measure -> measure
-  (** [m1 - m2 ] is the subtraction of the measurements in the largest possible 
-        unit representation. Requires [m1 >= m2]. Returned in simplest form *)
+  val subtract : measure -> measure -> measure
+  (** [subtract m1 m2 ] is the subtraction of the measurements [m1 - m2]. 
+      Requires [m1 >= m2].  *)
+
+  val scale : float -> measure -> measure
+  (** [scale f m] is m scaled by f.*)
 
   val greater_than : measure -> measure -> bool
   (** [greater_than m1 m2] is [true] if m1 is a greater quantity than m2. *)

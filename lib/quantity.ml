@@ -4,8 +4,9 @@ module type Measurement = sig
 
   val simplify : measure -> measure
   val convert : measure -> units -> measure
-  val ( + ) : measure -> measure -> measure
-  val ( - ) : measure -> measure -> measure
+  val add : measure -> measure -> measure
+  val subtract : measure -> measure -> measure
+  val scale : float -> measure -> measure
   val greater_than : measure -> measure -> bool
   val less_than : measure -> measure -> bool
   val equivalent : measure -> measure -> bool
@@ -61,36 +62,38 @@ struct
     match UnitMap.max_binding filtered_map with
     | largest_unit, _ -> convert (m, units) largest_unit
 
-  let ( + ) (m1, units1) (m2, units2) =
+  let add (m1, units1) (m2, units2) =
     let a = UnitMap.find units1 conversion_map in
     let b = UnitMap.find units2 conversion_map in
     if a < b then
       (* units1 is 'finer' *)
       let m_b_converted = m2 *. (b /. a) in
-      simplify (m1 +. m_b_converted, units1)
+      (m1 +. m_b_converted, units1)
     else
       (* units2 is 'finer *)
       let m_a_converted = m1 *. (a /. b) in
-      simplify (m_a_converted +. m2, units2)
+      (m_a_converted +. m2, units2)
 
-  let ( - ) (m1, units1) (m2, units2) =
+  let subtract (m1, units1) (m2, units2) =
     let a = UnitMap.find units1 conversion_map in
     let b = UnitMap.find units2 conversion_map in
     if a < b then
       (* units1 is 'finer' *)
       let m_b_converted = m2 *. (b /. a) in
-      simplify (m1 -. m_b_converted, units1)
+      (m1 -. m_b_converted, units1)
     else
       (* units2 is 'finer *)
       let m_a_converted = m1 *. (a /. b) in
-      simplify (m_a_converted -. m2, units2)
+      (m_a_converted -. m2, units2)
+
+  let scale f (m, units) = (f *. m, units)
 
   let greater_than (m1, units1) (m2, units2) =
-    match (m1, units1) - (m2, units2) with
+    match subtract (m1, units1) (m2, units2) with
     | new_m, _ -> if new_m > 0.0 then true else false
 
   let less_than (m1, units1) (m1, units2) =
-    match (m1, units2) - (m1, units2) with
+    match subtract (m1, units2) (m1, units2) with
     | new_m, _ -> if new_m < 0.0 then true else false
 
   let equivalent (m1, units1) (m2, units2) =
