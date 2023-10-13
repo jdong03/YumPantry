@@ -75,6 +75,7 @@ struct
       let m_a_converted = m1 *. (a /. b) in
       (m_a_converted +. m2, units2)
 
+  (* FIXME: I believe there is an issue here. Try 1 Quart - 1 Gallon *)
   let subtract (m1, units1) (m2, units2) =
     assert (UnitMap.mem units1 conversion_map);
     assert (UnitMap.mem units2 conversion_map);
@@ -94,14 +95,22 @@ struct
   let greater_than (m1, units1) (m2, units2) =
     assert (UnitMap.mem units1 conversion_map);
     assert (UnitMap.mem units2 conversion_map);
-    match subtract (m1, units1) (m2, units2) with
-    | new_m, _ -> if new_m > 0.0 then true else false
+    (* Convert both measurements to equivalent measurements in the finest unit
+       and see if m1 is < m2 *)
+    let finest_unit, _ = UnitMap.min_binding conversion_map in
+    let m1_converted, _ = convert (m1, units1) finest_unit in
+    let m2_converted, _ = convert (m2, units2) finest_unit in
+    if m1_converted > m2_converted then true else false
 
-  let less_than (m1, units1) (m1, units2) =
+  let less_than (m1, units1) (m2, units2) =
     assert (UnitMap.mem units1 conversion_map);
     assert (UnitMap.mem units2 conversion_map);
-    match subtract (m1, units2) (m1, units2) with
-    | new_m, _ -> if new_m < 0.0 then true else false
+    (* Convert both measurements to equivalent measurements in the finest unit
+       and see if m1 is < m2 *)
+    let finest_unit, _ = UnitMap.min_binding conversion_map in
+    let m1_converted, _ = convert (m1, units1) finest_unit in
+    let m2_converted, _ = convert (m2, units2) finest_unit in
+    if m1_converted < m2_converted then true else false
 
   let equivalent (m1, units1) (m2, units2) =
     assert (UnitMap.mem units1 conversion_map);

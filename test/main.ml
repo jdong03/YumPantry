@@ -70,6 +70,10 @@ let quantity_tests =
       assert_equal ~cmp:compare_amounts
         (Volume (0.5, Pint))
         (Volume (16.0, Tablespoon)) );
+    ( "Equality 6" >:: fun _ ->
+      assert_equal ~cmp:compare_amounts
+        (Volume (1.0, HalfCup))
+        (Volume (0.5, Cup)) );
     (* Scaling *)
     ( "Scaling 1" >:: fun _ ->
       assert_equal ~cmp:compare_amounts
@@ -96,6 +100,21 @@ let quantity_tests =
       assert_equal ~cmp:compare_amounts
         (Volume (1.0, Gallon))
         (Volume (Volume.add (3.0, Quart) (2.0, Pint))) );
+    (* Subtraction *)
+    ( "Subtraction 1" >:: fun _ ->
+      assert_equal ~cmp:compare_amounts
+        (Volume (0.0, Tablespoon))
+        (Volume (Volume.subtract (1.0, Gallon) (1.0, Gallon))) );
+    ( "Subtraction 2" >:: fun _ ->
+      assert_equal ~cmp:compare_amounts
+        (Volume (3.0, HalfCup))
+        (Volume (Volume.subtract (2.0, Cup) (1.0, HalfCup))) );
+    (* Less than *)
+    ( "Less than 1" >:: fun _ ->
+      assert_equal true (Volume.less_than (1.0, Quart) (1.0, Gallon)) );
+    ( "Less than 2" >:: fun _ ->
+      assert_equal false (Volume.less_than (5.0, Quart) (1.0, Gallon)) );
+    (* TODO: greater than *)
   ]
 
 let suite = "test suite for A2" >::: List.flatten [ quantity_tests ]
