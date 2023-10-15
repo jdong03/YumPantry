@@ -19,7 +19,7 @@ JiaYing Li (jl2725)
 
 ## Project Grader
 
-Anissa Dallman (ad792)
+Anissa Dallmann (ad792)
 
 ## Meeting Time
 
