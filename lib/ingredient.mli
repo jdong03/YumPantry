@@ -1,3 +1,12 @@
+(** Subtypes of ingredients. *)
+type meat
+type vegetable
+type fruit
+type dairy
+type condiments
+type spices
+type grain
+
 type ingredient 
 (** The general type given to all valid ingredients. *)
 
