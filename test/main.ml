@@ -9,6 +9,11 @@ let compare_amounts a1 a2 =
   | Count c1, Count c2 -> c1 = c2
   | _ -> failwith "amounts are not of the same type!"
 
+let compare_volumes v1 v2 = Volume.equivalent v1 v2
+
+let compare_volume_options v1 v2 =
+  match (v1, v2) with Some v1, Some v2 -> Volume.equivalent v1 v2 | _ -> false
+
 let quantity_tests =
   [
     (* Conversion *)
@@ -115,6 +120,19 @@ let quantity_tests =
     ( "Less than 2" >:: fun _ ->
       assert_equal false (Volume.less_than (5.0, Quart) (1.0, Gallon)) );
     (* TODO: greater than *)
+    (* Of string *)
+    ( "Test 1" >:: fun _ ->
+      assert_equal ~cmp:compare_volume_options
+        (Volume.of_string "3.0 Quart")
+        (Some (3.0, Quart)) );
+    ( "Test 2" >:: fun _ ->
+      assert_equal ~cmp:compare_volume_options
+        (Volume.of_string "30.0 Teaspoon")
+        (Some (30.0, Teaspoon)) );
+    ( "Test 3" >:: fun _ ->
+      assert_equal ~cmp:compare_volume_options
+        (Volume.of_string "0.0 Pint")
+        (Some (0.0, Pint)) );
   ]
 
 let suite = "test suite for A2" >::: List.flatten [ quantity_tests ]

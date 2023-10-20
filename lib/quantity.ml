@@ -10,6 +10,7 @@ module type Measurement = sig
   val greater_than : measure -> measure -> bool
   val less_than : measure -> measure -> bool
   val equivalent : measure -> measure -> bool
+  val of_string : string -> measure option
 end
 
 (** Define a set of related units *)
@@ -25,6 +26,8 @@ module type RelatedUnits = sig
 
   val conversion_map : float UnitMap.t
   (** Map converting a unit to an equivalent number in the finest unit *)
+
+  val unit_of_string : string -> units option
 end
 
 (** A "simple-ish" implementation of [Measurement] using a conversion map*)
@@ -121,6 +124,18 @@ struct
     let m1_converted, _ = convert (m1, units1) finest_unit in
     let m2_converted, _ = convert (m2, units2) finest_unit in
     if m1_converted = m2_converted then true else false
+
+  (** FIXME: this is yucky *)
+  let of_string s =
+    match String.split_on_char ' ' s with
+    | [ m; units ] -> (
+        match Float.of_string_opt m with
+        | Some m -> (
+            match M.unit_of_string units with
+            | Some units -> Some (m, units)
+            | None -> None)
+        | None -> None)
+    | _ -> None
 end
 
 let rec compare_units units_list a b =
@@ -173,6 +188,18 @@ module Volume = MakeSimpleMeasurement (struct
     |> UnitMap.add Quart 192.0
     |> UnitMap.add Gallon 768.0
     ) [@ocamlformat "disable"]
+
+  let unit_of_string s =
+    match String.lowercase_ascii s with
+    | "teaspoon" -> Some Teaspoon
+    | "tablespoon" -> Some Tablespoon
+    | "quartercup" -> Some QuarterCup
+    | "halfcup" -> Some HalfCup
+    | "cup" -> Some Cup
+    | "pint" -> Some Pint
+    | "quart" -> Some Quart
+    | "gallon" -> Some Gallon
+    | _ -> None
 end)
 
 (* Mass *)
@@ -198,6 +225,12 @@ module Mass = MakeSimpleMeasurement (struct
     |> UnitMap.add Ounce 1.0
     |> UnitMap.add Pound 16.0
     ) [@ocamlformat "disable"]
+
+  let unit_of_string s =
+    match String.lowercase_ascii s with
+    | "ounce" -> Some Ounce
+    | "pound" -> Some Pound
+    | _ -> None
 end)
 
 (* Amount *)
