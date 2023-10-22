@@ -236,3 +236,22 @@ end)
 (* Amount *)
 
 type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
+
+(** TODO: this is ugly *)
+let of_string s : amount option =
+  match String.split_on_char ' ' s with
+  | [ m; units ] -> (
+      if Volume.of_string s = None then
+        (* Try making a Mass *)
+        match Mass.of_string s with
+        | Some (m, units) -> Some (Mass (m, units))
+        | None -> None
+      else
+        (* Make a Volume *)
+        match Volume.of_string s with
+        | Some (v, units) -> Some (Volume (v, units))
+        | None -> None)
+  | [ m ] -> (
+      (* Try making a Count *)
+      match Float.of_string_opt m with Some m -> Some (Count m) | _ -> None)
+  | _ -> None
