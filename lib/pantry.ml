@@ -5,21 +5,25 @@ module type PantryType = sig
   type pantry
   type ing
   type food
+  type amount
 
   val empty : pantry
-  val add : pantry -> ing -> amount -> pantry
-  val remove : pantry -> ing -> amount -> pantry
+  val add : pantry -> food -> amount -> pantry
+  val remove : pantry -> food -> amount -> pantry
   val display : pantry -> string
   val reset : pantry -> pantry
 end
 
-module SimplePantry (Ing : Ingredient) = struct
+module SimplePantry (Ing : IngredientType) = struct
 
   type pantry = Ing.ingredient list
 
   type ing = Ing.ingredient
 
   type food = Ing.food
+
+  type amount = Ing.amount
+  
   let empty : pantry = []
 
   let add (p : pantry) (f : food) (a : amount) : pantry =
@@ -51,4 +55,7 @@ module SimplePantry (Ing : Ingredient) = struct
 
 end
 
+module Pantry = SimplePantry (Ingredient)
+
+  
 

@@ -1,17 +1,18 @@
 open Quantity
 
-module type Ingredient = sig 
+module type IngredientType = sig 
   type meat
   type vegetable
   type fruit
   type dairy
-  type condiments
-  type spices
+  type condiment
+  type spice
   type grain
   type food
-  type ingredient 
+  type amount
+  type ingredient
 
-  val make_ingredient : food -> 'a -> ingredient
+  val make_ingredient : food -> amount -> ingredient
   val same_food : ingredient -> ingredient -> bool
   val add : ingredient -> ingredient -> ingredient
   val sub : ingredient -> ingredient -> ingredient
@@ -110,6 +111,8 @@ module Ingredient = struct
     | Spice of spice
     | Condiment of condiment
     | Grain of grain
+
+  type amount = Quantity.amount
 
   type ingredient = {food : food; amount : amount}
 
