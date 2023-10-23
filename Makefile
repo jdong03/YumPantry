@@ -31,7 +31,7 @@ zip:
 
 clean:
 	dune clean
-	rm -f ngrams.zip
+	rm -f yum.zip
 
 doc:
 	dune build @doc
