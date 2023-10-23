@@ -1,0 +1,1 @@
+Run 'make yum' in terminal and follow the given prompts.
