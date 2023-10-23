@@ -1,3 +1,4 @@
+open Quantity
 module Ingredient = struct
 
   (** Can further specify into subgroups
@@ -5,7 +6,7 @@ module Ingredient = struct
   type meat = 
     | Pork
     | Beef
-    | Fish 
+    | Fish
     | Chicken
     | Tofu
     | Egg
@@ -50,7 +51,7 @@ module Ingredient = struct
     | Butter
     | Cheese
 
-  type spices = 
+  type spice = 
     | Cinnamon
     | Cumin
     | Basil
@@ -60,12 +61,12 @@ module Ingredient = struct
     | Ginger
     | Garlic
     | Salt
-    | Pepper
+    | BlackPepper
     | Nutmeg
     | Paprika
     | Sugar
 
-  type condiments = 
+  type condiment = 
     | SoySauce 
     | Ketchup
     | OliveOil
@@ -82,72 +83,86 @@ module Ingredient = struct
     | Bread
 
   type ingredient = 
-    | Meat of meat
-    | Vegetable of vegetable
-    | Fruit of fruit
-    | Dairy of dairy
-    | Spices of spices
-    | Condiments of condiments
-    | Grain of grain
+    | Meat of {food : meat; amount : amount}
+    | Vegetable of {food : vegetable; amount : amount}
+    | Fruit of {food : fruit; amount : amount}
+    | Dairy of {food : dairy; amount : amount}
+    | Spice of {food : spice; amount : amount}
+    | Condiment of {food : condiment; amount : amount}
+    | Grain of {food : grain; amount : amount}
 
   let of_string (input : string) : ingredient option =
     match String.lowercase_ascii input with 
-    | "pork" -> Some (Meat Pork)
-    | "beef" -> Some (Meat Beef)
-    | "chicken" -> Some (Meat Chicken)
-    | "tofu" -> Some (Meat Tofu)
-    | "egg" -> Some (Meat Egg)
-    | "turkey" -> Some (Meat Turkey)
-    | "duck" -> Some (Meat Duck)
-    | "lamb" -> Some (Meat Lamb)
-    | "shrimp" -> Some (Meat Shrimp)
+    | "pork" -> Some (Meat {food = Pork; amount = Mass (0., Ounce)})
+    | "beef" -> Some (Meat {food = Beef; amount = Mass (0., Ounce)})
+    | "chicken" -> Some (Meat {food = Chicken; amount = Mass (0., Ounce)})
+    | "tofu" -> Some (Meat {food = Tofu; amount = Mass (0., Ounce)})
+    | "egg" -> Some (Meat {food = Egg; amount = Count 0.})
+    | "turkey" -> Some (Meat {food = Turkey; amount = Mass (0., Ounce)})
+    | "duck" -> Some (Meat {food = Duck; amount = Mass (0., Ounce)})
+    | "lamb" -> Some (Meat {food = Lamb; amount = Mass (0., Ounce)})
+    | "shrimp" -> Some (Meat {food = Shrimp; amount = Mass (0., Ounce)})
 
-    | "broccoli" -> Some (Vegetable Broccoli)
-    | "onion" -> Some (Vegetable Onion)
-    | "potato" -> Some (Vegetable Potato)
-    | "corn" -> Some (Vegetable Corn)
-    | "carrot" -> Some (Vegetable Carrot)
-    | "tomato" -> Some (Vegetable Tomato)
-    | "lettuce" -> Some (Vegetable Lettuce)
-    | "spinach" -> Some (Vegetable Spinach)
-    | "pepper" -> Some (Vegetable Pepper)
-    | "squash" -> Some (Vegetable Squash)
-    | "celery" -> Some (Vegetable Celery)
-    | "mushroom" -> Some (Vegetable Mushroom)
+    | "broccoli" -> Some (Vegetable {food = Broccoli; amount = Mass (0., Ounce)})
+    | "onion" -> Some (Vegetable {food = Onion; amount = Count 0.})
+    | "potato" -> Some (Vegetable {food = Potato; amount = Count 0.})
+    | "corn" -> Some (Vegetable {food = Corn; amount = Mass (0., Ounce)})
+    | "carrot" -> Some (Vegetable {food = Carrot; amount = Count 0.})
+    | "tomato" -> Some (Vegetable {food = Tomato; amount = Count 0.})
+    | "lettuce" -> Some (Vegetable {food = Lettuce; amount = Count 0.})
+    | "spinach" -> Some (Vegetable {food = Spinach; amount = Mass (0., Ounce)})
+    | "pepper" -> Some (Vegetable {food = Pepper; amount = Count 0.})
+    | "squash" -> Some (Vegetable {food = Squash; amount = Count 0.})
+    | "celery" -> Some (Vegetable {food = Celery; amount = Count 0.})
+    | "mushroom" -> Some (Vegetable {food = Mushroom; amount = Mass (0., Ounce)})
 
-    | "apple" -> Some (Fruit Apple)
-    | "orange" -> Some (Fruit Orange)
-    | "banana" -> Some (Fruit Banana)
-    | "pineapple" -> Some (Fruit Pineapple)
-    | "grape" -> Some (Fruit Grape)
-    | "strawberry" -> Some (Fruit Strawberry)
-    | "watermelon" -> Some (Fruit Watermelon)
-    | "blueberry" -> Some (Fruit Blueberry)
-    | "blackberry" -> Some (Fruit Blackberry)
-    | "raspberry" -> Some (Fruit Raspberry)
-    | "pumpkin" -> Some (Fruit Pumpkin)
-    | "avacado" -> Some (Fruit Avacado)
-    | "peach" -> Some (Fruit Peach)
-    | "lemon" -> Some (Fruit Lemon)
-    | "lime" -> Some (Fruit Lime)
+    | "apple" -> Some (Fruit {food = Apple; amount = Count 0.})
+    | "orange" -> Some (Fruit {food = Orange; amount = Count 0.})
+    | "banana" -> Some (Fruit {food = Banana; amount = Count 0.})
+    | "pineapple" -> Some (Fruit {food = Pineapple; amount = Count 0.})
+    | "grape" -> Some (Fruit {food = Grape; amount = Mass (0., Ounce)})
+    | "strawberry" -> Some (Fruit {food = Strawberry; amount = Mass (0., Ounce)})
+    | "watermelon" -> Some (Fruit {food = Watermelon; amount = Count 0.})
+    | "blueberry" -> Some (Fruit {food = Blueberry; amount = Mass (0., Ounce)})
+    | "blackberry" -> Some (Fruit {food = Blackberry; amount = Mass (0., Ounce)})
+    | "raspberry" -> Some (Fruit {food = Raspberry; amount = Mass (0., Ounce)})
+    | "pumpkin" -> Some (Fruit {food = Pumpkin; amount = Count 0.})
+    | "avacado" -> Some (Fruit {food = Avacado; amount = Count 0.})
+    | "peach" -> Some (Fruit {food = Peach; amount = Count 0.})
+    | "lemon" -> Some (Fruit {food = Lemon; amount = Count 0.})
+    | "lime" -> Some (Fruit {food = Lime; amount = Count 0.})
 
-    | "milk" -> Some (Dairy Milk)
-    | "butter" -> Some (Dairy Butter)
-    | "cheese" -> Some (Dairy Cheese)
+    | "milk" -> Some (Dairy {food = Milk; amount = Volume (0., Cup)})
+    | "butter" -> Some (Dairy {food = Butter; amount = Volume (0., Cup)})
+    | "cheese" -> Some (Dairy {food = Cheese; amount = Mass (0., Ounce)})
 
-    | "soy sauce" | "soysauce" -> Some (Condiments SoySauce)
-    | "ketchup" -> Some (Condiments Ketchup)
-    | "olive oil" | "oliveoil" -> Some (Condiments OliveOil)
-    | "mayo" -> Some (Condiments Mayo)
-    | "honey" -> Some (Condiments Honey)
-    | "mustard" -> Some (Condiments Mustard)
-    | "peanut butter" | "peanutbutter" -> Some (Condiments PeanutButter)
-    | "jam" -> Some (Condiments Jam)
-    | "vinegar" -> Some (Condiments Vinegar)
+    | "cinnamon" -> Some (Spice {food = Cinnamon; amount = Volume (0., Cup)})
+    | "cumin" -> Some (Spice {food = Cumin; amount = Volume (0., Cup)})
+    | "basil" -> Some (Spice {food = Basil; amount = Volume (0., Cup)})
+    | "cilantro" -> Some (Spice {food = Cilantro; amount = Volume (0., Cup)})
+    | "thyme" -> Some (Spice {food = Thyme; amount = Volume (0., Cup)})
+    | "rosemary" -> Some (Spice {food = Rosemary; amount = Volume (0., Cup)})
+    | "ginger" -> Some (Spice {food = Ginger; amount = Volume (0., Cup)})
+    | "garlic" -> Some (Spice {food = Garlic; amount = Volume (0., Cup)})
+    | "salt" -> Some (Spice {food = Salt; amount = Volume (0., Cup)})
+    | "black pepper"| "blackpepper" -> Some (Spice {food = BlackPepper; amount = Volume (0., Cup)})
+    | "nutmeg" -> Some (Spice {food = Nutmeg; amount = Volume (0., Cup)})
+    | "paprika" -> Some (Spice {food = Paprika; amount = Volume (0., Cup)})
+    | "sugar" -> Some (Spice {food = Sugar; amount = Volume (0., Cup)})
 
-    | "rice" -> Some (Grain Rice)
-    | "pasta" -> Some (Grain Pasta)
-    | "bread" -> Some (Grain Bread)
+    | "soy sauce" | "soysauce" -> Some (Condiment {food = SoySauce; amount = Volume (0., Cup)})
+    | "ketchup" -> Some (Condiment {food = Ketchup; amount = Volume (0., Cup)})
+    | "olive oil" | "oliveoil" -> Some (Condiment {food = OliveOil; amount = Volume (0., Cup)})
+    | "mayo" -> Some (Condiment {food = Mayo; amount = Volume (0., Cup)})
+    | "honey" -> Some (Condiment {food = Honey; amount = Volume (0., Cup)})
+    | "mustard" -> Some (Condiment {food = Mustard; amount = Volume (0., Cup)})
+    | "peanut butter" | "peanutbutter" -> Some (Condiment {food = PeanutButter; amount = Volume (0., Cup)})
+    | "jam" -> Some (Condiment {food = Jam; amount = Volume (0., Cup)})
+    | "vinegar" -> Some (Condiment {food = Vinegar; amount = Volume (0., Cup)})
+
+    | "rice" -> Some (Grain {food = Rice; amount = Volume (0., Cup)})
+    | "pasta" -> Some (Grain {food = Pasta; amount = Volume (0., Cup)})
+    | "bread" -> Some (Grain {food = Bread; amount = Count 0.})
 
     | _ -> None
 
