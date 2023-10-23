@@ -1,40 +1,36 @@
 open Quantity
 
-type name = Apple | Beef | Cucumber
-
-type measurement_type =
-  | Mass of Quantity.Mass.measure
-  | Volume of Quantity.Volume.measure
-  | Count of float
+type name = Apple | Beef | Cucumber | Milk
+type measurement_type = Mass | Volume | Count
 
 let of_string s =
   match String.lowercase_ascii s with
   | "apple" -> Some Apple
   | "beef" -> Some Beef
   | "cucumber" -> Some Cucumber
+  | "milk" -> Some Milk
   | _ -> None
 
 let to_string = function
   | Apple -> "apple"
   | Beef -> "beef"
+  | Milk -> "milk"
   | Cucumber -> "cucumber"
+
+let compare_names a b = compare (to_string a) (to_string b)
 
 module MeasurementMap = Map.Make (struct
   type t = name
 
   (* Some sneaky higher-order stuff *)
-  let compare = compare names
+  let compare = compare_names
 end)
 
-let conversion_map =
+let measurement_types =
   (
-    UnitMap.empty
-    |> UnitMap.add Teaspoon 1.0
-    |> UnitMap.add Tablespoon 3.0
-    |> UnitMap.add QuarterCup 12.0
-    |> UnitMap.add HalfCup 24.0
-    |> UnitMap.add Cup 48.0
-    |> UnitMap.add Pint 96.0
-    |> UnitMap.add Quart 192.0
-    |> UnitMap.add Gallon 768.0
+    MeasurementMap.empty
+    |> MeasurementMap.add Apple Count
+    |> MeasurementMap.add Beef Mass
+    |> MeasurementMap.add Milk Volume
+    |> MeasurementMap.add Cucumber Count
     ) [@ocamlformat "disable"]

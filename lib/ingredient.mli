@@ -1,11 +1,7 @@
 open Quantity
 
 type name = Apple | Beef | Cucumber
-
-type measurement_type =
-  | Mass of Quantity.Mass.measure
-  | Volume of Quantity.Volume.measure
-  | Count of float
+type measurement_type = Mass | Volume | Count
 
 val of_string : string -> name option
 (** Converts a string to a value of type ingredient. *)
