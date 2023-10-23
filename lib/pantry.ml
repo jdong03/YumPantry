@@ -25,9 +25,9 @@ module SimplePantry (Ing : Ingredient) = struct
 
   let rec add(p : pantry) (f : food) (n : amount) : pantry =
     match p with
-    | [] -> [ingredient {food = f; amount = n}]
+    | [] -> [{food = f; amount = n}]
     | h::t -> if f = h.food then
-                (ingredient {food = f; amount = (Quantity.add n (h.amount))})::t
+                ({food = f; amount = (Quantity.add n (h.amount))})::t
               else
                 h::add t f n
 
@@ -35,7 +35,7 @@ module SimplePantry (Ing : Ingredient) = struct
     match p with
     | [] -> failwith "Ingredient not found"
     | h::t -> if f = h.food then
-                (ingredient {food = f; amount = (Quantity.subtract (h.amount) n)})::t
+                ({food = f; amount = (Quantity.subtract (h.amount) n)})::t
               else
                 h::remove t f n
 
