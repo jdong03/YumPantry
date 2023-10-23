@@ -1,16 +1,18 @@
-module type Pantry = sig
+open Ingredient
+open Quantity
 
-  type ingredient
-  (** The type to represent a food*)
+module type Pantry = sig
 
   type pantry
   (** The type to represent a pantry of food*)
 
-  val add : pantry -> ingredient -> int -> pantry
-  (** [add p s n] is the pantry [p] with the food [s] in the amount [n] added to it*)
+  val empty : pantry
 
-  val remove : pantry -> ingredient -> int -> pantry
-  (** [remove p s n] is the pantry [p] with the food [s] in the amount [n] removed from it*)
+  val add : pantry -> ingredient -> amount -> pantry
+  (** [add p s n] is the pantry [p] with the food [s] in the amount [amount] added to it*)
+
+  val remove : pantry -> ingredient -> amount -> pantry
+  (** [remove p s n] is the pantry [p] with the food [s] in the amount [amount] removed from it*)
 
   val display : pantry -> string
   (** [display p] is a string representation of the pantry [p]*)

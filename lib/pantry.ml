@@ -2,7 +2,7 @@ module Pantry = struct
   
   type ingredient = ingredient
 
-  type pantry = (ingredient*int) list
+  type pantry = ingredient list
 
   let empty : pantry = []
 
