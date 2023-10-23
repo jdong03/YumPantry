@@ -1,4 +1,4 @@
-(* open Ingredient
+open Ingredient
 open Quantity
 
 module type PantryType = sig
@@ -15,10 +15,10 @@ module type PantryType = sig
   val empty : pantry
   (** [empty] is an empty pantry*)
 
-  val add : pantry -> ing -> amount -> pantry
+  val add : pantry -> food -> amount -> pantry
   (** [add p s n] is the pantry [p] with the food [s] in the amount [amount] added to it*)
 
-  val remove : pantry -> ing -> amount -> pantry
+  val remove : pantry -> food -> amount -> pantry
   (** [remove p s n] is the pantry [p] with the food [s] in the amount [amount] removed from it*)
 
   val display : pantry -> string
@@ -26,4 +26,4 @@ module type PantryType = sig
 
   val reset : pantry -> pantry
   (** [reset p] is the pantry [p] with all of its food removed*)
-end *)
+end

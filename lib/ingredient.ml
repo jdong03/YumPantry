@@ -8,8 +8,13 @@ module type Ingredient = sig
   type condiments
   type spices
   type grain
+  type food
   type ingredient 
 
+  val make_ingredient : food -> 'a -> ingredient
+  val same_food : ingredient -> ingredient -> bool
+  val add : ingredient -> ingredient -> ingredient
+  val sub : ingredient -> ingredient -> ingredient
   val of_string : string -> ingredient option
   val to_string : ingredient -> string 
 end
@@ -108,6 +113,9 @@ module Ingredient = struct
 
   type ingredient = {food : food; amount : amount}
 
+  let make_ingredient (food : food) (amount : amount) : ingredient =
+    {food = food; amount = amount}
+  
   let same_food (ing1 : ingredient) (ing2 : ingredient) : bool =
     match ing1.food, ing2.food with
     | Meat m1, Meat m2 -> m1 = m2
@@ -126,7 +134,7 @@ module Ingredient = struct
     | Count c1, Count c2 -> {food = ing1.food; amount = Count (c1 +. c2)}
     | _, _ -> failwith "Cannot add different types of amounts" 
 
-  let remove (ing1 : ingredient) (ing2 : ingredient) : ingredient =
+  let sub (ing1 : ingredient) (ing2 : ingredient) : ingredient =
     match ing1.amount, ing2.amount with
     | Volume v1, Volume v2 -> {food = ing1.food; amount = Volume (Volume.subtract v1 v2)}
     | Mass m1, Mass m2 -> {food = ing1.food; amount = Mass (Mass.subtract m1 m2)}
