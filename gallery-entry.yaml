@@ -24,4 +24,6 @@ git-repo: "https://github.coecis.cornell.edu/sl2658/cs3110-final-project"
 demo-video-url: ""
 # Write a short, attention-grabbing description of your project.
 desc: >
-  Our project is an interactive food pantry and recipe recommendation system. (Expand)
+  Our project is an interactive food pantry and recipe recommendation system. 
+  It will track the ingredients stored in the user’s pantry, fridge, etc, and 
+  will recommend recipes that only use ingredients possessed by the user. (Expand)
