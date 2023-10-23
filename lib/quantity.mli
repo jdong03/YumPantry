@@ -68,6 +68,7 @@ module type Measurement = sig
   (** [equivalent m1 m2] is [true] if m1 is the same quantity as m2. *)
 
   val of_string : string -> measure option
+  val to_string : measure -> string
 end
 
 (** Volume measurements *)

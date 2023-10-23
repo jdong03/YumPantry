@@ -11,6 +11,7 @@ module type Measurement = sig
   val less_than : measure -> measure -> bool
   val equivalent : measure -> measure -> bool
   val of_string : string -> measure option
+  val to_string : measure -> string
 end
 
 (** Define a set of related units *)
@@ -28,6 +29,7 @@ module type RelatedUnits = sig
   (** Map converting a unit to an equivalent number in the finest unit *)
 
   val unit_of_string : string -> units option
+  val unit_to_string : units -> string
 end
 
 (** A "simple-ish" implementation of [Measurement] using a conversion map*)
@@ -136,6 +138,8 @@ struct
             | None -> None)
         | None -> None)
     | _ -> None
+
+  let to_string (q, units) = Float.to_string q ^ M.unit_to_string units
 end
 
 let rec compare_units units_list a b =
@@ -193,13 +197,24 @@ module Volume = MakeSimpleMeasurement (struct
     match String.lowercase_ascii s with
     | "teaspoon" -> Some Teaspoon
     | "tablespoon" -> Some Tablespoon
-    | "quartercup" -> Some QuarterCup
-    | "halfcup" -> Some HalfCup
+    | "quarter cup" -> Some QuarterCup
+    | "half cup" -> Some HalfCup
     | "cup" -> Some Cup
     | "pint" -> Some Pint
     | "quart" -> Some Quart
     | "gallon" -> Some Gallon
     | _ -> None
+
+  let unit_to_string u =
+    match u with
+    | Teaspoon -> "teaspoon"
+    | Tablespoon -> "tablespoon"
+    | QuarterCup -> "quart cup"
+    | HalfCup -> "half cup"
+    | Cup -> "cup"
+    | Pint -> "pint"
+    | Quart -> "quart"
+    | Gallon -> "gallon"
 end)
 
 (* Mass *)
@@ -231,6 +246,8 @@ module Mass = MakeSimpleMeasurement (struct
     | "ounce" -> Some Ounce
     | "pound" -> Some Pound
     | _ -> None
+
+  let unit_to_string u = match u with Ounce -> "ounce" | Pound -> "pound"
 end)
 
 (* Amount *)
