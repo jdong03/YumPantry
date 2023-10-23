@@ -141,7 +141,7 @@ struct
 
   let to_string (q, units) =
     Float.to_string q ^ " " ^ M.unit_to_string units
-    ^ if q = 1.0 then "s" else ""
+    ^ if q = 1.0 then "" else "s"
 end
 
 let rec compare_units units_list a b =
