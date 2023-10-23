@@ -1,12 +1,11 @@
 open Ingredient
 open Quantity
 
-type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
 type t = (Ingredient.ingredient * amount) list
 
 let empty = []
 
-let add (pantry : t) (ing : Ingredient.ingredient) (a : amount) : t =
+let add (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t =
   match List.assoc_opt ing pantry with
   | Some old_a -> (
       match old_a with
