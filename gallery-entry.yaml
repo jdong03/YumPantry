@@ -20,7 +20,6 @@ title: "Yum Food Pantry"
 # OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
 git-repo: "https://github.coecis.cornell.edu/sl2658/cs3110-final-project"
 # If you have no demo screencast, replace the url string with an empty string ""
-# TODO - add screencast?
 demo-video-url: ""
 # Write a short, attention-grabbing description of your project.
 desc: >
