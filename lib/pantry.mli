@@ -7,6 +7,10 @@ module type PantryType = sig
   (** The type to represent a pantry of food*)
 
   type ing
+  (** The type to represent an ingredient*)
+
+  type food
+  (** The type to represent a food*)
 
   val empty : pantry
   (** [empty] is an empty pantry*)
