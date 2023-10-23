@@ -13,12 +13,16 @@ let add (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t =
       | Volume v1 -> (
           match a with
           | Volume v2 ->
-              (ing, Volume (Quantity.Volume.add v1 v2)) :: pantry_without_assoc
+              ( ing,
+                Volume (Quantity.Volume.add v1 v2 |> Quantity.Volume.simplify)
+              )
+              :: pantry_without_assoc
           | _ -> pantry)
       | Mass m1 -> (
           match a with
           | Mass m2 ->
-              (ing, Mass (Quantity.Mass.add m1 m2)) :: pantry_without_assoc
+              (ing, Mass (Quantity.Mass.add m1 m2 |> Quantity.Mass.simplify))
+              :: pantry_without_assoc
           | _ -> pantry)
       | Count c1 -> (
           match a with
