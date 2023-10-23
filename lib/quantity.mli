@@ -66,6 +66,13 @@ module type Measurement = sig
 
   val equivalent : measure -> measure -> bool
   (** [equivalent m1 m2] is [true] if m1 is the same quantity as m2. *)
+
+  val of_string : string -> measure option
+  (** Attempts to convert a string to a measure. String must be formatted as
+      "float units", e.g., "3.0 Teaspoon".*)
+
+  val to_string : measure -> string
+  (** Converts a measure to a string.*)
 end
 
 (** Volume measurements *)
@@ -79,3 +86,5 @@ module Mass :
   Measurement with type units = mass_units and type measure = float * mass_units
 
 type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
+
+val of_string : string -> amount option
