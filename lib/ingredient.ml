@@ -1,9 +1,24 @@
 open Quantity
+
+module type Ingredient = sig 
+  type meat
+  type vegetable
+  type fruit
+  type dairy
+  type condiments
+  type spices
+  type grain
+  type ingredient 
+
+  val of_string : string -> ingredient option
+  val to_string : ingredient -> string 
+end
+
 module Ingredient = struct
 
   (** Can further specify into subgroups
       Ex. Different cuts of chicken, different types of fish, etc. *)
-  type meat = 
+  type food = 
     | Pork
     | Beef
     | Fish
@@ -15,7 +30,6 @@ module Ingredient = struct
     | Lamb
     | Shrimp
 
-  type vegetable = 
     | Broccoli 
     | Onion
     | Potato
@@ -29,7 +43,6 @@ module Ingredient = struct
     | Celery
     | Mushroom
 
-  type fruit = 
     | Apple
     | Orange
     | Banana
@@ -46,12 +59,10 @@ module Ingredient = struct
     | Lemon
     | Lime
 
-  type dairy = 
     | Milk
     | Butter
     | Cheese
 
-  type spice = 
     | Cinnamon
     | Cumin
     | Basil
@@ -66,7 +77,6 @@ module Ingredient = struct
     | Paprika
     | Sugar
 
-  type condiment = 
     | SoySauce 
     | Ketchup
     | OliveOil
@@ -77,19 +87,18 @@ module Ingredient = struct
     | Jam
     | Vinegar
 
-  type grain = 
     | Rice
     | Pasta
     | Bread
 
   type ingredient = 
-    | Meat of {food : meat; amount : amount}
-    | Vegetable of {food : vegetable; amount : amount}
-    | Fruit of {food : fruit; amount : amount}
-    | Dairy of {food : dairy; amount : amount}
-    | Spice of {food : spice; amount : amount}
-    | Condiment of {food : condiment; amount : amount}
-    | Grain of {food : grain; amount : amount}
+    | Meat of {food : food; amount : amount}
+    | Vegetable of {food : food; amount : amount}
+    | Fruit of {food : food; amount : amount}
+    | Dairy of {food : food; amount : amount}
+    | Spice of {food : food; amount : amount}
+    | Condiment of {food : food; amount : amount}
+    | Grain of {food : food; amount : amount}
 
   let of_string (input : string) : ingredient option =
     match String.lowercase_ascii input with 
@@ -167,92 +176,99 @@ module Ingredient = struct
     | _ -> None
 
   let to_string (input : ingredient) : string = 
-    match input with 
+    match input with
       | Meat spec -> begin
-        match spec.food with
-          | Pork -> "Pork, " ^ (Quantity.to_string spec.amount)
-          | Beef -> "Beef, " ^ (Quantity.to_string spec.amount)
-          | Fish -> "Fish, " ^ (Quantity.to_string spec.amount)
-          | Chicken -> "Chicken, " ^ (Quantity.to_string spec.amount)
-          | Tofu -> "Tofu, " ^ (Quantity.to_string spec.amount)
-          | Egg -> "Egg, " ^ (Quantity.to_string spec.amount)
-          | Turkey -> "Turkey, " ^ (Quantity.to_string spec.amount)
-          | Duck -> "Duck, " ^ (Quantity.to_string spec.amount)
-          | Lamb -> "Lamb, " ^ (Quantity.to_string spec.amount)
-          | Shrimp -> "Shrimp, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+          | Pork, Mass q -> "Pork, " ^ (Mass.to_string q)
+          | Beef, Mass q -> "Beef, " ^ (Mass.to_string q)
+          | Fish, Mass q -> "Fish, " ^ (Mass.to_string q)
+          | Chicken, Mass q -> "Chicken, " ^ (Mass.to_string q)
+          | Tofu, Mass q -> "Tofu, " ^ (Mass.to_string q)
+          | Egg, Count q -> "Egg, " ^ (string_of_float q)
+          | Turkey, Mass q -> "Turkey, " ^ (Mass.to_string q)
+          | Duck, Mass q -> "Duck, " ^ (Mass.to_string q)
+          | Lamb, Mass q -> "Lamb, " ^ (Mass.to_string q)
+          | Shrimp, Mass q -> "Shrimp, " ^ (Mass.to_string q)
+          | _, _ -> "Invalid Argument"
       end
       | Vegetable spec -> begin
-        match spec.food with
-        | Broccoli -> "Broccoli, " ^ (Quantity.to_string spec.amount)
-        | Onion -> "Onion, " ^ (Quantity.to_string spec.amount)
-        | Potato -> "Potato, " ^ (Quantity.to_string spec.amount)
-        | Corn -> "Corn, " ^ (Quantity.to_string spec.amount)
-        | Carrot -> "Carrot, " ^ (Quantity.to_string spec.amount)
-        | Tomato -> "Tomato, " ^ (Quantity.to_string spec.amount)
-        | Lettuce -> "Lettuce, " ^ (Quantity.to_string spec.amount)
-        | Spinach -> "Spinach, " ^ (Quantity.to_string spec.amount)
-        | Pepper -> "Pepper, " ^ (Quantity.to_string spec.amount)
-        | Squash -> "Squash, " ^ (Quantity.to_string spec.amount)
-        | Celery -> "Celery, " ^ (Quantity.to_string spec.amount)
-        | Mushroom -> "Mushrom, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+        | Broccoli, Mass q -> "Broccoli, " ^ (Mass.to_string q)
+        | Onion, Count q -> "Onion, " ^ (string_of_float q)
+        | Potato, Count q -> "Potato, " ^ (string_of_float q)
+        | Corn, Mass q -> "Corn, " ^ (Mass.to_string q)
+        | Carrot, Count q -> "Carrot, " ^ (string_of_float q)
+        | Tomato, Count q -> "Tomato, " ^ (string_of_float q)
+        | Lettuce, Count q -> "Lettuce, " ^ (string_of_float q)
+        | Spinach, Mass q -> "Spinach, " ^ (Mass.to_string q)
+        | Pepper, Count q -> "Pepper, " ^ (string_of_float q)
+        | Squash, Count q -> "Squash, " ^ (string_of_float q)
+        | Celery, Count q -> "Celery, " ^ (string_of_float q)
+        | Mushroom, Mass q -> "Mushrom, " ^ (Mass.to_string q)
+        | _, _ -> "Invalid Argument"
       end
       | Fruit spec -> begin
-        match spec.food with
-        | Apple -> "Apple, " ^ (Quantity.to_string spec.amount)
-        | Orange -> "Orange, " ^ (Quantity.to_string spec.amount)
-        | Banana -> "Banana, " ^ (Quantity.to_string spec.amount)
-        | Pineapple -> "Pineapple, " ^ (Quantity.to_string spec.amount)
-        | Grape -> "Grape, " ^ (Quantity.to_string spec.amount)
-        | Strawberry -> "Strawberry, " ^ (Quantity.to_string spec.amount)
-        | Watermelon -> "Watermelon, " ^ (Quantity.to_string spec.amount)
-        | Blueberry -> "Blueberry, " ^ (Quantity.to_string spec.amount)
-        | Blackberry -> "Blackberry, " ^ (Quantity.to_string spec.amount)
-        | Raspberry -> "Raspberry, " ^ (Quantity.to_string spec.amount)
-        | Pumpkin -> "Pumpkin, " ^ (Quantity.to_string spec.amount)
-        | Avacado -> "Avacado, " ^ (Quantity.to_string spec.amount)
-        | Peach -> "Peach, " ^ (Quantity.to_string spec.amount)
-        | Lemon -> "Lemon, " ^ (Quantity.to_string spec.amount)
-        | Lime -> "Lime, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+        | Apple, Count q -> "Apple, " ^ (string_of_float q)
+        | Orange, Count q -> "Orange, " ^ (string_of_float q)
+        | Banana, Count q -> "Banana, " ^ (string_of_float q)
+        | Pineapple, Count q -> "Pineapple, " ^ (string_of_float q)
+        | Grape, Mass q -> "Grape, " ^ (Mass.to_string q)
+        | Strawberry, Mass q -> "Strawberry, " ^ (Mass.to_string q)
+        | Watermelon, Count q -> "Watermelon, " ^ (string_of_float q)
+        | Blueberry, Mass q -> "Blueberry, " ^ (Mass.to_string q)
+        | Blackberry, Mass q -> "Blackberry, " ^ (Mass.to_string q)
+        | Raspberry, Mass q -> "Raspberry, " ^ (Mass.to_string q)
+        | Pumpkin, Count q -> "Pumpkin, " ^ (string_of_float q)
+        | Avacado, Count q -> "Avacado, " ^ (string_of_float q)
+        | Peach, Count q -> "Peach, " ^ (string_of_float q)
+        | Lemon, Count q -> "Lemon, " ^ (string_of_float q)
+        | Lime, Count q -> "Lime, " ^ (string_of_float q)
+        | _, _ -> "Invalid Argument"
       end
       | Dairy spec -> begin
-        match spec.food with
-        | Milk -> "Milk, " ^ (Quantity.to_string spec.amount)
-        | Butter -> "Butter, " ^ (Quantity.to_string spec.amount)
-        | Cheese -> "Cheese, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+        | Milk, Volume q -> "Milk, " ^ (Volume.to_string q)
+        | Butter, Volume q -> "Butter, " ^ (Volume.to_string q)
+        | Cheese, Mass q -> "Cheese, " ^ (Mass.to_string q)
+        | _, _ -> "Invalid Argument"
       end
       | Spice spec -> begin
-        match spec.food with
-        | Cinnamon -> "Cinnamon, " ^ (Quantity.to_string spec.amount)
-        | Cumin -> "Cumin, " ^ (Quantity.to_string spec.amount)
-        | Basil -> "Basil, " ^ (Quantity.to_string spec.amount)
-        | Cilantro -> "Cilantro, " ^ (Quantity.to_string spec.amount)
-        | Thyme -> "Thyme, " ^ (Quantity.to_string spec.amount)
-        | Rosemary -> "Rosemary, " ^ (Quantity.to_string spec.amount)
-        | Ginger -> "Ginger, " ^ (Quantity.to_string spec.amount)
-        | Garlic -> "Garlic, " ^ (Quantity.to_string spec.amount)
-        | Salt -> "Salt, " ^ (Quantity.to_string spec.amount)
-        | BlackPepper -> "Black Pepper, " ^ (Quantity.to_string spec.amount)
-        | Nutmeg -> "Nutmeg, " ^ (Quantity.to_string spec.amount)
-        | Paprika -> "Paprika, " ^ (Quantity.to_string spec.amount)
-        | Sugar -> "Sugar, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+        | Cinnamon, Volume q -> "Cinnamon, " ^ (Volume.to_string q)
+        | Cumin, Volume q -> "Cumin, " ^ (Volume.to_string q)
+        | Basil, Volume q -> "Basil, " ^ (Volume.to_string q)
+        | Cilantro, Volume q -> "Cilantro, " ^ (Volume.to_string q)
+        | Thyme, Volume q -> "Thyme, " ^ (Volume.to_string q)
+        | Rosemary, Volume q -> "Rosemary, " ^ (Volume.to_string q)
+        | Ginger, Volume q -> "Ginger, " ^ (Volume.to_string q)
+        | Garlic, Volume q -> "Garlic, " ^ (Volume.to_string q)
+        | Salt, Volume q -> "Salt, " ^ (Volume.to_string q)
+        | BlackPepper, Volume q -> "Black Pepper, " ^ (Volume.to_string q)
+        | Nutmeg, Volume q -> "Nutmeg, " ^ (Volume.to_string q)
+        | Paprika, Volume q -> "Paprika, " ^ (Volume.to_string q)
+        | Sugar, Volume q -> "Sugar, " ^ (Volume.to_string q)
+        | _, _ -> "Invalid Argument"
       end
       | Condiment spec -> begin
-        match spec.food with
-        | SoySauce -> "Soy Sauce, " ^ (Quantity.to_string spec.amount)
-        | Ketchup -> "Ketcup, " ^ (Quantity.to_string spec.amount)
-        | OliveOil -> "Olive Oil, " ^ (Quantity.to_string spec.amount)
-        | Mayo -> "Mayo, " ^ (Quantity.to_string spec.amount)
-        | Honey -> "Honey, " ^ (Quantity.to_string spec.amount)
-        | Mustard -> "Mustard, " ^ (Quantity.to_string spec.amount)
-        | PeanutButter -> "Peanut Butter, " ^ (Quantity.to_string spec.amount)
-        | Jam -> "Jam, " ^ (Quantity.to_string spec.amount)
-        | Vinegar -> "Vinegar, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+        | SoySauce, Volume q -> "Soy Sauce, " ^ (Volume.to_string q)
+        | Ketchup, Volume q -> "Ketcup, " ^ (Volume.to_string q)
+        | OliveOil, Volume q -> "Olive Oil, " ^ (Volume.to_string q)
+        | Mayo, Volume q -> "Mayo, " ^ (Volume.to_string q)
+        | Honey, Volume q -> "Honey, " ^ (Volume.to_string q)
+        | Mustard, Volume q -> "Mustard, " ^ (Volume.to_string q)
+        | PeanutButter, Volume q -> "Peanut Butter, " ^ (Volume.to_string q)
+        | Jam, Volume q -> "Jam, " ^ (Volume.to_string q)
+        | Vinegar, Volume q -> "Vinegar, " ^ (Volume.to_string q)
+        | _, _ -> "Invalid Argument"
       end
       | Grain spec -> begin
-        match spec.food with
-        | Rice -> "Rice, " ^ (Quantity.to_string spec.amount)
-        | Pasta -> "Pasta, " ^ (Quantity.to_string spec.amount)
-        | Bread -> "Bread, " ^ (Quantity.to_string spec.amount)
+        match spec.food, spec.amount with
+        | Rice, Volume q -> "Rice, " ^ (Volume.to_string q)
+        | Pasta, Volume q -> "Pasta, " ^ (Volume.to_string q)
+        | Bread, Count q -> "Bread, " ^ (string_of_float q)
+        | _, _ -> "Invalid Argument"
       end
       
   end
