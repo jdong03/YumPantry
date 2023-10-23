@@ -1,13 +1,26 @@
 open Ingredient
 open Quantity
 
-module Pantry = struct
+module type PantryType = sig
+  type pantry
+  type ing
 
-  type pantry = ingredient list
+  val empty : pantry
+  val add : pantry -> ing -> amount -> pantry
+  val remove : pantry -> ing -> amount -> pantry
+  val display : pantry -> string
+  val reset : pantry -> pantry
+end
+
+module SimplePantry (Ing : Ingredient) = struct
+
+  type pantry = Ing.ingredient list
+
+  type ing = Ing.ingredient
 
   let empty : pantry = []
 
-  let rec add(p : pantry) (f : ingredient) (n : amount) : pantry =
+  let rec add(p : pantry) (f : ing) (n : amount) : pantry =
     match p with
     | [] -> [ingredient {food = f; amount = n}]
     | h::t -> if f.food = h.food then
@@ -15,7 +28,7 @@ module Pantry = struct
               else
                 h::add t f n
 
-  let rec remove (p : pantry) (f : ingredient) (n : amount) : pantry =
+  let rec remove (p : pantry) (f : ing) (n : amount) : pantry =
     match p with
     | [] -> failwith "Ingredient not found"
     | h::t -> if f.food = h.food then
@@ -26,7 +39,7 @@ module Pantry = struct
   let rec display (p : pantry) : string =
     match p with
     | [] -> ""
-    | h::t -> (Ingredient.to_string h) ^ "\n" ^ (display t)
+    | h::t -> (Ing.to_string h) ^ "\n" ^ (display t)
 
   let reset (p : pantry) : pantry = []
 
