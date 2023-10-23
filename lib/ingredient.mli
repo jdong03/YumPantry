@@ -1,12 +1,12 @@
 open Quantity
 
-type name = Apple | Beef | Cucumber
+type ingredient = Apple | Beef | Cucumber | Milk
 type measurement_type = Mass | Volume | Count
 
-val of_string : string -> name option
+val of_string : string -> ingredient option
 (** Converts a string to a value of type ingredient. *)
 
-val to_string : name -> string
+val to_string : ingredient -> string
 (** Converts a value of type ingredient to a string. *)
 
-module MeasurementMap : Map.S with type key = name
+val correct_measurement_type : ingredient -> measurement_type

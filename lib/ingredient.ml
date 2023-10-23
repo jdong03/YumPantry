@@ -1,6 +1,6 @@
 open Quantity
 
-type name = Apple | Beef | Cucumber | Milk
+type ingredient = Apple | Beef | Cucumber | Milk
 type measurement_type = Mass | Volume | Count
 
 let of_string s =
@@ -20,7 +20,7 @@ let to_string = function
 let compare_names a b = compare (to_string a) (to_string b)
 
 module MeasurementMap = Map.Make (struct
-  type t = name
+  type t = ingredient
 
   (* Some sneaky higher-order stuff *)
   let compare = compare_names
@@ -34,3 +34,10 @@ let measurement_types =
     |> MeasurementMap.add Milk Volume
     |> MeasurementMap.add Cucumber Count
     ) [@ocamlformat "disable"]
+
+let correct_measurement_type ing =
+  match ing with
+  | Apple -> Count
+  | Beef -> Mass
+  | Milk -> Volume
+  | Cucumber -> Count
