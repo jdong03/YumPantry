@@ -1,37 +1,12 @@
-module type IngredientType = sig 
-    (** Subtypes of ingredients. *)
-    type meat
-    type vegetable
-    type fruit
-    type dairy
-    type condiment
-    type spice
-    type grain
+open Quantity
 
-    type food
-    type amount
+type ingredient = Apple | Beef | Cucumber | Milk
+type measurement_type = Mass | Volume | Count
 
-    type ingredient 
-    (** The general type given to all valid ingredients. *)
+val of_string : string -> ingredient option
+(** Converts a string to a value of type ingredient. *)
 
-    val make_ingredient : food -> amount -> ingredient
-    (** [make_ingredient f a] is an ingredient with [f] as its food and [a] as its amount. *)
+val to_string : ingredient -> string
+(** Converts a value of type ingredient to a string. *)
 
-    val same_food : ingredient -> ingredient -> bool
-    (** [same_food i1 i2] is true if [i1] and [i2] are the same food. *)
-
-    val add : ingredient -> ingredient -> ingredient
-    (** [add i1 i2] is the ingredient that results from adding [i1] and [i2]. *)
-
-    val sub : ingredient -> ingredient -> ingredient
-    (** [sub i1 i2] is the ingredient that results from subtracting [i2] from [i1]. *)
-
-    val of_string : string -> ingredient option
-    (** Converts a string to a value of type ingredient. *)
-
-    val to_string : ingredient -> string 
-    (** Converts a value of type ingredient to a string. *)
-end
-
-module Ingredient : IngredientType
-
+val correct_measurement_type : ingredient -> measurement_type
