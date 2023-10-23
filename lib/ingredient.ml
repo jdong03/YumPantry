@@ -18,7 +18,7 @@ module Ingredient = struct
 
   (** Can further specify into subgroups
       Ex. Different cuts of chicken, different types of fish, etc. *)
-  type food = 
+  type meat = 
     | Pork
     | Beef
     | Fish
@@ -30,6 +30,7 @@ module Ingredient = struct
     | Lamb
     | Shrimp
 
+  type vegetable =
     | Broccoli 
     | Onion
     | Potato
@@ -43,6 +44,7 @@ module Ingredient = struct
     | Celery
     | Mushroom
 
+  type fruit = 
     | Apple
     | Orange
     | Banana
@@ -59,10 +61,12 @@ module Ingredient = struct
     | Lemon
     | Lime
 
+  type dairy =
     | Milk
     | Butter
     | Cheese
-
+  
+  type spice =
     | Cinnamon
     | Cumin
     | Basil
@@ -77,6 +81,7 @@ module Ingredient = struct
     | Paprika
     | Sugar
 
+  type condiment =
     | SoySauce 
     | Ketchup
     | OliveOil
@@ -87,18 +92,21 @@ module Ingredient = struct
     | Jam
     | Vinegar
 
+  type grain =
     | Rice
     | Pasta
     | Bread
+  
+  type food =
+    | Meat of meat
+    | Vegetable of vegetable
+    | Fruit of fruit
+    | Dairy of dairy
+    | Spice of spice
+    | Condiment of condiment
+    | Grain of grain
 
-  type ingredient = 
-    | Meat of {food : food; amount : amount}
-    | Vegetable of {food : food; amount : amount}
-    | Fruit of {food : food; amount : amount}
-    | Dairy of {food : food; amount : amount}
-    | Spice of {food : food; amount : amount}
-    | Condiment of {food : food; amount : amount}
-    | Grain of {food : food; amount : amount}
+  type ingredient = {food : food; amount : amount}
 
   let of_string (input : string) : ingredient option =
     match String.lowercase_ascii input with 
