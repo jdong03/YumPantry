@@ -166,5 +166,93 @@ module Ingredient = struct
 
     | _ -> None
 
-
+  let to_string (input : ingredient) : string = 
+    match input with 
+      | Meat spec -> begin
+        match spec.food with
+          | Pork -> "Pork, " ^ (Quantity.to_string spec.amount)
+          | Beef -> "Beef, " ^ (Quantity.to_string spec.amount)
+          | Fish -> "Fish, " ^ (Quantity.to_string spec.amount)
+          | Chicken -> "Chicken, " ^ (Quantity.to_string spec.amount)
+          | Tofu -> "Tofu, " ^ (Quantity.to_string spec.amount)
+          | Egg -> "Egg, " ^ (Quantity.to_string spec.amount)
+          | Turkey -> "Turkey, " ^ (Quantity.to_string spec.amount)
+          | Duck -> "Duck, " ^ (Quantity.to_string spec.amount)
+          | Lamb -> "Lamb, " ^ (Quantity.to_string spec.amount)
+          | Shrimp -> "Shrimp, " ^ (Quantity.to_string spec.amount)
+      end
+      | Vegetable spec -> begin
+        match spec.food with
+        | Broccoli -> "Broccoli, " ^ (Quantity.to_string spec.amount)
+        | Onion -> "Onion, " ^ (Quantity.to_string spec.amount)
+        | Potato -> "Potato, " ^ (Quantity.to_string spec.amount)
+        | Corn -> "Corn, " ^ (Quantity.to_string spec.amount)
+        | Carrot -> "Carrot, " ^ (Quantity.to_string spec.amount)
+        | Tomato -> "Tomato, " ^ (Quantity.to_string spec.amount)
+        | Lettuce -> "Lettuce, " ^ (Quantity.to_string spec.amount)
+        | Spinach -> "Spinach, " ^ (Quantity.to_string spec.amount)
+        | Pepper -> "Pepper, " ^ (Quantity.to_string spec.amount)
+        | Squash -> "Squash, " ^ (Quantity.to_string spec.amount)
+        | Celery -> "Celery, " ^ (Quantity.to_string spec.amount)
+        | Mushroom -> "Mushrom, " ^ (Quantity.to_string spec.amount)
+      end
+      | Fruit spec -> begin
+        match spec.food with
+        | Apple -> "Apple, " ^ (Quantity.to_string spec.amount)
+        | Orange -> "Orange, " ^ (Quantity.to_string spec.amount)
+        | Banana -> "Banana, " ^ (Quantity.to_string spec.amount)
+        | Pineapple -> "Pineapple, " ^ (Quantity.to_string spec.amount)
+        | Grape -> "Grape, " ^ (Quantity.to_string spec.amount)
+        | Strawberry -> "Strawberry, " ^ (Quantity.to_string spec.amount)
+        | Watermelon -> "Watermelon, " ^ (Quantity.to_string spec.amount)
+        | Blueberry -> "Blueberry, " ^ (Quantity.to_string spec.amount)
+        | Blackberry -> "Blackberry, " ^ (Quantity.to_string spec.amount)
+        | Raspberry -> "Raspberry, " ^ (Quantity.to_string spec.amount)
+        | Pumpkin -> "Pumpkin, " ^ (Quantity.to_string spec.amount)
+        | Avacado -> "Avacado, " ^ (Quantity.to_string spec.amount)
+        | Peach -> "Peach, " ^ (Quantity.to_string spec.amount)
+        | Lemon -> "Lemon, " ^ (Quantity.to_string spec.amount)
+        | Lime -> "Lime, " ^ (Quantity.to_string spec.amount)
+      end
+      | Dairy spec -> begin
+        match spec.food with
+        | Milk -> "Milk, " ^ (Quantity.to_string spec.amount)
+        | Butter -> "Butter, " ^ (Quantity.to_string spec.amount)
+        | Cheese -> "Cheese, " ^ (Quantity.to_string spec.amount)
+      end
+      | Spice spec -> begin
+        match spec.food with
+        | Cinnamon -> "Cinnamon, " ^ (Quantity.to_string spec.amount)
+        | Cumin -> "Cumin, " ^ (Quantity.to_string spec.amount)
+        | Basil -> "Basil, " ^ (Quantity.to_string spec.amount)
+        | Cilantro -> "Cilantro, " ^ (Quantity.to_string spec.amount)
+        | Thyme -> "Thyme, " ^ (Quantity.to_string spec.amount)
+        | Rosemary -> "Rosemary, " ^ (Quantity.to_string spec.amount)
+        | Ginger -> "Ginger, " ^ (Quantity.to_string spec.amount)
+        | Garlic -> "Garlic, " ^ (Quantity.to_string spec.amount)
+        | Salt -> "Salt, " ^ (Quantity.to_string spec.amount)
+        | BlackPepper -> "Black Pepper, " ^ (Quantity.to_string spec.amount)
+        | Nutmeg -> "Nutmeg, " ^ (Quantity.to_string spec.amount)
+        | Paprika -> "Paprika, " ^ (Quantity.to_string spec.amount)
+        | Sugar -> "Sugar, " ^ (Quantity.to_string spec.amount)
+      end
+      | Condiment spec -> begin
+        match spec.food with
+        | SoySauce -> "Soy Sauce, " ^ (Quantity.to_string spec.amount)
+        | Ketchup -> "Ketcup, " ^ (Quantity.to_string spec.amount)
+        | OliveOil -> "Olive Oil, " ^ (Quantity.to_string spec.amount)
+        | Mayo -> "Mayo, " ^ (Quantity.to_string spec.amount)
+        | Honey -> "Honey, " ^ (Quantity.to_string spec.amount)
+        | Mustard -> "Mustard, " ^ (Quantity.to_string spec.amount)
+        | PeanutButter -> "Peanut Butter, " ^ (Quantity.to_string spec.amount)
+        | Jam -> "Jam, " ^ (Quantity.to_string spec.amount)
+        | Vinegar -> "Vinegar, " ^ (Quantity.to_string spec.amount)
+      end
+      | Grain spec -> begin
+        match spec.food with
+        | Rice -> "Rice, " ^ (Quantity.to_string spec.amount)
+        | Pasta -> "Pasta, " ^ (Quantity.to_string spec.amount)
+        | Bread -> "Bread, " ^ (Quantity.to_string spec.amount)
+      end
+      
   end

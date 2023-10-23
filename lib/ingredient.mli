@@ -13,5 +13,8 @@ module type Ingredient = sig
 
     val of_string : string -> ingredient option
     (** Converts a string to a value of type ingredient. *)
+
+    val to_string : ingredient -> string 
+    (** Converts a value of type ingredient to a string. *)
 end
 
