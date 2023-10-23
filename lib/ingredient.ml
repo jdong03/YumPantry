@@ -108,6 +108,31 @@ module Ingredient = struct
 
   type ingredient = {food : food; amount : amount}
 
+  let same_food (ing1 : ingredient) (ing2 : ingredient) : bool =
+    match ing1.food, ing2.food with
+    | Meat m1, Meat m2 -> m1 = m2
+    | Vegetable v1, Vegetable v2 -> v1 = v2
+    | Fruit f1, Fruit f2 -> f1 = f2
+    | Dairy d1, Dairy d2 -> d1 = d2
+    | Spice s1, Spice s2 -> s1 = s2
+    | Condiment c1, Condiment c2 -> c1 = c2
+    | Grain g1, Grain g2 -> g1 = g2
+    | _, _ -> false
+  
+  let add (ing1 : ingredient) (ing2 : ingredient) : ingredient =
+    match ing1.amount, ing2.amount with
+    | Volume v1, Volume v2 -> {food = ing1.food; amount = Volume (Volume.add v1 v2)}
+    | Mass m1, Mass m2 -> {food = ing1.food; amount = Mass (Mass.add m1 m2)}
+    | Count c1, Count c2 -> {food = ing1.food; amount = Count (c1 +. c2)}
+    | _, _ -> failwith "Cannot add different types of amounts" 
+
+  let remove (ing1 : ingredient) (ing2 : ingredient) : ingredient =
+    match ing1.amount, ing2.amount with
+    | Volume v1, Volume v2 -> {food = ing1.food; amount = Volume (Volume.subtract v1 v2)}
+    | Mass m1, Mass m2 -> {food = ing1.food; amount = Mass (Mass.subtract m1 m2)}
+    | Count c1, Count c2 -> {food = ing1.food; amount = Count (c1 -. c2)}
+    | _, _ -> failwith "Cannot remove different types of amounts"
+
   let of_string (input : string) : ingredient option =
     match String.lowercase_ascii input with 
     | "pork" -> Some ({food = Meat Pork; amount = Mass (0., Ounce)})

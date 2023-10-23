@@ -1,4 +1,4 @@
-open Yum
+(* open Yum
 open Pantry
 open Ingredient
 
@@ -42,4 +42,4 @@ let () =
   print_endline "\n\nWelcome to OCamlLM.\n";
   print_endline "Welcome to Yummy!";
   let pantry = build_empty_pantry in
-  action pantry
+  action pantry *)

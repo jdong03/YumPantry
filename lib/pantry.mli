@@ -1,4 +1,4 @@
-open Ingredient
+(* open Ingredient
 open Quantity
 
 module type PantryType = sig
@@ -26,4 +26,4 @@ module type PantryType = sig
 
   val reset : pantry -> pantry
   (** [reset p] is the pantry [p] with all of its food removed*)
-end
+end *)
