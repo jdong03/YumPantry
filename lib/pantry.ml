@@ -1,4 +1,4 @@
-(* open Ingredient
+open Ingredient
 open Quantity
 
 module type PantryType = sig
@@ -51,4 +51,4 @@ end
 module Pantry = SimplePantry (Ingredient)
 
 
- *)
+
