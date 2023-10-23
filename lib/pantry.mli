@@ -7,6 +7,7 @@ module type Pantry = sig
   (** The type to represent a pantry of food*)
 
   val empty : pantry
+  (** [empty] is an empty pantry*)
 
   val add : pantry -> ingredient -> amount -> pantry
   (** [add p s n] is the pantry [p] with the food [s] in the amount [amount] added to it*)
