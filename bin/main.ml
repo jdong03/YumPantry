@@ -5,7 +5,7 @@ open Ingredient
 (** [getValidIngredient ()] prompts the user for an ingredient and returns
     that ingredient if it is valid. Otherwise, it prompts the user again. *)
 let rec getValidIngredient () =
-  print_endline "What food would you like to add: ";
+  print_endline "\nWhat food would you like to add: ";
   match read_line () |> Ingredient.of_string with
   | None ->
     print_endline "Invalid ingredient. Please try again.\n";
@@ -15,7 +15,7 @@ let rec getValidIngredient () =
 (** [getValidQuantity ()] prompts the user for a quantity and returns
     that quantity if it is valid. Otherwise, it prompts the user again. *)
 let rec getValidQuantity () =
-  print_endline "How much of the food do you want to add?";
+  print_endline "\nHow much of the food do you want to add?";
   match read_line () |> Quantity.of_string with
   | None ->
     print_endline "Invalid quantity. Please try again.\n";
