@@ -1,6 +1,15 @@
 open Quantity
 
-type ingredient = Apple | Beef | Cucumber | Milk
+type ingredient =
+  | Apple
+  | Beef
+  | Cucumber
+  | Milk
+  | Corn
+  | Basil
+  | OliveOil
+  | Salt
+
 type measurement_type = Mass | Volume | Count
 
 val of_string : string -> ingredient option
