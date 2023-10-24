@@ -26,7 +26,7 @@ let rec getValidQuantity () =
     an action and then executes that action, then recursively loops. *)
 let rec action pantry =
   print_endline "Please enter what you would like to do: ";
-  print_endline "\"add\", \"remove\", \"display\", or \"reset\". (CTRL-C to quit))";
+  print_endline "\"add\", \"remove\", \"display\", \"reset\", or \"quit\"";
   print_string "> ";
 
   match read_line () with
@@ -53,6 +53,10 @@ let rec action pantry =
   | "reset" ->
     print_endline "Pantry reset.\n";
     action (Pantry.reset pantry)
+
+  | "quit" ->
+    print_endline "Goodbye!\n";
+    ()
   | _ ->
     print_endline "Invalid action.\n";
     action pantry
