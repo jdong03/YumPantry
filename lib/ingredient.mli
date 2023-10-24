@@ -8,7 +8,7 @@ type ingredient =
   | Corn
   | Basil
   | OliveOil
-  | Salt(** The type of ingredients. *)
+  | Salt
 
 type measurement_type = Mass | Volume | Count
 (** The type of measurements each ingredient can have. *)
