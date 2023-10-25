@@ -7,61 +7,60 @@ let empty = []
 
 let add (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t =
   match List.assoc_opt ing pantry with
-  | Some old_a -> begin
+  | Some old_a -> (
       let pantry_without_assoc = List.remove_assoc ing pantry in
       match old_a with
-      | Volume v1 -> begin
+      | Volume v1 -> (
           match a with
           | Volume v2 ->
               ( ing,
                 Volume (Quantity.Volume.add v1 v2 |> Quantity.Volume.simplify)
               )
               :: pantry_without_assoc
-          | _ -> pantry
-          end
-      | Mass m1 -> begin
+          | _ -> pantry)
+      | Mass m1 -> (
           match a with
           | Mass m2 ->
               (ing, Mass (Quantity.Mass.add m1 m2 |> Quantity.Mass.simplify))
               :: pantry_without_assoc
-          | _ -> pantry
-          end
-      | Count c1 -> begin
+          | _ -> pantry)
+      | Count c1 -> (
           match a with
           | Count c2 -> (ing, Count (c1 +. c2)) :: pantry_without_assoc
-          | _ -> pantry
-      end
-    end
-  | None -> (ing, a) :: pantry
+          | _ -> pantry))
+  | None -> (
+      match a with
+      | Volume v -> (ing, Volume (Quantity.Volume.simplify v)) :: pantry
+      | Mass m -> (ing, Mass (Quantity.Mass.simplify m)) :: pantry
+      | Count c -> (ing, a) :: pantry)
 
-let remove (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t=
-    match List.assoc_opt ing pantry with
-    | Some old_a -> begin
+let remove (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t
+    =
+  match List.assoc_opt ing pantry with
+  | Some old_a -> (
       let pantry_without_assoc = List.remove_assoc ing pantry in
       match old_a with
-      | Volume v1 -> begin
+      | Volume v1 -> (
           match a with
           | Volume v2 ->
               ( ing,
-                Volume (Quantity.Volume.subtract v1 v2 |> Quantity.Volume.simplify)
+                Volume
+                  (Quantity.Volume.subtract v1 v2 |> Quantity.Volume.simplify)
               )
               :: pantry_without_assoc
-          | _ -> pantry
-          end
-      | Mass m1 -> begin
+          | _ -> pantry)
+      | Mass m1 -> (
           match a with
           | Mass m2 ->
-              (ing, Mass (Quantity.Mass.subtract m1 m2 |> Quantity.Mass.simplify))
+              ( ing,
+                Mass (Quantity.Mass.subtract m1 m2 |> Quantity.Mass.simplify) )
               :: pantry_without_assoc
-          | _ -> pantry
-          end
-      | Count c1 -> begin
+          | _ -> pantry)
+      | Count c1 -> (
           match a with
           | Count c2 -> (ing, Count (c1 -. c2)) :: pantry_without_assoc
-          | _ -> pantry
-          end
-      end
-    | None -> pantry
+          | _ -> pantry))
+  | None -> pantry
 
 let display pantry =
   List.fold_left

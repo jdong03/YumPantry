@@ -54,13 +54,13 @@ struct
 
   let simplify (m, units) =
     assert (UnitMap.mem units conversion_map);
-    let measure_in_finest_units = UnitMap.find units conversion_map in
+    let measure_in_finest_units = m *. UnitMap.find units conversion_map in
     let filtered_map =
       let is_mult x y =
         match modf (x /. y) with remainder, _ -> remainder = 0.0
       in
       UnitMap.filter
-        (fun _ value -> is_mult value measure_in_finest_units)
+        (fun _ value -> is_mult measure_in_finest_units value)
         conversion_map
     in
     match UnitMap.max_binding filtered_map with
