@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Chicken Breast",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Ribeye",
+        "measurement_type": "Mass"
+    },
+    {
+        "name": "Ground Beef",
+        "measurement_type": "Volume"
+    },
+    {
+        "name": "Wagyu",
+        "measurement_type": "Mass"
+    },
+    {
+        "name": "Sirloin",
+        "measurement_type": "Volume"
+    }
+]

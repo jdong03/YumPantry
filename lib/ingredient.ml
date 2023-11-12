@@ -1,48 +1,47 @@
 open Quantity
-
-type ingredient =
-  | Apple
-  | Beef
-  | Cucumber
-  | Milk
-  | Corn
-  | Basil
-  | OliveOil
-  | Salt
+open Yojson.Basic.Util
+open Yojson.Basic
 
 type measurement_type = Mass | Volume | Count
+type ingredient = { name : string; measurement_type : measurement_type }
+
+let remove_double_quotes s = String.concat "" (String.split_on_char '\"' s)
+
+let measurement_type_of_string s =
+  match s |> String.lowercase_ascii with
+  | "mass" -> Mass
+  | "volume" -> Volume
+  | "count" -> Count
+  | _ -> failwith ("Could not find measurement type \"" ^ s ^ "\"")
+
+(* Convert JSON to ingredient type *)
+let ingredient_of_json json =
+  {
+    name = json |> member "name" |> to_string |> remove_double_quotes;
+    measurement_type =
+      json |> member "measurement_type" |> to_string |> remove_double_quotes
+      |> measurement_type_of_string;
+  }
+
+(* Function to parse a list of ingredients from a JSON string *)
+let ingredients_from_file file =
+  let json = from_file file in
+  (* Match the JSON structure to a list, then convert each element *)
+  match json with
+  | `List lst -> List.map ingredient_of_json lst
+  | _ -> failwith "Expected a JSON list"
+
+let all_ingredients =
+  List.flatten
+    [
+      ingredients_from_file "data/spices.json";
+      ingredients_from_file "data/meats.json";
+    ]
 
 let of_string s =
-  match String.lowercase_ascii s with
-  | "apple" -> Some Apple
-  | "beef" -> Some Beef
-  | "cucumber" -> Some Cucumber
-  | "milk" -> Some Milk
-  | "corn" -> Some Corn
-  | "basil" -> Some Basil
-  | "olive oil" -> Some OliveOil
-  | "salt" -> Some Salt
-  | _ -> None
+  List.find_opt
+    (fun ingredient -> String.lowercase_ascii ingredient.name = s)
+    all_ingredients
 
-let to_string = function
-  | Apple -> "apple"
-  | Beef -> "beef"
-  | Milk -> "milk"
-  | Cucumber -> "cucumber"
-  | Corn -> "corn"
-  | Basil -> "basil"
-  | OliveOil -> "olive oil"
-  | Salt -> "salt"
-
+let to_string ingredient = ingredient.name
 let compare_names a b = compare (to_string a) (to_string b)
-
-let correct_measurement_type ing =
-  match ing with
-  | Apple -> Count
-  | Beef -> Mass
-  | Milk -> Volume
-  | Cucumber -> Count
-  | Corn -> Count
-  | Basil -> Volume
-  | OliveOil -> Volume
-  | Salt -> Volume

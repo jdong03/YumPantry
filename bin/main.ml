@@ -1,7 +1,6 @@
 open Yum
 open Pantry
 open Ingredient
-open Parsing
 
 (** [getValidIngredient ()] prompts the user for an ingredient and returns
     that ingredient if it is valid. Otherwise, it prompts the user again. *)
@@ -64,4 +63,6 @@ let () =
   print_endline "Welcome to Yummy!";
   (* let pantry = Pantry.empty in *)
   (* action pantry *)
-  print_all (ingredients_from_file "data/ingredients.json")
+  match Ingredient.of_string "chicken breast" with
+  | Some i -> print_endline "Found it!"
+  | None -> print_endline "Did not find it!"

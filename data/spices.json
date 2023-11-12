@@ -1,22 +1,22 @@
 [
     {
-        "name": "Milk",
+        "name": "Paprika",
         "measurement_type": "Volume"
     },
     {
-        "name": "Apple",
+        "name": "Pepper",
         "measurement_type": "Count"
     },
     {
-        "name": "Cucumber",
+        "name": "Salt",
         "measurement_type": "Count"
     },
     {
-        "name": "Corn",
+        "name": "Cumin",
         "measurement_type": "Count"
     },
     {
-        "name": "Olive Oil",
+        "name": "Garlic Powder",
         "measurement_type": "Volume"
     }
 ]
