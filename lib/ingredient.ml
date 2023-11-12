@@ -32,14 +32,10 @@ let ingredients_from_file file =
   | _ -> failwith "Expected a JSON list"
 
 let all_ingredients =
-  List.flatten
-    [
-      ingredients_from_file "data/carbs.json";
-      ingredients_from_file "data/fruits.json";
-      ingredients_from_file "data/meats.json";
-      ingredients_from_file "data/spices.json";
-      ingredients_from_file "data/vegetables.json";
-    ]
+  let file_names = "data" |> Sys.readdir |> Array.to_list in
+  List.fold_left
+    (fun acc elt -> ingredients_from_file ("data/" ^ elt) @ acc)
+    [] file_names
 
 let of_string s =
   List.find_opt
