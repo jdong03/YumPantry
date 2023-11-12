@@ -19,6 +19,9 @@ test:
 yum:
 	OCAMLRUNPARAM=b dune exec bin/main.exe
 
+yummy:
+	OCAMLRUNPAREM=b dune exec gui/gui.exe
+
 check:
 	@bash check.sh
 
