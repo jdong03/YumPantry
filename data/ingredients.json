@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Milk",
+        "measurement_type": "Volume"
+    },
+    {
+        "name": "Apple",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Cucumber",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Corn",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Olive Oil",
+        "measurement_type": "Volume"
+    }
+]
