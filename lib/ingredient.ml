@@ -34,8 +34,11 @@ let ingredients_from_file file =
 let all_ingredients =
   List.flatten
     [
-      ingredients_from_file "data/spices.json";
+      ingredients_from_file "data/carbs.json";
+      ingredients_from_file "data/fruits.json";
       ingredients_from_file "data/meats.json";
+      ingredients_from_file "data/spices.json";
+      ingredients_from_file "data/vegetables.json";
     ]
 
 let of_string s =
