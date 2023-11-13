@@ -15,4 +15,6 @@ val to_string : ingredient -> string
 (** Converts a value of type ingredient to a string. *)
 
 val all_ingredients : ingredient list
+(** A list of every ingredient in data/ *)
+
 val string_of_measurement_type : measurement_type -> string

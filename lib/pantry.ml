@@ -9,12 +9,12 @@ let set_assoc (k, v) lst =
   let lst_without_assoc = List.remove_assoc k lst in
   (k, v) :: lst_without_assoc
 
+let correct_measurement_type ing a =
+  match (ing.measurement_type, a) with
+  | Mass, Mass _ | Volume, Volume _ | Count, Count _ -> true
+  | _ -> false
+
 let add (pantry : t) (ing : ingredient) (a : amount) : t =
-  let correct_measurement_type ing a =
-    match (ing.measurement_type, a) with
-    | Mass, Mass _ | Volume, Volume _ | Count, Count _ -> true
-    | _ -> false
-  in
   if not (correct_measurement_type ing a) then
     failwith
       ("Expected an amount of type "
@@ -35,11 +35,6 @@ let add (pantry : t) (ing : ingredient) (a : amount) : t =
     | None -> set_assoc (ing, a) pantry
 
 let remove (pantry : t) (ing : ingredient) (a : amount) : t =
-  let correct_measurement_type ing a =
-    match (ing.measurement_type, a) with
-    | Mass, Mass _ | Volume, Volume _ | Count, Count _ -> true
-    | _ -> false
-  in
   if not (correct_measurement_type ing a) then
     failwith
       ("Expected an amount of type "

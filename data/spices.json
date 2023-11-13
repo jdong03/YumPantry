@@ -5,15 +5,15 @@
     },
     {
         "name": "Pepper",
-        "measurement_type": "Count"
+        "measurement_type": "Volume"
     },
     {
         "name": "Salt",
-        "measurement_type": "Count"
+        "measurement_type": "Volume"
     },
     {
         "name": "Cumin",
-        "measurement_type": "Count"
+        "measurement_type": "Volume"
     },
     {
         "name": "Garlic Powder",
