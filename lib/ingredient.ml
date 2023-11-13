@@ -38,9 +38,15 @@ let all_ingredients =
     [] file_names
 
 let of_string s =
+  let s = String.lowercase_ascii s in
   List.find_opt
     (fun ingredient -> String.lowercase_ascii ingredient.name = s)
     all_ingredients
 
 let to_string ingredient = ingredient.name
 let compare_names a b = compare (to_string a) (to_string b)
+
+let string_of_measurement_type = function
+  | Mass -> "Mass"
+  | Volume -> "Volume"
+  | Count -> "Count"

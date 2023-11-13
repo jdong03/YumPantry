@@ -1,66 +1,63 @@
 open Ingredient
 open Quantity
 
-type t = (Ingredient.ingredient * amount) list
+type t = (ingredient * amount) list
 
 let empty = []
 
-let add (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t =
-  match List.assoc_opt ing pantry with
-  | Some old_a -> (
-      let pantry_without_assoc = List.remove_assoc ing pantry in
-      match old_a with
-      | Volume v1 -> (
-          match a with
-          | Volume v2 ->
-              ( ing,
-                Volume (Quantity.Volume.add v1 v2 |> Quantity.Volume.simplify)
-              )
-              :: pantry_without_assoc
-          | _ -> pantry)
-      | Mass m1 -> (
-          match a with
-          | Mass m2 ->
-              (ing, Mass (Quantity.Mass.add m1 m2 |> Quantity.Mass.simplify))
-              :: pantry_without_assoc
-          | _ -> pantry)
-      | Count c1 -> (
-          match a with
-          | Count c2 -> (ing, Count (c1 +. c2)) :: pantry_without_assoc
-          | _ -> pantry))
-  | None -> (
-      match a with
-      | Volume v -> (ing, Volume (Quantity.Volume.simplify v)) :: pantry
-      | Mass m -> (ing, Mass (Quantity.Mass.simplify m)) :: pantry
-      | Count c -> (ing, a) :: pantry)
+let set_assoc (k, v) lst =
+  let lst_without_assoc = List.remove_assoc k lst in
+  (k, v) :: lst_without_assoc
 
-let remove (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t
-    =
-  match List.assoc_opt ing pantry with
-  | Some old_a -> (
-      let pantry_without_assoc = List.remove_assoc ing pantry in
-      match old_a with
-      | Volume v1 -> (
-          match a with
-          | Volume v2 ->
-              ( ing,
-                Volume
-                  (Quantity.Volume.subtract v1 v2 |> Quantity.Volume.simplify)
-              )
-              :: pantry_without_assoc
-          | _ -> pantry)
-      | Mass m1 -> (
-          match a with
-          | Mass m2 ->
-              ( ing,
-                Mass (Quantity.Mass.subtract m1 m2 |> Quantity.Mass.simplify) )
-              :: pantry_without_assoc
-          | _ -> pantry)
-      | Count c1 -> (
-          match a with
-          | Count c2 -> (ing, Count (c1 -. c2)) :: pantry_without_assoc
-          | _ -> pantry))
-  | None -> pantry
+let add (pantry : t) (ing : ingredient) (a : amount) : t =
+  let correct_measurement_type ing a =
+    match (ing.measurement_type, a) with
+    | Mass, Mass _ | Volume, Volume _ | Count, Count _ -> true
+    | _ -> false
+  in
+  if not (correct_measurement_type ing a) then
+    failwith
+      ("Expected an amount of type "
+      ^ string_of_measurement_type ing.measurement_type)
+  else
+    match List.assoc_opt ing pantry with
+    | Some old_a ->
+        (* There already is a binding  *)
+        let new_amount =
+          match (old_a, a) with
+          | Mass m1, Mass m2 -> Mass (Mass.add m1 m2)
+          | Volume v1, Volume v2 -> Volume (Volume.add v1 v2)
+          | Count c1, Count c2 -> Count (c1 +. c2)
+          | _ -> failwith "This should be impossible"
+        in
+        set_assoc (ing, new_amount) pantry
+    (* There is no binding *)
+    | None -> set_assoc (ing, a) pantry
+
+let remove (pantry : t) (ing : ingredient) (a : amount) : t =
+  let correct_measurement_type ing a =
+    match (ing.measurement_type, a) with
+    | Mass, Mass _ | Volume, Volume _ | Count, Count _ -> true
+    | _ -> false
+  in
+  if not (correct_measurement_type ing a) then
+    failwith
+      ("Expected an amount of type "
+      ^ string_of_measurement_type ing.measurement_type)
+  else
+    match List.assoc_opt ing pantry with
+    | Some old_a ->
+        (* There already is a binding s*)
+        let new_amount =
+          match (old_a, a) with
+          | Mass m1, Mass m2 -> Mass (Mass.subtract m1 m2)
+          | Volume v1, Volume v2 -> Volume (Volume.subtract v1 v2)
+          | Count c1, Count c2 -> Count (c1 -. c2)
+          | _ -> failwith "This should be impossible"
+        in
+        set_assoc (ing, new_amount) pantry
+    (* There is no binding *)
+    | None -> set_assoc (ing, a) pantry
 
 let display pantry =
   List.fold_left
