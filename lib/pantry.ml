@@ -27,12 +27,14 @@ let add (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t =
       | Count c1 -> (
           match a with
           | Count c2 -> (ing, Count (c1 +. c2)) :: pantry_without_assoc
-          | _ -> pantry))
+          | _ -> pantry)
+      | Invalid -> pantry)
   | None -> (
       match a with
       | Volume v -> (ing, Volume (Quantity.Volume.simplify v)) :: pantry
       | Mass m -> (ing, Mass (Quantity.Mass.simplify m)) :: pantry
-      | Count c -> (ing, a) :: pantry)
+      | Count c -> (ing, a) :: pantry
+      | Invalid -> pantry)
 
 let remove (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t
     =
@@ -59,7 +61,8 @@ let remove (pantry : t) (ing : Ingredient.ingredient) (a : Quantity.amount) : t
       | Count c1 -> (
           match a with
           | Count c2 -> (ing, Count (c1 -. c2)) :: pantry_without_assoc
-          | _ -> pantry))
+          | _ -> pantry)
+      | Invalid -> pantry)
   | None -> pantry
 
 let display pantry =
@@ -70,6 +73,7 @@ let display pantry =
         | Mass m -> Quantity.Mass.to_string m
         | Volume v -> Quantity.Volume.to_string v
         | Count c -> Float.to_string c
+        | Invalid -> ""
       in
       let ingredient_string = Ingredient.to_string ing in
       "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)

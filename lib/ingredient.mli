@@ -9,6 +9,7 @@ type ingredient =
   | Basil
   | OliveOil
   | Salt
+  | Invalid
 
 type measurement_type = Mass | Volume | Count
 (** The type of measurements each ingredient can have. *)

@@ -9,6 +9,7 @@ type ingredient =
   | Basil
   | OliveOil
   | Salt
+  | Invalid
 
 type measurement_type = Mass | Volume | Count
 
@@ -33,6 +34,7 @@ let to_string = function
   | Basil -> "basil"
   | OliveOil -> "olive oil"
   | Salt -> "salt"
+  | Invalid -> ""
 
 let compare_names a b = compare (to_string a) (to_string b)
 
@@ -46,3 +48,4 @@ let correct_measurement_type ing =
   | Basil -> Volume
   | OliveOil -> Volume
   | Salt -> Volume
+  | Invalid -> Count
