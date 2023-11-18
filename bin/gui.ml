@@ -54,6 +54,15 @@ let rec action_choice pantry =
     let layout = L.tower [L.resident invalid_label; row1; row2; L.resident submit] in
     let board = Bogue.of_layout layout in Bogue.run board) in
 
+  (** The page that displays the contents of the pantry. *)
+  let display pantry = 
+    (let label = W.label "Pantry Contents" in 
+    let display_text = Pantry.display pantry in 
+    let contents = if display_text = "" then W.label "Your pantry is empty."
+      else W.text_display display_text in 
+    let layout = L.tower_of_w ~align: Draw.Center [label; contents] in 
+    let board = Bogue.of_layout layout in Bogue.run board) in
+
   
   (** The main page of the program. It provides various buttons that performs various actions.
       The default page that every action returns to after completely executing. *)
@@ -63,8 +72,11 @@ let rec action_choice pantry =
   let remove_button = W.button "Remove" in
     W.on_click remove_button ~click: (fun _ -> add_remove_input "remove" false pantry);
   let display_button = W.button "Display" in
+      W.on_click display_button ~click: (fun __ -> display pantry);
   let reset_button = W.button "Reset" in
+      W.on_click reset_button ~click: (fun _ -> action_choice (Pantry.reset pantry));
   let quit_button = W.button "Quit" in 
+      W.on_click quit_button ~click: (fun _ -> raise Bogue.Exit);
   let layout = L.tower_of_w ~align:Draw.Center 
     [label; add_button; remove_button; display_button; reset_button; quit_button] in
   let board = Bogue.of_layout layout in Bogue.run board
@@ -76,4 +88,5 @@ let () =
   let pantry = Pantry.empty in
   action pantry *)
     let pantry = Pantry.empty in
-    action_choice pantry
+    action_choice pantry;
+    Bogue.quit()
