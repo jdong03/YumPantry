@@ -2,16 +2,16 @@ open Quantity
 open Yojson.Basic.Util
 open Yojson.Basic
 
-type measurement_type = Mass | Volume | Count
+type measurement_type = MMass | MVolume | MCount
 type ingredient = { name : string; measurement_type : measurement_type }
 
 let remove_double_quotes s = String.concat "" (String.split_on_char '\"' s)
 
 let measurement_type_of_string s =
   match s |> String.lowercase_ascii with
-  | "mass" -> Mass
-  | "volume" -> Volume
-  | "count" -> Count
+  | "mass" -> MMass
+  | "volume" -> MVolume
+  | "count" -> MCount
   | _ -> failwith ("Could not find measurement type \"" ^ s ^ "\"")
 
 (* Convert JSON to ingredient type *)
@@ -47,6 +47,6 @@ let to_string ingredient = ingredient.name
 let compare_names a b = compare (to_string a) (to_string b)
 
 let string_of_measurement_type = function
-  | Mass -> "Mass"
-  | Volume -> "Volume"
-  | Count -> "Count"
+  | MMass -> "Mass"
+  | MVolume -> "Volume"
+  | MCount -> "Count"

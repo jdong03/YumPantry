@@ -85,6 +85,6 @@ module Volume :
 module Mass :
   Measurement with type units = mass_units and type measure = float * mass_units
 
-type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float | Invalid
+type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
 
 val of_string : string -> amount option

@@ -1,9 +1,10 @@
 open Quantity
 
+(** The type of measurements each ingredient can have. *)
 type measurement_type =
-  | Mass
-  | Volume
-  | Count  (** The type of measurements each ingredient can have. *)
+  | MMass
+  | MVolume
+  | MCount
 
 type ingredient = { name : string; measurement_type : measurement_type }
 (** Record representation of an ingredient. *)

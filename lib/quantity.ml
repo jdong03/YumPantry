@@ -254,7 +254,7 @@ end)
 
 (* Amount *)
 
-type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float | Invalid
+type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
 
 (** TODO: this is ugly *)
 let of_string s : amount option =

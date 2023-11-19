@@ -11,7 +11,7 @@ let set_assoc (k, v) lst =
 
 let correct_measurement_type ing a =
   match (ing.measurement_type, a) with
-  | Mass, Mass _ | Volume, Volume _ | Count, Count _ -> true
+  | MMass, Mass _ | MVolume, Volume _ | MCount, Count _ -> true
   | _ -> false
 
 let add (pantry : t) (ing : ingredient) (a : amount) : t =
@@ -62,7 +62,6 @@ let display pantry =
         | Mass m -> Quantity.Mass.to_string m
         | Volume v -> Quantity.Volume.to_string v
         | Count c -> Float.to_string c
-        | Invalid -> ""
       in
       let ingredient_string = Ingredient.to_string ing in
       "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
