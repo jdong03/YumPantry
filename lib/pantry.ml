@@ -52,7 +52,7 @@ let remove (pantry : t) (ing : ingredient) (a : amount) : t =
         in
         set_assoc (ing, new_amount) pantry
     (* There is no binding *)
-    | None -> set_assoc (ing, a) pantry
+    | None -> pantry
 
 let display pantry =
   List.fold_left
