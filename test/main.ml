@@ -135,5 +135,34 @@ let quantity_tests =
         (Some (0.0, Pint)) );
   ]
 
-let suite = "test suite for A2" >::: List.flatten [ quantity_tests ]
+(* let pantry_tests =
+   [
+     (*Empty pantry*)
+     ("Empty Test" >:: fun _ -> assert_equal "" (Pantry.display Pantry.empty));
+     ( "Empty Remove" >:: fun _ ->
+       assert_equal "" (Pantry.empty |> Pantry.remove Apple 1 |> Pantry.display)
+     );
+     (*Add tests*)
+     ( "Add one ingredient" >:: fun _ ->
+       assert_equal "" (Pantry.empty |> Pantry.add Apple 1 |> Pantry.display) );
+     ( "Add two ingredients" >:: fun _ ->
+       assert_equal ""
+         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.add Beef 1
+        |> Pantry.display) );
+     ( "Add two ingredients of same type" >:: fun _ ->
+       assert_equal ""
+         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.add Apple 1
+        |> Pantry.display) );
+     ( "Add two ingredients of same type with different amounts" >:: fun _ ->
+       assert_equal ""
+         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.add Apple 2
+        |> Pantry.display) );
+     (*Remove tests*)
+     ( "Remove one ingredient" >:: fun _ ->
+       assert_equal ""
+         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.remove Apple 1
+        |> Pantry.display) );
+   ] *)
+
+let suite = "test suite" >::: List.flatten [ quantity_tests ]
 let () = run_test_tt_main suite
