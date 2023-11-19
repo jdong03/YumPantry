@@ -1,6 +1,9 @@
 open OUnit2
 open Yum
 open Quantity
+open Ingredient
+
+let pp_string s = "\"" ^ s ^ "\""
 
 let compare_amounts a1 a2 =
   match (a1, a2) with
@@ -135,34 +138,97 @@ let quantity_tests =
         (Some (0.0, Pint)) );
   ]
 
-(* let pantry_tests =
-   [
-     (*Empty pantry*)
-     ("Empty Test" >:: fun _ -> assert_equal "" (Pantry.display Pantry.empty));
-     ( "Empty Remove" >:: fun _ ->
-       assert_equal "" (Pantry.empty |> Pantry.remove Apple 1 |> Pantry.display)
-     );
-     (*Add tests*)
-     ( "Add one ingredient" >:: fun _ ->
-       assert_equal "" (Pantry.empty |> Pantry.add Apple 1 |> Pantry.display) );
-     ( "Add two ingredients" >:: fun _ ->
-       assert_equal ""
-         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.add Beef 1
-        |> Pantry.display) );
-     ( "Add two ingredients of same type" >:: fun _ ->
-       assert_equal ""
-         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.add Apple 1
-        |> Pantry.display) );
-     ( "Add two ingredients of same type with different amounts" >:: fun _ ->
-       assert_equal ""
-         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.add Apple 2
-        |> Pantry.display) );
-     (*Remove tests*)
-     ( "Remove one ingredient" >:: fun _ ->
-       assert_equal ""
-         (Pantry.empty |> Pantry.add Apple 1 |> Pantry.remove Apple 1
-        |> Pantry.display) );
-   ] *)
+let apple = { name = "Apple"; measurement_type = MCount }
+let beef = { name = "Beef"; measurement_type = MMass }
 
-let suite = "test suite" >::: List.flatten [ quantity_tests ]
+let pantry_tests =
+  [
+    (*Empty pantry*)
+    ("Empty Test" >:: fun _ -> assert_equal "" (Pantry.display Pantry.empty));
+    ( "Empty Remove" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Empty Remove two ingredients" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.remove pantry beef (Mass (8.0, Ounce)))
+        |> Pantry.display)
+        ~printer:pp_string );
+    (*Add tests*)
+    ( "Add one ingredient" >:: fun _ ->
+      assert_equal "\n1. of Apple"
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Add two ingredients" >:: fun _ ->
+      assert_equal "\n1. of Apple\n8. ounces of Beef"
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Add two ingredients of same type" >:: fun _ ->
+      assert_equal "\n2. of Apple"
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Add two ingredients of same type with different amounts" >:: fun _ ->
+      assert_equal "\n3. of Apple"
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.add pantry apple (Count 2.0))
+        |> Pantry.display)
+        ~printer:pp_string );
+    (*Remove tests*)
+    ( "Remove one ingredient" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Remove two ingredients" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.remove pantry beef (Mass (8.0, Ounce)))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Remove more ingredients than pantry has" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.remove pantry apple (Count 2.0))
+        |> Pantry.display)
+        ~printer:pp_string );
+    (*Reset tests*)
+    ( "Reset empty pantry" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty |> Pantry.reset |> Pantry.display)
+        ~printer:pp_string );
+    ( "Reset pantry with one ingredient" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> Pantry.reset |> Pantry.display)
+        ~printer:pp_string );
+    ( "Reset pantry with two ingredients" >:: fun _ ->
+      assert_equal ""
+        (Pantry.empty
+        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> Pantry.reset |> Pantry.display)
+        ~printer:pp_string );
+  ]
+
+let suite = "test suite" >::: List.flatten [ quantity_tests; pantry_tests ]
 let () = run_test_tt_main suite
