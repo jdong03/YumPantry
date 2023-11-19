@@ -62,6 +62,7 @@ let display pantry =
         | Mass m -> Quantity.Mass.to_string m
         | Volume v -> Quantity.Volume.to_string v
         | Count c -> Float.to_string c
+        | Invalid -> ""
       in
       let ingredient_string = Ingredient.to_string ing in
       "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
