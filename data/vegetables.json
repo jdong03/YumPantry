@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Cucumber",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Lettuce",
+        "measurement_type": "Count"
+    }
+]

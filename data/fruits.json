@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Apple",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Pineapple",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Green Grape",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Red Grape",
+        "measurement_type": "Count"
+    },
+    {
+        "name": "Dragon Fruit",
+        "measurement_type": "Count"
+    }
+]
