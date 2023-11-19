@@ -50,3 +50,10 @@ let string_of_measurement_type = function
   | MMass -> "Mass"
   | MVolume -> "Volume"
   | MCount -> "Count"
+
+let measurement_type_of_string s =
+  match String.lowercase_ascii s with
+  | "mass" -> MMass
+  | "volume" -> MVolume
+  | "count" -> MCount
+  | _ -> failwith ("Count not find measurement type for " ^ s)

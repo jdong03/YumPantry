@@ -57,12 +57,7 @@ let remove (pantry : t) (ing : ingredient) (a : amount) : t =
 let display pantry =
   List.fold_left
     (fun acc (ing, amount) ->
-      let amount_string =
-        match amount with
-        | Mass m -> Quantity.Mass.to_string m
-        | Volume v -> Quantity.Volume.to_string v
-        | Count c -> Float.to_string c
-      in
+      let amount_string = Quantity.to_string amount in
       let ingredient_string = Ingredient.to_string ing in
       "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
     "" pantry

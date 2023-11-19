@@ -88,3 +88,5 @@ module Mass :
 type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
 
 val of_string : string -> amount option
+
+val to_string : amount -> string

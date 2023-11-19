@@ -1,0 +1,19 @@
+[
+    {
+    "title": "Chocolate Chip Cookies",
+    "servings": 4,
+    "prep_time": "15 minutes",
+    "cook_time": "10 minutes",
+    "total_time": "25 minutes",
+    "ingredients": [
+      {
+        "name": "Baguette",
+        "measurement_type": "Count",
+        "quantity": "2"
+      }
+      
+    ],
+    "instructions": "Preheat oven to 375 degrees F (190 degrees C). In a small bowl, stir together flour, baking soda, and salt; set aside. In a large bowl, cream together the butter, white sugar, and brown sugar until smooth. Beat in the vanilla and eggs until light and fluffy. Gradually blend in the dry ingredients."
+      
+    }
+]

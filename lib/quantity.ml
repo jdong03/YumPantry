@@ -274,3 +274,9 @@ let of_string s : amount option =
       (* Try making a Count *)
       match Float.of_string_opt m with Some m -> Some (Count m) | _ -> None)
   | _ -> None
+
+let to_string amount =
+  match amount with
+  | Mass m -> Mass.to_string m
+  | Volume v -> Volume.to_string v
+  | Count c -> Float.to_string c
