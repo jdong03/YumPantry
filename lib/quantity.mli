@@ -17,76 +17,52 @@
           let remaining = Volume.subtract fridge recipe_requirement;;
         ]
       * [remaining] should evaluate to [Volume (3.0, HalfCup)]
+
+    NOTE: many of these functions return option. None is returned if the
+          operation operates on invalid types, e.g. attempting to add a mass and
+          a volume
 *)
 
-(** Available volume units *)
-type volume_units =
-  | Teaspoon
-  | Tablespoon
-  | QuarterCup
-  | HalfCup
-  | Cup
-  | Pint
-  | Quart
-  | Gallon
+type units
+(** The various units in which a quantity may be measured*)
 
-(** Available mass units *)
-type mass_units = Ounce | Pound
+type t
+(** Quantity type *)
 
-(** Represent a measured quantity*)
-module type Measurement = sig
-  type units
-  (** The unit representation of the measurement, e.g. teaspoons, pounds, etc. *)
+val simplify : t -> t
+(** Reduces a quantity to a simpler representation if possible. For example, 
+      [simplify (4.0, Cup)] evaluates to [(1.0, Quart)].*)
 
-  type measure
-  (** An actual quantity of the measurement *)
+val add : t -> t -> t option
+(** [add q1 q2] is the addition of the quantities [q1 + q2].*)
 
-  val simplify : measure -> measure
-  (** Reduces a measurement to a simpler representation if possible. For example, 
-        [simplify (4.0, Cup)] evaluates to [(1.0, Quart)].*)
+val subtract : t -> t -> t option
+(** [subtract q1 q2 ] is the subtraction of the measurements [q1 - q2]. 
+    Requires [m1 >= m2].  *)
 
-  val convert : measure -> units -> measure
-  (** Convert a measurement in one unit to a volume in another unit *)
+val scale : float -> t -> t
+(** [scale f m] is m scaled by f.*)
 
-  val add : measure -> measure -> measure
-  (** [add m1 m2] is the addition of the measurements [m1 + m2]. *)
+val greater_than : t -> t -> bool option
+(** [greater_than q1 q2] is [true] if q1 is a greater quantity than q2. *)
 
-  val subtract : measure -> measure -> measure
-  (** [subtract m1 m2 ] is the subtraction of the measurements [m1 - m2]. 
-      Requires [m1 >= m2].  *)
+val less_than : t -> t -> bool option
+(** [less_than q1 q2] is [true] if q1 is a lesser quantity than q2. *)
 
-  val scale : float -> measure -> measure
-  (** [scale f m] is m scaled by f.*)
+val equivalent : t -> t -> bool option
+(** [equivalent q1 q2] is [true] if q1 is the same quantity as q2. *)
 
-  val greater_than : measure -> measure -> bool
-  (** [greater_than m1 m2] is [true] if m1 is a greater quantity than m2. *)
+val of_string : string -> t option
+(** Attempts to convert a string to a measure. String must be formatted as
+    "float units", e.g., "3.0 Teaspoon".*)
 
-  val less_than : measure -> measure -> bool
-  (** [less_than m1 m2] is [true] if m1 is a lesser quantity than m2. *)
+val to_string : t -> string
+(** Converts a quantity to a string.*)
 
-  val equivalent : measure -> measure -> bool
-  (** [equivalent m1 m2] is [true] if m1 is the same quantity as m2. *)
+val same_type_of_units : units -> units -> bool
 
-  val of_string : string -> measure option
-  (** Attempts to convert a string to a measure. String must be formatted as
-      "float units", e.g., "3.0 Teaspoon".*)
+val units_of_string : string -> units option
 
-  val to_string : measure -> string
-  (** Converts a measure to a string.*)
-end
+val units_of_quantity : t -> units
 
-(** Volume measurements *)
-module Volume :
-  Measurement
-    with type units = volume_units
-     and type measure = float * volume_units
-
-(** Mass measurements *)
-module Mass :
-  Measurement with type units = mass_units and type measure = float * mass_units
-
-type amount = Volume of Volume.measure | Mass of Mass.measure | Count of float
-
-val of_string : string -> amount option
-
-val to_string : amount -> string
+val measurement_type : units -> string

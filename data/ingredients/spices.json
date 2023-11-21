@@ -1,22 +1,22 @@
 [
     {
         "name": "Paprika",
-        "measurement_type": "Volume"
+        "measurement_type": "Teaspoon"
     },
     {
         "name": "Pepper",
-        "measurement_type": "Volume"
+        "measurement_type": "Teaspoon"
     },
     {
         "name": "Salt",
-        "measurement_type": "Volume"
+        "measurement_type": "Teaspoon"
     },
     {
         "name": "Cumin",
-        "measurement_type": "Volume"
+        "measurement_type": "Teaspoon"
     },
     {
         "name": "Garlic Powder",
-        "measurement_type": "Volume"
+        "measurement_type": "Teaspoon"
     }
 ]

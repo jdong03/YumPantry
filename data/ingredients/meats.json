@@ -1,22 +1,22 @@
 [
     {
         "name": "Chicken Breast",
-        "measurement_type": "Count"
+        "measurement_type": "Whole"
     },
     {
         "name": "Ribeye",
-        "measurement_type": "Mass"
+        "measurement_type": "Ounce"
     },
     {
         "name": "Ground Beef",
-        "measurement_type": "Volume"
+        "measurement_type": "Ounce"
     },
     {
         "name": "Wagyu",
-        "measurement_type": "Mass"
+        "measurement_type": "Ounce"
     },
     {
         "name": "Sirloin",
-        "measurement_type": "Mass"
+        "measurement_type": "Ounce"
     }
 ]

@@ -31,8 +31,7 @@ let rec getValidQuantity (ingredient : Ingredient.t) () =
     ("\nHow much "
     ^ Ingredient.to_string ingredient
     ^ " do you want to add? (Measured in "
-    ^ string_of_measurement_type
-        (Ingredient.correct_measurement_type ingredient)
+    ^ Quantity.measurement_type (Ingredient.default_units ingredient)
     ^ ")");
   match read_line () |> Quantity.of_string with
   | None ->

@@ -8,13 +8,13 @@ type t = {
   prep_time : string;
   cook_time : string;
   total_time : string;
-  ingredients : (Ingredient.t * Quantity.amount) list;
+  ingredients : (Ingredient.t * Quantity.t) list;
   instructions : string;
 }
 (** Recipe type *)
 
 (** Parse an ingredient amount pair from JSON *)
-let ing_amount_of_json json : Ingredient.t * Quantity.amount =
+let ing_amount_of_json json : Ingredient.t * Quantity.t =
   let ing = Ingredient.of_json json in
   let quantity =
     json |> member "quantity" |> string_of_mem |> Quantity.of_string

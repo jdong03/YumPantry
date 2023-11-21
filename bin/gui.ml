@@ -17,7 +17,7 @@ let rec getValidIngredient (input : string) : Ingredient.t option =
 
 (** [getValidQuantity s] matches the string s to a quantity and returns
   that quantity if it is valid. Otherwise, it prompts the user again. *)
-let rec getValidQuantity (input : string) : amount option =
+let rec getValidQuantity (input : string) : Quantity.t option =
   input |> Quantity.of_string
 
 let rec action_choice pantry =

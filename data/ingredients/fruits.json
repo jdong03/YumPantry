@@ -1,22 +1,22 @@
 [
     {
         "name": "Apple",
-        "measurement_type": "Count"
+        "measurement_type": "Whole"
     },
     {
         "name": "Pineapple",
-        "measurement_type": "Count"
+        "measurement_type": "Whole"
     },
     {
         "name": "Green Grape",
-        "measurement_type": "Count"
+        "measurement_type": "Whole"
     },
     {
         "name": "Red Grape",
-        "measurement_type": "Count"
+        "measurement_type": "Whole"
     },
     {
         "name": "Dragon Fruit",
-        "measurement_type": "Count"
+        "measurement_type": "Whole"
     }
 ]

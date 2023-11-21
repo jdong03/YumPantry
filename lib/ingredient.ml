@@ -3,25 +3,17 @@ open Yojson.Basic.Util
 open Yojson.Basic
 open Jsonutil
 
-type measurement_type = MMass | MVolume | MCount
-type t = { name : string; measurement_type : measurement_type }
-
-let remove_double_quotes s = String.concat "" (String.split_on_char '\"' s)
-
-let measurement_type_of_string s =
-  match s |> String.lowercase_ascii with
-  | "mass" -> MMass
-  | "volume" -> MVolume
-  | "count" -> MCount
-  | _ -> failwith ("Could not find measurement type \"" ^ s ^ "\"")
+type t = { name : string; default_units : Quantity.units }
 
 (* Convert JSON to ingredient type *)
 let of_json json =
   {
     name = json |> member "name" |> string_of_mem;
-    measurement_type =
-      json |> member "measurement_type" |> string_of_mem
-      |> measurement_type_of_string;
+    default_units =
+      (let units_string = json |> member "measurement_type" |> string_of_mem in
+       match Quantity.units_of_string units_string with
+       | Some u -> u
+       | None -> failwith ("Could not find units " ^ units_string));
   }
 
 (* Function to parse a list of ingredients from a JSON string *)
@@ -46,16 +38,4 @@ let of_string s =
 
 let to_string ingredient = ingredient.name
 let compare_names a b = compare (to_string a) (to_string b)
-let correct_measurement_type i = i.measurement_type
-
-let string_of_measurement_type = function
-  | MMass -> "Mass"
-  | MVolume -> "Volume"
-  | MCount -> "Count"
-
-let measurement_type_of_string s =
-  match String.lowercase_ascii s with
-  | "mass" -> MMass
-  | "volume" -> MVolume
-  | "count" -> MCount
-  | _ -> failwith ("Count not find measurement type for " ^ s)
+let default_units ing = ing.default_units
