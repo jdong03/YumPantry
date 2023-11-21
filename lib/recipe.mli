@@ -1,6 +1,3 @@
-open Ingredient
-open Quantity
-
 (* Type definition for a recipe *)
 type t
 

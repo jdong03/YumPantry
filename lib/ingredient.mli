@@ -11,7 +11,7 @@ type t
 
 val correct_measurement_type : t -> measurement_type
 
-val ingredient_of_json : Yojson.Basic.t -> t
+val of_json : Yojson.Basic.t -> t
 
 val of_string : string -> t option
 (** Converts a string to a value of type ingredient. *)

@@ -16,7 +16,7 @@ let measurement_type_of_string s =
   | _ -> failwith ("Could not find measurement type \"" ^ s ^ "\"")
 
 (* Convert JSON to ingredient type *)
-let ingredient_of_json json =
+let of_json json =
   {
     name = json |> member "name" |> string_of_mem;
     measurement_type =
@@ -29,7 +29,7 @@ let ingredients_from_file file =
   let json = from_file file in
   (* Match the JSON structure to a list, then convert each element *)
   match json with
-  | `List lst -> List.map ingredient_of_json lst
+  | `List lst -> List.map of_json lst
   | _ -> failwith "Expected a JSON list"
 
 let all_ingredients =
