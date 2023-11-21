@@ -10,7 +10,7 @@ module W = Widget
 
 (** [getValidIngredient s] matches the string s to an ingredient returns
     that ingredient if it is valid. Otherwise, it prompts the user again. *)
-let rec getValidIngredient (input : string) : ingredient option =
+let rec getValidIngredient (input : string) : Ingredient.t option =
   input |> Ingredient.of_string
 
 (* TODO: Infinite recursion if invalid quantity. *)
@@ -37,7 +37,9 @@ let rec action_choice pantry =
     in
 
     let invalid_label =
-      if invalid = true then W.label "Invalid input. Try again." else W.label "Change Pantry" in
+      if invalid = true then W.label "Invalid input. Try again."
+      else W.label "Change Pantry"
+    in
     let food_input = W.text_input ~prompt:"Enter a valid food" () in
     let amount_input = W.text_input ~prompt:"Enter a valid quantity" () in
     let food_label = W.label ("What food would you like to " ^ action ^ "?") in

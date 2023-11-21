@@ -18,7 +18,7 @@ type t = {
 let ingredient_amount_of_json json : Ingredient.t * amount =
   let ing = Ingredient.ingredient_of_json json in
   let quantity =
-    json |> member "quantity" |> mem_to_string |> Quantity.of_string
+    json |> member "quantity" |> string_of_mem |> Quantity.of_string
   in
   match quantity with
   | None ->
@@ -28,15 +28,15 @@ let ingredient_amount_of_json json : Ingredient.t * amount =
 
 let recipe_of_json json : t =
   {
-    title = json |> member "title" |> mem_to_string;
+    title = json |> member "title" |> string_of_mem;
     servings = json |> member "servings" |> to_int;
-    prep_time = json |> member "prep_time" |> mem_to_string;
-    cook_time = json |> member "cook_time" |> mem_to_string;
-    total_time = json |> member "total_time" |> mem_to_string;
+    prep_time = json |> member "prep_time" |> string_of_mem;
+    cook_time = json |> member "cook_time" |> string_of_mem;
+    total_time = json |> member "total_time" |> string_of_mem;
     ingredients =
       json |> member "ingredients" |> to_list
       |> List.map ingredient_amount_of_json;
-    instructions = json |> member "instructions" |> mem_to_string;
+    instructions = json |> member "instructions" |> string_of_mem;
   }
 
 let recipes_from_file file =

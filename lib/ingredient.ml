@@ -1,6 +1,7 @@
 open Quantity
 open Yojson.Basic.Util
 open Yojson.Basic
+open Jsonutil
 
 type measurement_type = MMass | MVolume | MCount
 type t = { name : string; measurement_type : measurement_type }
@@ -17,9 +18,9 @@ let measurement_type_of_string s =
 (* Convert JSON to ingredient type *)
 let ingredient_of_json json =
   {
-    name = json |> member "name" |> to_string |> remove_double_quotes;
+    name = json |> member "name" |> string_of_mem;
     measurement_type =
-      json |> member "measurement_type" |> to_string |> remove_double_quotes
+      json |> member "measurement_type" |> string_of_mem
       |> measurement_type_of_string;
   }
 

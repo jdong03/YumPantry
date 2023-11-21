@@ -1,1 +1,2 @@
-val mem_to_string : Yojson.Basic.t -> string
+(** Convert a JSON member to a string. Properly sanitizes string*)
+val string_of_mem : Yojson.Basic.t -> string
