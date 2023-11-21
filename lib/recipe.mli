@@ -4,9 +4,6 @@ open Quantity
 (* Type definition for a recipe *)
 type t
 
-(* Function to parse an ingredient with its amount from JSON *)
-val ingredient_amount_of_json : Yojson.Basic.t -> ingredient * amount
-
 (** Parse a recipe from JSON *)
 val recipe_of_json : Yojson.Basic.t -> t
 

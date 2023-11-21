@@ -6,19 +6,21 @@ type measurement_type =
   | MVolume
   | MCount
 
-type ingredient = { name : string; measurement_type : measurement_type }
-(** Record representation of an ingredient. *)
+type t
+(** Ingredient type. *)
 
-val ingredient_of_json : Yojson.Basic.t -> ingredient
+val correct_measurement_type : t -> measurement_type
 
-val of_string : string -> ingredient option
+val ingredient_of_json : Yojson.Basic.t -> t
+
+val of_string : string -> t option
 (** Converts a string to a value of type ingredient. *)
 
-val to_string : ingredient -> string
+val to_string : t -> string
 (** Converts a value of type ingredient to a string. *)
 
-val all_ingredients : ingredient list
-(** A list of every ingredient in data/ *)
+val all_ingredients : t list
+(** A list of every ingredient in data/ingredients *)
 
 val string_of_measurement_type : measurement_type -> string
 

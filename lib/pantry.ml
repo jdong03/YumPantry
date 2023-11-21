@@ -1,7 +1,7 @@
 open Ingredient
 open Quantity
 
-type t = (ingredient * amount) list
+type t = (Ingredient.t * amount) list
 
 let empty = []
 
@@ -10,15 +10,15 @@ let set_assoc (k, v) lst =
   (k, v) :: lst_without_assoc
 
 let correct_measurement_type ing a =
-  match (ing.measurement_type, a) with
+  match (Ingredient.correct_measurement_type ing, a) with
   | MMass, Mass _ | MVolume, Volume _ | MCount, Count _ -> true
   | _ -> false
 
-let add (pantry : t) (ing : ingredient) (a : amount) : t =
+let add (pantry : t) (ing : Ingredient.t) (a : amount) : t =
   if not (correct_measurement_type ing a) then
     failwith
       ("Expected an amount of type "
-      ^ string_of_measurement_type ing.measurement_type)
+      ^ string_of_measurement_type (Ingredient.correct_measurement_type ing))
   else
     match List.assoc_opt ing pantry with
     | Some old_a ->
@@ -34,11 +34,11 @@ let add (pantry : t) (ing : ingredient) (a : amount) : t =
     (* There is no binding *)
     | None -> set_assoc (ing, a) pantry
 
-let remove (pantry : t) (ing : ingredient) (a : amount) : t =
+let remove (pantry : t) (ing : Ingredient.t) (a : amount) : t =
   if not (correct_measurement_type ing a) then
     failwith
       ("Expected an amount of type "
-      ^ string_of_measurement_type ing.measurement_type)
+      ^ string_of_measurement_type (Ingredient.correct_measurement_type ing))
   else
     match List.assoc_opt ing pantry with
     | Some old_a ->

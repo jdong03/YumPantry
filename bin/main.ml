@@ -26,12 +26,13 @@ let print_all_recipes () = print_all all_recipes Recipe.to_string
 
 (** [getValidQuantity ()] prompts the user for a quantity and returns
     that quantity if it is valid. Otherwise, it prompts the user again. *)
-let rec getValidQuantity (ingredient : Ingredient.ingredient) () =
+let rec getValidQuantity (ingredient : Ingredient.t) () =
   print_endline
     ("\nHow much "
     ^ Ingredient.to_string ingredient
     ^ " do you want to add? (Measured in "
-    ^ string_of_measurement_type ingredient.measurement_type
+    ^ string_of_measurement_type
+        (Ingredient.correct_measurement_type ingredient)
     ^ ")");
   match read_line () |> Quantity.of_string with
   | None ->

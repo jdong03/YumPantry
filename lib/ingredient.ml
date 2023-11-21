@@ -3,7 +3,7 @@ open Yojson.Basic.Util
 open Yojson.Basic
 
 type measurement_type = MMass | MVolume | MCount
-type ingredient = { name : string; measurement_type : measurement_type }
+type t = { name : string; measurement_type : measurement_type }
 
 let remove_double_quotes s = String.concat "" (String.split_on_char '\"' s)
 
@@ -32,9 +32,9 @@ let ingredients_from_file file =
   | _ -> failwith "Expected a JSON list"
 
 let all_ingredients =
-  let file_names = "data" |> Sys.readdir |> Array.to_list in
+  let file_names = "data/ingredients" |> Sys.readdir |> Array.to_list in
   List.fold_left
-    (fun acc elt -> ingredients_from_file ("data/" ^ elt) @ acc)
+    (fun acc elt -> ingredients_from_file ("data/ingredients/" ^ elt) @ acc)
     [] file_names
 
 let of_string s =
@@ -45,6 +45,7 @@ let of_string s =
 
 let to_string ingredient = ingredient.name
 let compare_names a b = compare (to_string a) (to_string b)
+let correct_measurement_type i = i.measurement_type
 
 let string_of_measurement_type = function
   | MMass -> "Mass"

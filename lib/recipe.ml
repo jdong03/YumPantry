@@ -10,18 +10,20 @@ type t = {
   prep_time : string;
   cook_time : string;
   total_time : string;
-  ingredients : (ingredient * amount) list;
+  ingredients : (Ingredient.t * amount) list;
   instructions : string;
 }
 (** Recipe type *)
 
-let ingredient_amount_of_json json : ingredient * amount =
+let ingredient_amount_of_json json : Ingredient.t * amount =
   let ing = Ingredient.ingredient_of_json json in
   let quantity =
     json |> member "quantity" |> mem_to_string |> Quantity.of_string
   in
   match quantity with
-  | None -> failwith ("Failed to parse quantity for ingredient " ^ ing.name)
+  | None ->
+      failwith
+        ("Failed to parse quantity for ingredient " ^ Ingredient.to_string ing)
   | Some quantity -> (ing, quantity)
 
 let recipe_of_json json : t =
@@ -59,4 +61,4 @@ let to_string (recipe : t) : string =
   ^ "Ingredients:\n" ^ ingredients_str ^ "\n\n" ^ "Instructions:\n"
   ^ recipe.instructions
 
-let all_recipes = recipes_from_file "recipes/recipes.json"
+let all_recipes = recipes_from_file "data/recipes/recipes.json"
