@@ -1,10 +1,10 @@
 open Ingredient
 open Quantity
-open Util
 open Yojson.Basic.Util
 open Yojson.Basic
+open Jsonutil
 
-type recipe = {
+type t = {
   title : string;
   servings : int;
   prep_time : string;
@@ -13,39 +13,28 @@ type recipe = {
   ingredients : (ingredient * amount) list;
   instructions : string;
 }
-
-let parse_int s = int_of_string (String.trim s)
+(** Recipe type *)
 
 let ingredient_amount_of_json json : ingredient * amount =
-  let ing =
-    {
-      name = json |> member "name" |> to_string |> remove_double_quotes;
-      measurement_type =
-        json |> member "measurement_type" |> to_string |> remove_double_quotes
-        |> measurement_type_of_string;
-    }
-  in
+  let ing = Ingredient.ingredient_of_json json in
   let quantity =
-    json |> member "quantity" |> to_string |> remove_double_quotes
-    |> Quantity.of_string
+    json |> member "quantity" |> mem_to_string |> Quantity.of_string
   in
   match quantity with
   | None -> failwith ("Failed to parse quantity for ingredient " ^ ing.name)
   | Some quantity -> (ing, quantity)
 
-let recipe_of_json json : recipe =
+let recipe_of_json json : t =
   {
-    title = json |> member "title" |> to_string |> remove_double_quotes;
+    title = json |> member "title" |> mem_to_string;
     servings = json |> member "servings" |> to_int;
-    prep_time = json |> member "prep_time" |> to_string |> remove_double_quotes;
-    cook_time = json |> member "cook_time" |> to_string |> remove_double_quotes;
-    total_time =
-      json |> member "total_time" |> to_string |> remove_double_quotes;
+    prep_time = json |> member "prep_time" |> mem_to_string;
+    cook_time = json |> member "cook_time" |> mem_to_string;
+    total_time = json |> member "total_time" |> mem_to_string;
     ingredients =
       json |> member "ingredients" |> to_list
       |> List.map ingredient_amount_of_json;
-    instructions =
-      json |> member "instructions" |> to_string |> remove_double_quotes;
+    instructions = json |> member "instructions" |> mem_to_string;
   }
 
 let recipes_from_file file =
@@ -54,7 +43,7 @@ let recipes_from_file file =
   | `List lst -> List.map recipe_of_json lst
   | _ -> failwith "Expected a JSON list"
 
-let to_string (recipe : recipe) : string =
+let to_string (recipe : t) : string =
   let ingredients_str =
     List.map
       (fun (ing, amount) ->
