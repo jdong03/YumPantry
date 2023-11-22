@@ -59,11 +59,20 @@ type units =
 
 type t = float * units
 
-(** TODO: implement this *)
+(** TODO: this is so messy! fix this! *)
 let simplify (q : t) : t =
   match q with
-  | v, VolumeUnit u -> failwith "Can't do!"
-  | m, MassUnit u -> failwith "Can't do"
+  | v, VolumeUnit u ->
+      let teaspoons = convert_volume v u Teaspoon in
+      if teaspoons >= 768.0 then (teaspoons /. 768.0, VolumeUnit Gallon)
+      else if teaspoons >= 192.0 then (teaspoons /. 192.0, VolumeUnit Quart)
+      else if teaspoons >= 96.0 then (teaspoons /. 96.0, VolumeUnit Pint)
+      else if teaspoons >= 48.0 then (teaspoons /. 48.0, VolumeUnit Cup)
+      else if teaspoons >= 24.0 then (teaspoons /. 24.0, VolumeUnit HalfCup)
+      else if teaspoons >= 12.0 then (teaspoons /. 12.0, VolumeUnit QuarterCup)
+      else if teaspoons >= 3.0 then (teaspoons /. 3.0, VolumeUnit Tablespoon)
+      else (v, VolumeUnit Teaspoon)
+  | m, MassUnit u -> (m, MassUnit u)
   | c, CountUnit u -> (c, CountUnit u)
 
 let add q1 q2 =
@@ -132,12 +141,20 @@ let equivalent q1 q2 =
       if u1 <> u2 then None else Some (c1 = c2)
   | _ -> None
 
+let sanitize_string s =
+  let remove_spaces s = String.concat "" (String.split_on_char ' ' s) in
+  let remove_last_if_s s =
+    let len = String.length s in
+    if len > 0 && s.[len - 1] = 's' then String.sub s 0 (len - 1) else s
+  in
+  String.trim s |> String.lowercase_ascii |> remove_spaces |> remove_last_if_s
+
 let volume_unit_of_string s : volume_units option =
-  match String.lowercase_ascii s with
+  match sanitize_string s with
   | "teaspoon" -> Some Teaspoon
   | "tablespoon" -> Some Tablespoon
-  | "quarterCup" -> Some QuarterCup
-  | "halfCup" -> Some HalfCup
+  | "quartercup" -> Some QuarterCup
+  | "halfcup" -> Some HalfCup
   | "cup" -> Some Cup
   | "pint" -> Some Pint
   | "quart" -> Some Quart
@@ -145,13 +162,13 @@ let volume_unit_of_string s : volume_units option =
   | _ -> None
 
 let mass_unit_of_string s : mass_units option =
-  match String.lowercase_ascii s with
+  match sanitize_string s with
   | "ounce" -> Some Ounce
   | "pound" -> Some Pound
   | _ -> None
 
 let count_unit_of_string s : count_units option =
-  match String.lowercase_ascii s with
+  match sanitize_string s with
   | "slice" -> Some Slice
   | "bulb" -> Some Bulb
   | "whole" -> Some Whole
@@ -171,15 +188,16 @@ let units_of_string s : units option =
 (** TODO: this is ugly *)
 let of_string s : t option =
   match String.split_on_char ' ' s with
-  | [ m; units_str ] -> (
-      match (Float.of_string_opt m, units_of_string units_str) with
-      | Some value, Some unit -> Some (value, unit)
-      | _ -> None)
-  | [ c ] -> (
+  | c :: [] -> (
       (* Assuming single number strings are always counts with unit 'Whole' *)
       match Float.of_string_opt c with
       | Some value -> Some (value, CountUnit Whole)
       | None -> None)
+  | m :: units_list -> (
+      let units_str = String.concat "" units_list in
+      match (Float.of_string_opt m, units_of_string units_str) with
+      | Some value, Some unit -> Some (value, unit)
+      | _ -> None)
   | _ -> None
 
 let string_of_volume_unit u =
@@ -204,11 +222,11 @@ let to_string q =
       let amount = Float.to_string f in
       let plural_addition = if f = 1.0 then "" else "s" in
       match units with
-      | MassUnit u -> amount ^ string_of_mass_unit u ^ plural_addition
-      | VolumeUnit u -> amount ^ string_of_volume_unit u ^ plural_addition
+      | MassUnit u -> amount ^ " " ^ string_of_mass_unit u ^ plural_addition
+      | VolumeUnit u -> amount ^ " " ^ string_of_volume_unit u ^ plural_addition
       | CountUnit u ->
           if u = Whole then amount
-          else amount ^ string_of_count_unit u ^ plural_addition)
+          else amount ^ " " ^ string_of_count_unit u ^ plural_addition)
 
 let measurement_type u =
   match u with

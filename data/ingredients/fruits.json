@@ -1,22 +1,22 @@
 [
     {
         "name": "Apple",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     },
     {
         "name": "Pineapple",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     },
     {
         "name": "Green Grape",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     },
     {
         "name": "Red Grape",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     },
     {
         "name": "Dragon Fruit",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     }
 ]

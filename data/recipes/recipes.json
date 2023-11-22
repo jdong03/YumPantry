@@ -8,7 +8,7 @@
     "ingredients": [
       {
         "name": "Baguette",
-        "measurement_type": "Whole",
+        "default_units": "Whole",
         "quantity": "2"
       }
       

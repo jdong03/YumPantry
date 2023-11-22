@@ -1,10 +1,10 @@
 [
     {
         "name": "Cucumber",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     },
     {
         "name": "Lettuce",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     }
 ]

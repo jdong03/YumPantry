@@ -61,6 +61,8 @@ val to_string : t -> string
 
 val same_type_of_units : units -> units -> bool
 
+val units_of_quantity : t -> units
+
 val units_of_string : string -> units option
 
 val units_of_quantity : t -> units

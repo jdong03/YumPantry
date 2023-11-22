@@ -1,22 +1,22 @@
 [
     {
         "name": "Chicken Breast",
-        "measurement_type": "Whole"
+        "default_units": "Whole"
     },
     {
         "name": "Ribeye",
-        "measurement_type": "Ounce"
+        "default_units": "Ounce"
     },
     {
         "name": "Ground Beef",
-        "measurement_type": "Ounce"
+        "default_units": "Ounce"
     },
     {
         "name": "Wagyu",
-        "measurement_type": "Ounce"
+        "default_units": "Ounce"
     },
     {
         "name": "Sirloin",
-        "measurement_type": "Ounce"
+        "default_units": "Ounce"
     }
 ]

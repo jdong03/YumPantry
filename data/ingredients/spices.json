@@ -1,22 +1,22 @@
 [
     {
         "name": "Paprika",
-        "measurement_type": "Teaspoon"
+        "default_units": "Teaspoon"
     },
     {
         "name": "Pepper",
-        "measurement_type": "Teaspoon"
+        "default_units": "Teaspoon"
     },
     {
         "name": "Salt",
-        "measurement_type": "Teaspoon"
+        "default_units": "Teaspoon"
     },
     {
         "name": "Cumin",
-        "measurement_type": "Teaspoon"
+        "default_units": "Teaspoon"
     },
     {
         "name": "Garlic Powder",
-        "measurement_type": "Teaspoon"
+        "default_units": "Teaspoon"
     }
 ]

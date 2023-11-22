@@ -10,7 +10,7 @@ let of_json json =
   {
     name = json |> member "name" |> string_of_mem;
     default_units =
-      (let units_string = json |> member "measurement_type" |> string_of_mem in
+      (let units_string = json |> member "default_units" |> string_of_mem in
        match Quantity.units_of_string units_string with
        | Some u -> u
        | None -> failwith ("Could not find units " ^ units_string));
