@@ -39,7 +39,9 @@ let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
     | Some old_q -> (
         (* There already is a binding  *)
         match Quantity.subtract old_q q with
-        | Some new_q -> set_assoc (ing, new_q) pantry
+        | Some new_q ->
+            if Quantity.is_neg new_q then pantry
+            else set_assoc (ing, new_q) pantry
         | None -> failwith "This should not be possible ")
     (* There is no binding *)
     | None -> pantry

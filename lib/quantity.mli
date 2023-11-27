@@ -68,3 +68,5 @@ val units_of_string : string -> units option
 val units_of_quantity : t -> units
 
 val measurement_type : units -> string
+
+val is_neg : t -> bool

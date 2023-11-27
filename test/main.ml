@@ -163,8 +163,12 @@ let quantity_tests =
         (Quantity.of_string "1.0 gallons" |> construct_quantity) );
   ]
 
-let apple = { name = "Apple"; measurement_type = MCount }
-let beef = { name = "Beef"; measurement_type = MMass }
+let construct_ingredient = function
+  | Some i -> i
+  | None -> failwith "Could not construct ingredient"
+
+let apple = Ingredient.of_string "Apple" |> construct_ingredient
+let beef = Ingredient.of_string "Beef" |> construct_ingredient
 
 let pantry_tests =
   [
@@ -173,66 +177,103 @@ let pantry_tests =
     ( "Empty Remove" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Empty Remove two ingredients" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     (*Add tests*)
     ( "Add one ingredient" >:: fun _ ->
       assert_equal "\n1. of Apple"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients" >:: fun _ ->
-      assert_equal "\n1. of Apple\n8. ounces of Beef"
+      assert_equal "\n1. of Apple\n8. Ounces of Beef"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients of same type" >:: fun _ ->
       assert_equal "\n2. of Apple"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients of same type with different amounts" >:: fun _ ->
       assert_equal "\n3. of Apple"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry apple (Count 2.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     (*Remove tests*)
     ( "Remove one ingredient" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Remove two ingredients" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
+    (* TODO: I'd argue that this should fail instead*)
     ( "Remove more ingredients than pantry has" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry apple (Count 2.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "2.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     (*Reset tests*)
@@ -243,14 +284,20 @@ let pantry_tests =
     ( "Reset pantry with one ingredient" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
     ( "Reset pantry with two ingredients" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
   ]

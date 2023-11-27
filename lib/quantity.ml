@@ -15,6 +15,7 @@ module type Quantity = sig
   val units_of_string : string -> units option
   val units_of_quantity : t -> units
   val measurement_type : units -> string
+  val is_neg : t -> bool
 end
 
 (** Restart ******************************************************************)
@@ -242,3 +243,4 @@ let same_type_of_units u1 u2 =
   | _ -> false
 
 let units_of_quantity (f, u) = u
+let is_neg (q : t) : bool = match q with a, _ -> a <= 0.0
