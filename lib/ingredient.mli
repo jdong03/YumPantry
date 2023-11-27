@@ -1,6 +1,5 @@
 open Quantity
 
-
 type t
 (** Ingredient type. *)
 

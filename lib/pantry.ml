@@ -42,7 +42,7 @@ let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
         | Some new_q -> set_assoc (ing, new_q) pantry
         | None -> failwith "This should not be possible ")
     (* There is no binding *)
-    | None -> set_assoc (ing, q) pantry
+    | None -> pantry
 
 let display pantry =
   List.fold_left
