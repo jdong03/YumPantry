@@ -1,6 +1,7 @@
 open Yum
 open Pantry
 open Ingredient
+open Recipe
 
 (** [getValidIngredient ()] prompts the user for an ingredient and returns
     that ingredient if it is valid. Otherwise, it prompts the user again. *)
@@ -12,22 +13,25 @@ let rec getValidIngredient () =
       getValidIngredient ()
   | Some ingredient -> ingredient
 
-let print_all_ingredients () =
-  let rec print_all lst =
-    match lst with
-    | [] -> ()
-    | h :: t ->
-        print_endline (to_string h);
-        print_all t
-  in
-  print_all all_ingredients
+(** Print all elements in a list using the given to_string method [f]*)
+let rec print_all lst f =
+  match lst with
+  | [] -> ()
+  | h :: t ->
+      print_endline (f h);
+      print_all t f
+
+let print_all_ingredients () = print_all all_ingredients Ingredient.to_string
+let print_all_recipes () = print_all all_recipes Recipe.to_string
 
 (** [getValidQuantity ()] prompts the user for a quantity and returns
     that quantity if it is valid. Otherwise, it prompts the user again. *)
-let rec getValidQuantity ingredient () =
+let rec getValidQuantity (ingredient : Ingredient.t) () =
   print_endline
-    ("\nHow much " ^ to_string ingredient ^ " do you want to add? (Measured in "
-    ^ string_of_measurement_type ingredient.measurement_type
+    ("\nHow much "
+    ^ Ingredient.to_string ingredient
+    ^ " do you want to add? (Measured in "
+    ^ Quantity.measurement_type (Ingredient.default_units ingredient)
     ^ ")");
   match read_line () |> Quantity.of_string with
   | None ->
@@ -41,7 +45,8 @@ let rec action pantry =
   print_endline "";
   print_endline "Please enter what you would like to do: ";
   print_endline
-    "\"add\", \"remove\", \"display\", \"reset\", \"ingredients\", or \"quit\"";
+    "\"add\", \"remove\", \"display\", \"reset\", \"ingredients\", \
+     \"recipes\", or \"quit\"";
   print_string "> ";
 
   match read_line () with
@@ -60,6 +65,10 @@ let rec action pantry =
   | "ingredients" ->
       print_endline "All ingredients:\n";
       print_all_ingredients ();
+      action pantry
+  | "recipes" ->
+      print_endline "All recipes:\n";
+      print_all_recipes ();
       action pantry
   | "display" ->
       let display_text = Pantry.display pantry in

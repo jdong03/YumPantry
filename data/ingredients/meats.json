@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Chicken Breast",
+        "default_units": "Whole"
+    },
+    {
+        "name": "Ribeye",
+        "default_units": "Ounce"
+    },
+    {
+        "name": "Beef",
+        "default_units": "Ounce"
+    },
+    {
+        "name": "Wagyu",
+        "default_units": "Ounce"
+    },
+    {
+        "name": "Sirloin",
+        "default_units": "Ounce"
+    }
+]

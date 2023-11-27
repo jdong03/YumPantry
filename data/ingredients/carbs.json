@@ -1,6 +1,6 @@
 [
     {
         "name": "Baguette",
-        "measurement_type": "Count"
+        "default_units": "Whole"
     }
 ]

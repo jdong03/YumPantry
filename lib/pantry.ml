@@ -1,7 +1,7 @@
 open Ingredient
 open Quantity
 
-type t = (ingredient * amount) list
+type t = (Ingredient.t * Quantity.t) list
 
 let empty = []
 
@@ -9,60 +9,47 @@ let set_assoc (k, v) lst =
   let lst_without_assoc = List.remove_assoc k lst in
   (k, v) :: lst_without_assoc
 
-let correct_measurement_type ing a =
-  match (ing.measurement_type, a) with
-  | MMass, Mass _ | MVolume, Volume _ | MCount, Count _ -> true
-  | _ -> false
+let correct_measurement_type ing q =
+  Quantity.same_type_of_units
+    (Ingredient.default_units ing)
+    (Quantity.units_of_quantity q)
 
-let add (pantry : t) (ing : ingredient) (a : amount) : t =
-  if not (correct_measurement_type ing a) then
-    failwith
-      ("Expected an amount of type "
-      ^ string_of_measurement_type ing.measurement_type)
+let incorrect_measurement_warning ing =
+  "Expected an amount of type "
+  ^ Quantity.measurement_type (Ingredient.default_units ing)
+
+let add (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
+  if not (correct_measurement_type ing q) then
+    failwith (incorrect_measurement_warning ing)
   else
     match List.assoc_opt ing pantry with
-    | Some old_a ->
+    | Some old_q -> (
         (* There already is a binding  *)
-        let new_amount =
-          match (old_a, a) with
-          | Mass m1, Mass m2 -> Mass (Mass.add m1 m2)
-          | Volume v1, Volume v2 -> Volume (Volume.add v1 v2)
-          | Count c1, Count c2 -> Count (c1 +. c2)
-          | _ -> failwith "This should be impossible"
-        in
-        set_assoc (ing, new_amount) pantry
+        match Quantity.add old_q q with
+        | Some new_q -> set_assoc (ing, new_q) pantry
+        | None -> failwith "This should not be possible ")
     (* There is no binding *)
-    | None -> set_assoc (ing, a) pantry
+    | None -> set_assoc (ing, q) pantry
 
-let remove (pantry : t) (ing : ingredient) (a : amount) : t =
-  if not (correct_measurement_type ing a) then
-    failwith
-      ("Expected an amount of type "
-      ^ string_of_measurement_type ing.measurement_type)
+let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
+  if not (correct_measurement_type ing q) then
+    failwith (incorrect_measurement_warning ing)
   else
     match List.assoc_opt ing pantry with
-    | Some old_a ->
-        (* There already is a binding s*)
-        let new_amount =
-          match (old_a, a) with
-          | Mass m1, Mass m2 -> Mass (Mass.subtract m1 m2)
-          | Volume v1, Volume v2 -> Volume (Volume.subtract v1 v2)
-          | Count c1, Count c2 -> Count (c1 -. c2)
-          | _ -> failwith "This should be impossible"
-        in
-        set_assoc (ing, new_amount) pantry
+    | Some old_q -> (
+        (* There already is a binding  *)
+        match Quantity.subtract old_q q with
+        | Some new_q ->
+            if Quantity.is_neg new_q then pantry
+            else set_assoc (ing, new_q) pantry
+        | None -> failwith "This should not be possible ")
     (* There is no binding *)
     | None -> pantry
 
 let display pantry =
   List.fold_left
     (fun acc (ing, amount) ->
-      let amount_string =
-        match amount with
-        | Mass m -> Quantity.Mass.to_string m
-        | Volume v -> Quantity.Volume.to_string v
-        | Count c -> Float.to_string c
-      in
+      let amount_string = Quantity.to_string amount in
       let ingredient_string = Ingredient.to_string ing in
       "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
     "" pantry

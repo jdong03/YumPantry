@@ -7,10 +7,10 @@ type t
 val empty : t
 (* The empty pantry *)
 
-val add : t -> Ingredient.ingredient -> Quantity.amount -> t
+val add : t -> Ingredient.t -> Quantity.t -> t
 (* [add p i a] adds [a] of ingredient [i] to pantry [p] *)
 
-val remove : t -> Ingredient.ingredient -> Quantity.amount -> t
+val remove : t -> Ingredient.t -> Quantity.t -> t
 (* [remove p i a] removes [a] of ingredient [i] from pantry [p] *)
 
 val display : t -> string

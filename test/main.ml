@@ -5,141 +5,170 @@ open Ingredient
 
 let pp_string s = "\"" ^ s ^ "\""
 
-let compare_amounts a1 a2 =
-  match (a1, a2) with
-  | Volume v1, Volume v2 -> Volume.equivalent v1 v2
-  | Mass m1, Mass m2 -> Mass.equivalent m2 m2
-  | Count c1, Count c2 -> c1 = c2
-  | _ -> failwith "amounts are not of the same type!"
+let compare_quantities q1 q2 =
+  match Quantity.equivalent q1 q2 with
+  | Some b -> b
+  | None -> failwith "Quantities are not of the same type!"
 
-let compare_volumes v1 v2 = Volume.equivalent v1 v2
-
-let compare_volume_options v1 v2 =
-  match (v1, v2) with Some v1, Some v2 -> Volume.equivalent v1 v2 | _ -> false
+let construct_quantity = function
+  | Some q -> q
+  | None -> failwith "Could not construct quantity"
 
 let quantity_tests =
   [
-    (* Conversion *)
-    ( "Convert 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Teaspoon))
-        (Volume (Volume.convert (1.0, Teaspoon) Teaspoon)) );
-    ( "Convert 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Tablespoon))
-        (Volume (Volume.convert (3.0, Teaspoon) Tablespoon)) );
-    ( "Convert 3" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Gallon))
-        (Volume (Volume.convert (16.0, Cup) Gallon)) );
     (* Simplification.*)
     ( "Simplify 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Tablespoon))
-        (Volume (Volume.simplify (3.0, Teaspoon))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Tablespoon" |> construct_quantity)
+        (Quantity.of_string "3.0 Teaspoon"
+        |> construct_quantity |> Quantity.simplify) );
     ( "Simplify 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Gallon))
-        (Volume (Volume.simplify (16.0, Cup))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Gallon" |> construct_quantity)
+        (Quantity.of_string "16.0 Cup"
+        |> construct_quantity |> Quantity.simplify) );
     ( "Simplify 3" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Mass (1.0, Pound))
-        (Mass (Mass.simplify (16.0, Ounce))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Pound" |> construct_quantity)
+        (Quantity.of_string "16.0 Ounce"
+        |> construct_quantity |> Quantity.simplify) );
     ( "Simplify 4" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (3.0, QuarterCup))
-        (Volume (Volume.simplify (12.0, Tablespoon))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "3.0 Quarter Cup" |> construct_quantity)
+        (Quantity.of_string "12.0 Tablespoon"
+        |> construct_quantity |> Quantity.simplify) );
     ( "Simplify 5" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (2.0, Teaspoon))
-        (Volume (Volume.simplify (2.0, Teaspoon))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "2.0 Teaspoon" |> construct_quantity)
+        (Quantity.of_string "2.0 Teaspoon"
+        |> construct_quantity |> Quantity.simplify) );
     (* Equality *)
     ( "Equality 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Teaspoon))
-        (Volume (1.0, Teaspoon)) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Teaspoon" |> construct_quantity)
+        (Quantity.of_string "1.0 Teaspoon" |> construct_quantity) );
     ( "Equality 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (5.5, Gallon))
-        (Volume (5.5, Gallon)) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "5.5 Gallon" |> construct_quantity)
+        (Quantity.of_string "5.5 Gallon" |> construct_quantity) );
     ( "Equality 3" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (3.0, Teaspoon))
-        (Volume (1.0, Tablespoon)) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "3.0 Teaspoon" |> construct_quantity)
+        (Quantity.of_string "1.0 Tablespoon" |> construct_quantity) );
     ( "Equality 4" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (3.0, Teaspoon))
-        (Volume (1.0, Tablespoon)) );
-    ( "Equality 4" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (2.5, Cup))
-        (Volume (5.0, HalfCup)) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Tablespoon" |> construct_quantity)
+        (Quantity.of_string "3.0 Teaspoon" |> construct_quantity) );
     ( "Equality 5" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (0.5, Pint))
-        (Volume (16.0, Tablespoon)) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "2.5 Cup" |> construct_quantity)
+        (Quantity.of_string "5.0 HalfCup" |> construct_quantity) );
     ( "Equality 6" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, HalfCup))
-        (Volume (0.5, Cup)) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "0.5 Pint" |> construct_quantity)
+        (Quantity.of_string "16.0 Tablespoon" |> construct_quantity) );
+    ( "Equality 7" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 HalfCup" |> construct_quantity)
+        (Quantity.of_string "0.5 Cup" |> construct_quantity) );
     (* Scaling *)
     ( "Scaling 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (5.0, HalfCup))
-        (Volume (Volume.scale 1.0 (5.0, HalfCup))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "5.0 Half Cup" |> construct_quantity)
+        (Quantity.of_string "5.0 Half Cup"
+        |> construct_quantity |> Quantity.scale 1.0) );
     ( "Scaling 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (0.25, Teaspoon))
-        (Volume (Volume.scale 0.25 (1.0, Teaspoon))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "0.25 Teaspoon" |> construct_quantity)
+        (Quantity.of_string "1.0 Teaspoon"
+        |> construct_quantity |> Quantity.scale 0.25) );
     ( "Scaling 3" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Quart))
-        (Volume (Volume.scale 0.5 (2.0, Quart))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Quart" |> construct_quantity)
+        (Quantity.of_string "2.0 Quart"
+        |> construct_quantity |> Quantity.scale 0.5) );
     (* Addition *)
     ( "Addition 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Tablespoon))
-        (Volume (Volume.add (1.0, Teaspoon) (2.0, Teaspoon))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Tablespoon" |> construct_quantity)
+        (Quantity.add
+           (Quantity.of_string "1.0 Teaspoon" |> construct_quantity)
+           (Quantity.of_string "2.0 Teaspoon" |> construct_quantity)
+        |> construct_quantity) );
     ( "Addition 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (0.0, Teaspoon))
-        (Volume (Volume.add (0.0, Gallon) (0.0, Pint))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "0.0 Tablespoon" |> construct_quantity)
+        (Quantity.add
+           (Quantity.of_string "0.0 Pint" |> construct_quantity)
+           (Quantity.of_string "0.0 Gallon" |> construct_quantity)
+        |> construct_quantity) );
     ( "Addition 3" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (1.0, Gallon))
-        (Volume (Volume.add (3.0, Quart) (2.0, Pint))) );
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Gallons" |> construct_quantity)
+        (Quantity.add
+           (Quantity.of_string "3.0 Quart" |> construct_quantity)
+           (Quantity.of_string "2.0 Pint" |> construct_quantity)
+        |> construct_quantity) );
     (* Subtraction *)
-    ( "Subtraction 1" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (0.0, Tablespoon))
-        (Volume (Volume.subtract (1.0, Gallon) (1.0, Gallon))) );
-    ( "Subtraction 2" >:: fun _ ->
-      assert_equal ~cmp:compare_amounts
-        (Volume (3.0, HalfCup))
-        (Volume (Volume.subtract (2.0, Cup) (1.0, HalfCup))) );
+    ( "Subtract 1" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "0.0 Tablespoon" |> construct_quantity)
+        (Quantity.subtract
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)
+        |> construct_quantity) );
+    ( "Subtract 2" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "3.0 Half Cup" |> construct_quantity)
+        (Quantity.subtract
+           (Quantity.of_string "2.0 Cup" |> construct_quantity)
+           (Quantity.of_string "1.0 Half Cup" |> construct_quantity)
+        |> construct_quantity) );
     (* Less than *)
     ( "Less than 1" >:: fun _ ->
-      assert_equal true (Volume.less_than (1.0, Quart) (1.0, Gallon)) );
+      assert_equal (Some true)
+        (Quantity.less_than
+           (Quantity.of_string "1.0 Quart" |> construct_quantity)
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)) );
     ( "Less than 2" >:: fun _ ->
-      assert_equal false (Volume.less_than (5.0, Quart) (1.0, Gallon)) );
+      assert_equal (Some false)
+        (Quantity.less_than
+           (Quantity.of_string "5.0 Quart" |> construct_quantity)
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)) );
     (* TODO: greater than *)
     (* Of string *)
-    ( "Test 1" >:: fun _ ->
-      assert_equal ~cmp:compare_volume_options
-        (Volume.of_string "3.0 Quart")
-        (Some (3.0, Quart)) );
-    ( "Test 2" >:: fun _ ->
-      assert_equal ~cmp:compare_volume_options
-        (Volume.of_string "30.0 Teaspoon")
-        (Some (30.0, Teaspoon)) );
-    ( "Test 3" >:: fun _ ->
-      assert_equal ~cmp:compare_volume_options
-        (Volume.of_string "0.0 Pint")
-        (Some (0.0, Pint)) );
+    ( "Case of units is irrelevant 1" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Half Cup" |> construct_quantity)
+        (Quantity.of_string "1.0 half cup" |> construct_quantity) );
+    ( "Case of units is irrelevant 2" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 HaLF CuP" |> construct_quantity)
+        (Quantity.of_string "1.0 half cup" |> construct_quantity) );
+    ( "Units can have spaces 1" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 half cup" |> construct_quantity)
+        (Quantity.of_string "1.0 halfcup" |> construct_quantity) );
+    ( "Units can have spaces 2" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 half   cup" |> construct_quantity)
+        (Quantity.of_string "1.0 halfcup" |> construct_quantity) );
+    ( "Units can be plural 1" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 half cups" |> construct_quantity)
+        (Quantity.of_string "1.0 half cup" |> construct_quantity) );
+    ( "Units can be plural 2" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 gallon" |> construct_quantity)
+        (Quantity.of_string "1.0 gallons" |> construct_quantity) );
   ]
 
-let apple = { name = "Apple"; measurement_type = MCount }
-let beef = { name = "Beef"; measurement_type = MMass }
+let construct_ingredient = function
+  | Some i -> i
+  | None -> failwith "Could not construct ingredient"
+
+let apple = Ingredient.of_string "Apple" |> construct_ingredient
+let beef = Ingredient.of_string "Beef" |> construct_ingredient
 
 let pantry_tests =
   [
@@ -148,66 +177,103 @@ let pantry_tests =
     ( "Empty Remove" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Empty Remove two ingredients" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     (*Add tests*)
     ( "Add one ingredient" >:: fun _ ->
       assert_equal "\n1. of Apple"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients" >:: fun _ ->
-      assert_equal "\n1. of Apple\n8. ounces of Beef"
+      assert_equal "\n1. of Apple\n8. Ounces of Beef"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients of same type" >:: fun _ ->
       assert_equal "\n2. of Apple"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients of same type with different amounts" >:: fun _ ->
       assert_equal "\n3. of Apple"
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry apple (Count 2.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     (*Remove tests*)
     ( "Remove one ingredient" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     ( "Remove two ingredients" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
-        |> (fun pantry -> Pantry.remove pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
+    (* TODO: I'd argue that this should fail instead*)
     ( "Remove more ingredients than pantry has" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.remove pantry apple (Count 2.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "2.0" |> construct_quantity))
         |> Pantry.display)
         ~printer:pp_string );
     (*Reset tests*)
@@ -218,14 +284,20 @@ let pantry_tests =
     ( "Reset pantry with one ingredient" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
     ( "Reset pantry with two ingredients" >:: fun _ ->
       assert_equal ""
         (Pantry.empty
-        |> (fun pantry -> Pantry.add pantry apple (Count 1.0))
-        |> (fun pantry -> Pantry.add pantry beef (Mass (8.0, Ounce)))
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
   ]
