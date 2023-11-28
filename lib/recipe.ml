@@ -2,12 +2,25 @@ open Yojson.Basic.Util
 open Yojson.Basic
 open Jsonutil
 
+module type Recipe = sig
+  type t
+
+  val to_string : t -> string
+  val title : t -> string
+  val servings : t -> int
+  val prep_time : t -> float
+  val cook_time : t -> float
+  val instructions : t -> string
+  val ingredients : t -> Ingredient.t list
+  val all_recipes : t list
+end
+
 type t = {
   title : string;
   servings : int;
-  prep_time : string;
-  cook_time : string;
-  total_time : string;
+  prep_time : float;
+  cook_time : float;
+  total_time : float;
   ingredients : (Ingredient.t * Quantity.t) list;
   instructions : string;
 }
@@ -29,9 +42,9 @@ let recipe_of_json json : t =
   {
     title = json |> member "title" |> string_of_mem;
     servings = json |> member "servings" |> to_int;
-    prep_time = json |> member "prep_time" |> string_of_mem;
-    cook_time = json |> member "cook_time" |> string_of_mem;
-    total_time = json |> member "total_time" |> string_of_mem;
+    prep_time = json |> member "prep_time" |> to_float;
+    cook_time = json |> member "cook_time" |> to_float;
+    total_time = json |> member "total_time" |> to_float;
     instructions = json |> member "instructions" |> string_of_mem;
     ingredients =
       json |> member "ingredients" |> to_list |> List.map ing_amount_of_json;
@@ -56,7 +69,18 @@ let to_string (recipe : t) : string =
   in
   "Title: " ^ recipe.title ^ "\n" ^ "Servings: "
   ^ string_of_int recipe.servings
-  ^ "\n" ^ "Prep Time: " ^ recipe.prep_time ^ "\n" ^ "Cook Time: "
-  ^ recipe.cook_time ^ "\n" ^ "Total Time: " ^ recipe.total_time ^ "\n\n"
-  ^ "Ingredients:\n" ^ ingredients_str ^ "\n\n" ^ "Instructions:\n"
+  ^ "\n" ^ "Prep Time: "
+  ^ string_of_float recipe.prep_time
+  ^ "\n" ^ "Cook Time: "
+  ^ string_of_float recipe.cook_time
+  ^ "\n" ^ "Total Time: "
+  ^ string_of_float recipe.total_time
+  ^ "\n\n" ^ "Ingredients:\n" ^ ingredients_str ^ "\n\n" ^ "Instructions:\n"
   ^ recipe.instructions
+
+let title r = r.title
+let servings r = r.servings
+let prep_time r = r.prep_time
+let cook_time r = r.cook_time
+let instructions r = r.instructions
+let ingredients r = r.ingredients
