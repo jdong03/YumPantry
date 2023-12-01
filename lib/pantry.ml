@@ -55,3 +55,8 @@ let display pantry =
     "" pantry
 
 let reset pantry = empty
+
+let rec lookup (pantry : t) (ingred : Ingredient.t * Quantity.t) : bool =
+  match pantry with
+  | [] -> false
+  | (ing, q) :: t -> if ing = fst ingred && q >= snd ingred then true else lookup t ingred

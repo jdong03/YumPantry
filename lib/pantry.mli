@@ -18,3 +18,6 @@ val display : t -> string
 
 val reset : t -> t
 (* [reset p] resets pantry [p] to the empty pantry *)
+
+val lookup : t -> Ingredient.t * Quantity.t -> bool
+(* [lookup p (i, a)] returns true if [p] contains [a] of ingredient [i] *)

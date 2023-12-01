@@ -13,3 +13,6 @@ val ingredients : t -> (Ingredient.t * Quantity.t) list
 
 val all_recipes : t list
 (** A list of all recipes in data/recipes.recipes.json*)
+
+val get_information_from_name : string -> string
+(** Get the instructions for a recipe from its name *)
