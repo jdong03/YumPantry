@@ -31,6 +31,11 @@
 
     ![switch](assets/switch.png)
 
+## Running
+
+* Command line: `make yum`
+* GUI: `make yummy`
+
 ## [Team Contract](/CONTRACT.md)
 
 ## [Roadmap](/ROADMAP.md)
