@@ -40,12 +40,13 @@ let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
         (* There already is a binding  *)
         match Quantity.subtract old_q q with
         | Some new_q ->
-            if Quantity.is_neg new_q then failwith "Not enough ingredients"
+            if Quantity.is_neg new_q then
+              failwith "Not enough ingredients in pantry"
             else if Quantity.is_zero new_q then List.remove_assoc ing pantry
             else set_assoc (ing, new_q) pantry
         | None -> failwith "This should not be possible ")
     (* There is no binding *)
-    | None -> pantry
+    | None -> failwith "Ingredient does not exist in pantry"
 
 let find (pantry : t) (ing : Ingredient.t) : Quantity.t option =
   List.assoc_opt ing pantry
