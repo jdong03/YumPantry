@@ -2,6 +2,8 @@ open Yum
 open Pantry
 open Ingredient
 open Recipe
+open Quantity
+open Match
 
 (** [getValidIngredient ()] prompts the user for an ingredient and returns
     that ingredient if it is valid. Otherwise, it prompts the user again. *)
@@ -21,6 +23,14 @@ let rec print_all lst f =
       print_endline (f h);
       print_all t f
 
+(** Print all elements in a list of recipes *)
+let rec print_all_string lst =
+  match lst with
+  | [] -> ()
+  | h :: t ->
+      print_endline h;
+      print_all_string t
+
 let print_all_ingredients () = print_all all_ingredients Ingredient.to_string
 let print_all_recipes () = print_all all_recipes Recipe.to_string
 
@@ -39,6 +49,16 @@ let rec getValidQuantity (ingredient : Ingredient.t) () =
       getValidQuantity ingredient ()
   | Some x -> x
 
+(** [getValidRecipe ()] prompts the user for a recipe and returns
+    that recipe if it is valid. Otherwise, it prompts the user again. *)
+let rec getValidRecipe () =
+  print_endline "\nWhat recipe would you like to cook: ";
+  match Match.get_selected_recipe (read_line ()) all_recipes  with
+  | None ->
+      print_endline "Invalid recipe. Please try again.\n";
+      getValidRecipe ()
+  | Some recipe -> recipe
+
 (** [action pantry] is the main loop of the program. It prompts the user for
     an action and then executes that action, then recursively loops. *)
 let rec action pantry =
@@ -46,7 +66,7 @@ let rec action pantry =
   print_endline "Please enter what you would like to do: ";
   print_endline
     "\"add\", \"remove\", \"display\", \"reset\", \"ingredients\", \
-     \"recipes\", or \"quit\"";
+     \"recipes\", \"possible recipes\", or \"quit\"";
   print_string "> ";
 
   match read_line () with
@@ -78,6 +98,17 @@ let rec action pantry =
   | "reset" ->
       print_endline "Pantry reset.";
       action (Pantry.reset pantry)
+  | "possible recipes" ->
+        let possible_recipes = Match.display_all_matches pantry all_recipes in
+        if possible_recipes = [] then
+            print_endline "You don't have enough ingredients to make any recipes."
+        else 
+            print_endline "Possible recipes:\n";
+            print_all_string possible_recipes;
+            let recipe = getValidRecipe () in
+            print_endline "\nHere is the recipe:\n";
+            print_endline (Recipe.to_string recipe);
+        action pantry
   | "quit" ->
       print_endline "Goodbye!\n";
       ()
