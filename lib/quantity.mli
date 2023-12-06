@@ -60,13 +60,9 @@ val to_string : t -> string
 (** Converts a quantity to a string.*)
 
 val same_type_of_units : units -> units -> bool
-
 val units_of_quantity : t -> units
-
 val units_of_string : string -> units option
-
 val units_of_quantity : t -> units
-
 val measurement_type : units -> string
-
 val is_neg : t -> bool
+val is_zero : t -> bool

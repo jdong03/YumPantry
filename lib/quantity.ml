@@ -243,4 +243,5 @@ let same_type_of_units u1 u2 =
   | _ -> false
 
 let units_of_quantity (f, u) = u
-let is_neg (q : t) : bool = match q with a, _ -> a <= 0.0
+let is_neg (q : t) : bool = match q with a, _ -> a < 0.0
+let is_zero (q : t) : bool = match q with a, _ -> a = 0.0
