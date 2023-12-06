@@ -42,6 +42,16 @@ let quantity_tests =
         (Quantity.of_string "2.0 Teaspoon" |> construct_quantity)
         (Quantity.of_string "2.0 Teaspoon"
         |> construct_quantity |> Quantity.simplify) );
+    ( "Simplify 6" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Pound" |> construct_quantity)
+        (Quantity.of_string "16.0 Ounce"
+        |> construct_quantity |> Quantity.simplify) );
+    ( "Simplify 7" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Pint" |> construct_quantity)
+        (Quantity.of_string "0.5 Quart"
+        |> construct_quantity |> Quantity.simplify) );
     (* Equality *)
     ( "Equality 1" >:: fun _ ->
       assert_equal ~cmp:compare_quantities
@@ -71,6 +81,14 @@ let quantity_tests =
       assert_equal ~cmp:compare_quantities
         (Quantity.of_string "1.0 HalfCup" |> construct_quantity)
         (Quantity.of_string "0.5 Cup" |> construct_quantity) );
+    ( "Equality 8" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Gallon" |> construct_quantity)
+        (Quantity.of_string "4.0 Quart" |> construct_quantity) );
+    ( "Equality 9" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "2.0 Pound" |> construct_quantity)
+        (Quantity.of_string "32.0 Ounce" |> construct_quantity) );
     (* Scaling *)
     ( "Scaling 1" >:: fun _ ->
       assert_equal ~cmp:compare_quantities
@@ -87,6 +105,16 @@ let quantity_tests =
         (Quantity.of_string "1.0 Quart" |> construct_quantity)
         (Quantity.of_string "2.0 Quart"
         |> construct_quantity |> Quantity.scale 0.5) );
+    ( "Scaling 4" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "5.0 Teaspoon" |> construct_quantity)
+        (Quantity.of_string "2.5 Teaspoon"
+        |> construct_quantity |> Quantity.scale 2.0) );
+    ( "Scaling 5" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "1.0 Tablespoon" |> construct_quantity)
+        (Quantity.of_string "0.25 Tablespoon"
+        |> construct_quantity |> Quantity.scale 4.0) );
     (* Addition *)
     ( "Addition 1" >:: fun _ ->
       assert_equal ~cmp:compare_quantities
@@ -109,6 +137,20 @@ let quantity_tests =
            (Quantity.of_string "3.0 Quart" |> construct_quantity)
            (Quantity.of_string "2.0 Pint" |> construct_quantity)
         |> construct_quantity) );
+    ( "Addition 4" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "3.0 Pint" |> construct_quantity)
+        (Quantity.add
+           (Quantity.of_string "2.0 Pint" |> construct_quantity)
+           (Quantity.of_string "1.0 Pint" |> construct_quantity)
+        |> construct_quantity) );
+    ( "Addition 5" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "7.0 Quart" |> construct_quantity)
+        (Quantity.add
+           (Quantity.of_string "3.0 Quart" |> construct_quantity)
+           (Quantity.of_string "4.0 Quart" |> construct_quantity)
+        |> construct_quantity) );
     (* Subtraction *)
     ( "Subtract 1" >:: fun _ ->
       assert_equal ~cmp:compare_quantities
@@ -124,6 +166,20 @@ let quantity_tests =
            (Quantity.of_string "2.0 Cup" |> construct_quantity)
            (Quantity.of_string "1.0 Half Cup" |> construct_quantity)
         |> construct_quantity) );
+    ( "Subtract 3" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "0.5 Pint" |> construct_quantity)
+        (Quantity.subtract
+           (Quantity.of_string "1.0 Pint" |> construct_quantity)
+           (Quantity.of_string "0.5 Pint" |> construct_quantity)
+        |> construct_quantity) );
+    ( "Subtract 4" >:: fun _ ->
+      assert_equal ~cmp:compare_quantities
+        (Quantity.of_string "2.0 Tablespoon" |> construct_quantity)
+        (Quantity.subtract
+           (Quantity.of_string "3.0 Tablespoon" |> construct_quantity)
+           (Quantity.of_string "1.0 Tablespoon" |> construct_quantity)
+        |> construct_quantity) );
     (* Less than *)
     ( "Less than 1" >:: fun _ ->
       assert_equal (Some true)
@@ -135,7 +191,42 @@ let quantity_tests =
         (Quantity.less_than
            (Quantity.of_string "5.0 Quart" |> construct_quantity)
            (Quantity.of_string "1.0 Gallon" |> construct_quantity)) );
-    (* TODO: greater than *)
+    ( "Less than 3" >:: fun _ ->
+      assert_equal (Some true)
+        (Quantity.less_than
+           (Quantity.of_string "1.0 Pint" |> construct_quantity)
+           (Quantity.of_string "2.0 Pint" |> construct_quantity)) );
+    ( "Less than 4" >:: fun _ ->
+      assert_equal (Some true)
+        (Quantity.less_than
+           (Quantity.of_string "4.0 Quart" |> construct_quantity)
+           (Quantity.of_string "2.0 Gallon" |> construct_quantity)) );
+    (* Greater than *)
+    ( "Greater than 1" >:: fun _ ->
+      assert_equal (Some false)
+        (Quantity.greater_than
+           (Quantity.of_string "1.0 Quart" |> construct_quantity)
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)) );
+    ( "Greater than 2" >:: fun _ ->
+      assert_equal (Some true)
+        (Quantity.greater_than
+           (Quantity.of_string "5.0 Quart" |> construct_quantity)
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)) );
+    ( "Greater than 3" >:: fun _ ->
+      assert_equal (Some false)
+        (Quantity.greater_than
+           (Quantity.of_string "1.0 Pint" |> construct_quantity)
+           (Quantity.of_string "2.0 Pint" |> construct_quantity)) );
+    ( "Greater than 4" >:: fun _ ->
+      assert_equal (Some false)
+        (Quantity.greater_than
+           (Quantity.of_string "4.0 Quart" |> construct_quantity)
+           (Quantity.of_string "2.0 Gallon" |> construct_quantity)) );
+    ( "Greater than 5" >:: fun _ ->
+      assert_equal (Some true)
+        (Quantity.greater_than
+           (Quantity.of_string "3.0 Gallon" |> construct_quantity)
+           (Quantity.of_string "2.0 Gallon" |> construct_quantity)) );
     (* Of string *)
     ( "Case of units is irrelevant 1" >:: fun _ ->
       assert_equal ~cmp:compare_quantities
@@ -161,6 +252,35 @@ let quantity_tests =
       assert_equal ~cmp:compare_quantities
         (Quantity.of_string "1.0 gallon" |> construct_quantity)
         (Quantity.of_string "1.0 gallons" |> construct_quantity) );
+    ( "Invalid String 1" >:: fun _ ->
+      assert_equal None (Quantity.of_string "abc Teaspoon") );
+    (* To String *)
+    ( "To String 1" >:: fun _ ->
+      assert_equal "1. Gallon"
+        (Quantity.to_string
+           (Quantity.of_string "1.0 Gallon" |> construct_quantity)) );
+    (* Is Negative *)
+    ( "Is Negative 1" >:: fun _ ->
+      assert_equal true
+        (Quantity.is_neg
+           (Quantity.of_string "-1.0 Quart" |> construct_quantity)) );
+    (* Is Zero *)
+    ( "Is Zero 1" >:: fun _ ->
+      assert_equal true
+        (Quantity.is_zero
+           (Quantity.of_string "0.0 Quart" |> construct_quantity)) );
+    ( "Is Zero 2" >:: fun _ ->
+      assert_equal true
+        (Quantity.is_zero
+           (Quantity.of_string "0.0 Gallon" |> construct_quantity)) );
+    ( "Is Zero 3" >:: fun _ ->
+      assert_equal true
+        (Quantity.is_zero
+           (Quantity.of_string "0.0 Ounce" |> construct_quantity)) );
+    ( "Is Zero 4" >:: fun _ ->
+      assert_equal true
+        (Quantity.is_zero
+           (Quantity.of_string "0.0 Pound" |> construct_quantity)) );
   ]
 
 let construct_ingredient = function
