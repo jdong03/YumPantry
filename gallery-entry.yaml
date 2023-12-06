@@ -24,5 +24,7 @@ demo-video-url: ""
 # Write a short, attention-grabbing description of your project.
 desc: >
   Our project is an interactive food pantry and recipe recommendation system. 
-  It will track the ingredients stored in the user’s pantry, fridge, etc, and 
-  will recommend recipes that only use ingredients possessed by the user.
+  The pantry is designed to keep an accurate and real-time track of ingredients 
+  stored in the user’s pantry, fridge, and other storage areas. In addition, our
+  system will recommend recipes based on the ingredients stored in the user’s
+  pantry.
