@@ -51,6 +51,7 @@ let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
 let find (pantry : t) (ing : Ingredient.t) : Quantity.t option =
   List.assoc_opt ing pantry
 
+(* TODO CHECK IF WE WANT TO KEEP CHECK_CONTAINS OR LOOKUP *)
 let check_contains (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : bool =
   match List.assoc_opt ing pantry with
   | Some old_q -> (
@@ -60,6 +61,9 @@ let check_contains (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : bool =
       | None -> failwith "This should not be possible ")
   (* There is no binding *)
   | None -> false
+
+let distinct_ingredients (pantry : t) : int =
+  List.fold_left (fun acc _ -> acc + 1) 0 pantry
 
 let display pantry =
   List.fold_left

@@ -21,6 +21,10 @@ val check_contains : t -> Ingredient.t -> Quantity.t -> bool
 (* [check_contains p i a] returns true if pantry [p] contains [a] of
    ingredient [i] *)
 
+val distinct_ingredients : t -> int
+(* [distinct_ingredients p] returns the number of distinct ingredients
+   in pantry [p] *)
+
 val display : t -> string
 (* [display p] returns a string representation of pantry [p] *)
 

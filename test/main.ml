@@ -588,29 +588,29 @@ let pantry_tests =
           Pantry.remove pantry apple
             (Quantity.of_string "2.0" |> construct_quantity)
           |> fun pantry -> Pantry.find pantry apple ) );
-    (* Check Contains tests*)
-    ( "Contains empty pantry" >:: fun _ ->
+    (* Lookup tests*)
+    ( "Lookup empty pantry" >:: fun _ ->
       assert_equal false
         ( Pantry.empty |> fun pantry ->
-          Pantry.check_contains pantry apple
-            (Quantity.of_string "1.0" |> construct_quantity) ) );
-    ( "Contains one ingredient" >:: fun _ ->
+          Pantry.lookup pantry
+            (apple, Quantity.of_string "1.0" |> construct_quantity) ) );
+    ( "Lookup one ingredient" >:: fun _ ->
       assert_equal true
         ( ( Pantry.empty |> fun pantry ->
             Pantry.add pantry apple
               (Quantity.of_string "1.0" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.check_contains pantry apple
-            (Quantity.of_string "1.0" |> construct_quantity) ) );
-    ( "Contains one ingredient beef" >:: fun _ ->
+          Pantry.lookup pantry
+            (apple, Quantity.of_string "1.0" |> construct_quantity) ) );
+    ( "Lookup one ingredient beef" >:: fun _ ->
       assert_equal true
         ( ( Pantry.empty |> fun pantry ->
             Pantry.add pantry beef
               (Quantity.of_string "12.0 Ounce" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.check_contains pantry beef
-            (Quantity.of_string "8.0 Ounce" |> construct_quantity) ) );
-    ( "Contains for pantry with two ingredients" >:: fun _ ->
+          Pantry.lookup pantry
+            (beef, Quantity.of_string "8.0 Ounce" |> construct_quantity) ) );
+    ( "Lookup for pantry with two ingredients" >:: fun _ ->
       assert_equal true
         ( ( ( Pantry.empty |> fun pantry ->
               Pantry.add pantry apple
@@ -619,9 +619,9 @@ let pantry_tests =
             Pantry.add pantry beef
               (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.check_contains pantry apple
-            (Quantity.of_string "0.5" |> construct_quantity) ) );
-    ( "Contains for pantry with two ingredients of same type added" >:: fun _ ->
+          Pantry.lookup pantry
+            (apple, Quantity.of_string "0.5" |> construct_quantity) ) );
+    ( "Lookup for pantry with two ingredients of same type added" >:: fun _ ->
       assert_equal true
         ( ( ( Pantry.empty |> fun pantry ->
               Pantry.add pantry apple
@@ -630,9 +630,9 @@ let pantry_tests =
             Pantry.add pantry apple
               (Quantity.of_string "1.0" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.check_contains pantry apple
-            (Quantity.of_string "2.0" |> construct_quantity) ) );
-    ( "Contains for pantry with two ingredients of same type in different \
+          Pantry.lookup pantry
+            (apple, Quantity.of_string "2.0" |> construct_quantity) ) );
+    ( "Lookup for pantry with two ingredients of same type in different \
        amounts added"
     >:: fun _ ->
       assert_equal true
@@ -643,8 +643,8 @@ let pantry_tests =
             Pantry.add pantry apple
               (Quantity.of_string "1.0" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.check_contains pantry apple
-            (Quantity.of_string "3.0" |> construct_quantity) ) );
+          Pantry.lookup pantry
+            (apple, Quantity.of_string "3.0" |> construct_quantity) ) );
     ( "Contains ingredient with multiple ingredient in pantry" >:: fun _ ->
       assert_equal false
         ( ( ( Pantry.empty |> fun pantry ->
@@ -654,8 +654,46 @@ let pantry_tests =
             Pantry.add pantry beef
               (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.check_contains pantry apple
-            (Quantity.of_string "2.0" |> construct_quantity) ) );
+          Pantry.lookup pantry
+            (apple, Quantity.of_string "2.0" |> construct_quantity) ) );
+    (* Distinct Ingredients tests *)
+    ( "Distinct Ingredients empty pantry" >:: fun _ ->
+      assert_equal 0 (Pantry.empty |> Pantry.distinct_ingredients) );
+    ( "Distinct Ingredients one ingredient" >:: fun _ ->
+      assert_equal 1
+        ( Pantry.empty |> fun pantry ->
+          Pantry.add pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
+    ( "Distinct Ingredients two ingredients" >:: fun _ ->
+      assert_equal 2
+        ( ( Pantry.empty |> fun pantry ->
+            Pantry.add pantry apple
+              (Quantity.of_string "1.0" |> construct_quantity) )
+        |> fun pantry ->
+          Pantry.add pantry beef
+            (Quantity.of_string "8.0 Ounce" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
+    ( "Distinct Ingredients two ingredients of same type" >:: fun _ ->
+      assert_equal 1
+        ( ( Pantry.empty |> fun pantry ->
+            Pantry.add pantry apple
+              (Quantity.of_string "1.0" |> construct_quantity) )
+        |> fun pantry ->
+          Pantry.add pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
+    ( "Distinct Ingredients two ingredients of same type with different\n\
+      \       amounts"
+    >:: fun _ ->
+      assert_equal 1
+        ( ( Pantry.empty |> fun pantry ->
+            Pantry.add pantry apple
+              (Quantity.of_string "2.0" |> construct_quantity) )
+        |> fun pantry ->
+          Pantry.add pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
     (*Reset tests*)
     ( "Reset empty pantry" >:: fun _ ->
       assert_equal ""
