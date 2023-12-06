@@ -645,7 +645,7 @@ let pantry_tests =
         |> fun pantry ->
           Pantry.lookup pantry
             (apple, Quantity.of_string "3.0" |> construct_quantity) ) );
-    ( "Contains ingredient with multiple ingredient in pantry" >:: fun _ ->
+    ( "Lookup ingredient with multiple ingredient in pantry" >:: fun _ ->
       assert_equal false
         ( ( ( Pantry.empty |> fun pantry ->
               Pantry.add pantry apple
@@ -674,6 +674,18 @@ let pantry_tests =
           Pantry.add pantry beef
             (Quantity.of_string "8.0 Ounce" |> construct_quantity)
           |> Pantry.distinct_ingredients ) );
+    ( " Distinct Ingredients three ingredients" >:: fun _ ->
+      assert_equal 3
+        ( ( ( Pantry.empty |> fun pantry ->
+              Pantry.add pantry apple
+                (Quantity.of_string "1.0" |> construct_quantity) )
+          |> fun pantry ->
+            Pantry.add pantry beef
+              (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
+        |> fun pantry ->
+          Pantry.add pantry ribeye
+            (Quantity.of_string "1000.0 Ounce" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
     ( "Distinct Ingredients two ingredients of same type" >:: fun _ ->
       assert_equal 1
         ( ( Pantry.empty |> fun pantry ->
@@ -693,6 +705,43 @@ let pantry_tests =
         |> fun pantry ->
           Pantry.add pantry apple
             (Quantity.of_string "1.0" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
+    ( "Distinct Ingredients after remove ingredient from pantry" >:: fun _ ->
+      assert_equal 2
+        ( ( ( Pantry.empty |> fun pantry ->
+              Pantry.add pantry apple
+                (Quantity.of_string "1.0" |> construct_quantity) )
+          |> fun pantry ->
+            Pantry.add pantry beef
+              (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
+        |> fun pantry ->
+          Pantry.add pantry ribeye
+            (Quantity.of_string "1000.0 Ounce" |> construct_quantity)
+          |> fun pantry ->
+          Pantry.remove pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity)
+          |> Pantry.distinct_ingredients ) );
+    ( " Distinct Ingredients after remove all ingredients from pantry"
+    >:: fun _ ->
+      assert_equal 0
+        ( ( ( Pantry.empty |> fun pantry ->
+              Pantry.add pantry apple
+                (Quantity.of_string "1.0" |> construct_quantity) )
+          |> fun pantry ->
+            Pantry.add pantry beef
+              (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
+        |> fun pantry ->
+          Pantry.add pantry ribeye
+            (Quantity.of_string "1000.0 Ounce" |> construct_quantity)
+          |> fun pantry ->
+          Pantry.remove pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity)
+          |> fun pantry ->
+          Pantry.remove pantry beef
+            (Quantity.of_string "8.0 Ounce" |> construct_quantity)
+          |> fun pantry ->
+          Pantry.remove pantry ribeye
+            (Quantity.of_string "1000.0 Ounce" |> construct_quantity)
           |> Pantry.distinct_ingredients ) );
     (*Reset tests*)
     ( "Reset empty pantry" >:: fun _ ->

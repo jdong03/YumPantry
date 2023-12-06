@@ -36,6 +36,20 @@
 * Command line: `make yum`
 * GUI: `make yummy`
 
+## Checking LOC
+
+1. Install cloc using homebrew (install homebrew if neccesary)
+
+    ```text
+    brew install cloc
+    ```
+
+2. Run command in source directory
+
+    ```text
+    cloc --by-file --include-lang=OCaml .
+    ```
+    
 ## [Team Contract](/CONTRACT.md)
 
 ## [Roadmap](/ROADMAP.md)
