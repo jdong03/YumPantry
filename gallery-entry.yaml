@@ -26,5 +26,5 @@ desc: >
   Our project is an interactive food pantry and recipe recommendation system. 
   The pantry is designed to keep an accurate and real-time track of ingredients 
   stored in the user’s pantry, fridge, and other storage areas. In addition, our
-  system will recommend recipes based on the ingredients stored in the user’s
-  pantry.
+  system suggets a variety of recipes based on the current ingredients stored in 
+  the user’s pantry.
