@@ -175,24 +175,22 @@ let pantry_tests =
     (*Empty pantry*)
     ("Empty Test" >:: fun _ -> assert_equal "" (Pantry.display Pantry.empty));
     ( "Empty Remove" >:: fun _ ->
-      assert_equal ""
-        (Pantry.empty
-        |> (fun pantry ->
-             Pantry.remove pantry apple
-               (Quantity.of_string "1.0" |> construct_quantity))
-        |> Pantry.display)
-        ~printer:pp_string );
+      assert_raises (Failure "Ingredient does not exist in pantry") (fun () ->
+          Pantry.empty
+          |> (fun pantry ->
+               Pantry.remove pantry apple
+                 (Quantity.of_string "1.0" |> construct_quantity))
+          |> Pantry.display) );
     ( "Empty Remove two ingredients" >:: fun _ ->
-      assert_equal ""
-        (Pantry.empty
-        |> (fun pantry ->
-             Pantry.remove pantry apple
-               (Quantity.of_string "1.0" |> construct_quantity))
-        |> (fun pantry ->
-             Pantry.remove pantry beef
-               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
-        |> Pantry.display)
-        ~printer:pp_string );
+      assert_raises (Failure "Ingredient does not exist in pantry") (fun () ->
+          Pantry.empty
+          |> (fun pantry ->
+               Pantry.remove pantry apple
+                 (Quantity.of_string "1.0" |> construct_quantity))
+          |> (fun pantry ->
+               Pantry.remove pantry beef
+                 (Quantity.of_string "8.0 Ounce" |> construct_quantity))
+          |> Pantry.display) );
     (*Add tests*)
     ( "Add one ingredient" >:: fun _ ->
       assert_equal "\n1. of Apple"
@@ -265,7 +263,7 @@ let pantry_tests =
         |> Pantry.display)
         ~printer:pp_string );
     ( "Remove more ingredients than pantry has" >:: fun _ ->
-      assert_raises (Failure "Not enough ingredients") (fun () ->
+      assert_raises (Failure "Not enough ingredients in pantry") (fun () ->
           Pantry.empty
           |> (fun pantry ->
                Pantry.add pantry apple
@@ -273,6 +271,43 @@ let pantry_tests =
           |> (fun pantry ->
                Pantry.remove pantry apple
                  (Quantity.of_string "2.0" |> construct_quantity))
+          |> Pantry.display) );
+    ( "Remove ingredient that does not exist in pantry" >:: fun _ ->
+      assert_raises (Failure "Ingredient does not exist in pantry") (fun () ->
+          Pantry.empty
+          |> (fun pantry ->
+               Pantry.add pantry apple
+                 (Quantity.of_string "1.0" |> construct_quantity))
+          |> (fun pantry ->
+               Pantry.remove pantry beef
+                 (Quantity.of_string "8.0 Ounce" |> construct_quantity))
+          |> Pantry.display) );
+    ( "Remove ingredient with multiple ingredient in pantry" >:: fun _ ->
+      assert_equal "\n8. Ounces of Beef"
+        (Pantry.empty
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "2.0" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.add pantry beef
+               (Quantity.of_string "8.0 Ounce" |> construct_quantity))
+        |> (fun pantry ->
+             Pantry.remove pantry apple
+               (Quantity.of_string "2.0" |> construct_quantity))
+        |> Pantry.display)
+        ~printer:pp_string );
+    ( "Remove ingredient with multiple ingredient in pantry 3" >:: fun _ ->
+      assert_raises (Failure "Not enough ingredients in pantry") (fun () ->
+          Pantry.empty
+          |> (fun pantry ->
+               Pantry.add pantry apple
+                 (Quantity.of_string "2.0" |> construct_quantity))
+          |> (fun pantry ->
+               Pantry.add pantry beef
+                 (Quantity.of_string "8.0 Ounce" |> construct_quantity))
+          |> (fun pantry ->
+               Pantry.remove pantry apple
+                 (Quantity.of_string "3.0" |> construct_quantity))
           |> Pantry.display) );
     (*Find tests*)
     ( "Find empty pantry" >:: fun _ ->
