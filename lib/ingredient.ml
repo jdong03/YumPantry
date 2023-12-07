@@ -59,9 +59,10 @@ let len_s1 = String.length s1 in
 
 (* [match_string s] "autocorrects" s by matching it to an ingredient in 
    Ingredient.al_ingredients. Returns the ingredient that has the lowest 
-   Levenshtein distance with s if the distance is less than 3. Returns None otherwise. *)
+   Levenshtein distance with s if the distance is less than 3. 
+    Returns None otherwise. *)
 let match_string (s : string) : t option = 
-  let rec match_string_helper (s : string) (lst : t list) (acc : int * t) : (int * t) = 
+  let rec match_string_helper s lst acc = 
     match lst with 
       | [] -> acc
       | h :: t -> begin
@@ -73,7 +74,8 @@ let match_string (s : string) : t option =
         end
       in
   let first_ingredient = List.hd all_ingredients in 
-  match match_string_helper s all_ingredients (String.length s, first_ingredient) with 
+  match match_string_helper s all_ingredients 
+    (String.length s, first_ingredient) with 
     | (score, ing) -> if score < 3 then Some ing else None
 
 let of_string s =
