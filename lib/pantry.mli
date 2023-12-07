@@ -17,10 +17,6 @@ val find : t -> Ingredient.t -> Quantity.t option
 (** [find p i] returns the quantity of ingredient [i] in pantry [p].
    Returns None if ingredient [i] does not exist in pantry*)
 
-val check_contains : t -> Ingredient.t -> Quantity.t -> bool
-(** [check_contains p i a] returns true if pantry [p] contains [a] of
-   ingredient [i] *)
-
 val distinct_ingredients : t -> int
 (** [distinct_ingredients p] returns the number of distinct ingredients
    in pantry [p] *)

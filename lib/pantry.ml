@@ -51,17 +51,6 @@ let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
 let find (pantry : t) (ing : Ingredient.t) : Quantity.t option =
   List.assoc_opt ing pantry
 
-(* TODO CHECK IF WE WANT TO KEEP CHECK_CONTAINS OR LOOKUP *)
-let check_contains (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : bool =
-  match List.assoc_opt ing pantry with
-  | Some old_q -> (
-      (* There already is a binding  *)
-      match Quantity.subtract old_q q with
-      | Some new_q -> not (Quantity.is_neg new_q)
-      | None -> failwith "This should not be possible ")
-  (* There is no binding *)
-  | None -> false
-
 let distinct_ingredients (pantry : t) : int =
   List.fold_left (fun acc _ -> acc + 1) 0 pantry
 
@@ -76,7 +65,13 @@ let display pantry =
 let reset pantry = empty
 
 let rec lookup (pantry : t) (ingred : Ingredient.t * Quantity.t) : bool =
-  match pantry with
-  | [] -> false
-  | (ing, q) :: t ->
-      if ing = fst ingred && q >= snd ingred then true else lookup t ingred
+  match ingred with
+  | ing, q -> (
+      match List.assoc_opt ing pantry with
+      | Some old_q -> (
+          (* There already is a binding  *)
+          match Quantity.subtract old_q q with
+          | Some new_q -> not (Quantity.is_neg new_q)
+          | None -> failwith "This should not be possible ")
+      (* There is no binding *)
+      | None -> false)
