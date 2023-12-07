@@ -2,6 +2,7 @@ open OUnit2
 open Yum
 open Quantity
 open Ingredient
+open Match
 
 (* TODO Write Test Plan explaning approach to testing: what you tested, anything
      you omitted testing, and why you believe that your test suite demonstrates
@@ -369,6 +370,10 @@ let construct_ingredient = function
 let apple = Ingredient.of_string "Apple" |> construct_ingredient
 let beef = Ingredient.of_string "Beef" |> construct_ingredient
 let ribeye = Ingredient.of_string "Ribeye" |> construct_ingredient
+let baguette = Ingredient.of_string "Baguette" |> construct_ingredient
+
+let all_recipes = Recipe.all_recipes
+let fst_recipe = List.hd all_recipes
 
 let pantry_tests =
   [
@@ -792,6 +797,61 @@ let pantry_tests =
                (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
+    (*Match: can_make_recipe tests*)
+    ("Cannot make recipe if pantry is empty" >:: fun _ ->
+      assert_equal false (Pantry.empty |> Match.can_make_recipe fst_recipe));
+    ("Cannot make recipe if pantry does not have enough ingredients" >:: fun _ ->
+      assert_equal false
+        (Pantry.empty
+        |> (fun pantry ->
+             Pantry.add pantry baguette
+               (Quantity.of_string "1.0" |> construct_quantity))
+        |> Match.can_make_recipe fst_recipe));
+    ("Can make recipe if pantry has enough ingredients" >:: fun _ ->
+      assert_equal true
+        (Pantry.empty
+        |> (fun pantry ->
+             Pantry.add pantry baguette
+               (Quantity.of_string "2.0" |> construct_quantity))
+        |> Match.can_make_recipe fst_recipe));
+    ("Cannot make recipe if pantry has the wrong ingredients" >:: fun _ ->
+      assert_equal false
+        (Pantry.empty
+        |> (fun pantry ->
+             Pantry.add pantry apple
+               (Quantity.of_string "2.0" |> construct_quantity))
+        |> Match.can_make_recipe fst_recipe));
+    ("get_all_recipes gets all recipes" >:: fun _ ->
+      assert_equal 1 (Recipe.all_recipes |> List.length));
+    ("display_all_matches displays no matches if pantry is empty" >:: fun _ ->
+      assert_equal []
+        (Match.display_all_matches Pantry.empty all_recipes));
+    ("display_all_matches displays no matches if pantry does not have enough \
+      ingredients"
+    >:: fun _ ->
+      assert_equal []
+        (let pantry = Pantry.add Pantry.empty baguette 
+        (Quantity.of_string "1.0" |> construct_quantity) in
+         Match.display_all_matches pantry all_recipes));
+    ("display_all_matchess displays matches if pantry has enough ingredients" 
+      >:: fun _ ->
+      assert_equal ["Chocolate Chip Cookies"]
+        (let pantry = Pantry.add Pantry.empty baguette 
+        (Quantity.of_string "2.0" |> construct_quantity) in
+         Match.display_all_matches pantry all_recipes));
+    ("display_all_matches displays matches if pantry has the wrong ingredients" 
+      >:: fun _ ->
+      assert_equal []
+        (let pantry = Pantry.add Pantry.empty apple 
+        (Quantity.of_string "2.0" |> construct_quantity) in
+         Match.display_all_matches pantry all_recipes));
+    ("get_selected_recipe returns None if no recipe is selected" >:: fun _ ->
+      assert_equal None (Match.get_selected_recipe "" all_recipes));
+    ("get_selected_recipe returns None if recipe does not exist" >:: fun _ ->
+      assert_equal None (Match.get_selected_recipe "Ratatouille" all_recipes));
+    ("get_selected_recipe returns Some recipe if recipe exists" >:: fun _ ->
+      assert_equal (Some fst_recipe) 
+      (Match.get_selected_recipe "Chocolate Chip Cookies" all_recipes));
   ]
 
 let ingredient_autocorrect_tests = 
