@@ -790,5 +790,22 @@ let pantry_tests =
         ~printer:pp_string );
   ]
 
-let suite = "test suite" >::: List.flatten [ quantity_tests; pantry_tests ]
+let ingredient_autocorrect_tests = 
+  [
+  ("to_string |> of_string yields the same ingredient that was inputted" >:: 
+  (fun _ -> assert_equal (Some apple) (apple |> Ingredient.to_string |> Ingredient.of_string)));
+  ("of_string |> to_string yields the same string that was inputted with the first letter capitalized" >::
+  fun _ -> assert_equal "Apple" ("apple" |> Ingredient.of_string |> Option.get |> Ingredient.to_string)
+  ~printer: pp_string );
+  ("of_string autocorrect with Levenshtein distance of 1" >::
+  fun _ -> assert_equal ("Apple") ("appl" |> Ingredient.of_string |> Option.get |> Ingredient.to_string)
+  ~printer: pp_string);
+  ("of_string autocorrect with Levenshtein distance of 2" >::
+  fun _ -> assert_equal ("Apple") ("appel" |> Ingredient.of_string |> Option.get |> Ingredient.to_string)
+  ~printer: pp_string);
+  ("of_string autocorrect fails with Levenshtein distance of 3" >::
+  fun _ -> assert_equal None (Ingredient.of_string "ppelp"));
+  ]
+
+let suite = "test suite" >::: List.flatten [ quantity_tests; pantry_tests; ingredient_autocorrect_tests]
 let () = run_test_tt_main suite

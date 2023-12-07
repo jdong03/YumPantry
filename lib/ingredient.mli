@@ -1,15 +1,16 @@
-open Quantity
-
 type t
-(** Ingredient type. *)
+(** The type representing an ingredient. *)
 
 val of_json : Yojson.Basic.t -> t
 
-val of_string : string -> t option
-(** Converts a string to a value of type ingredient. *)
-
 val to_string : t -> string
 (** Converts a value of type ingredient to a string. *)
+
+val of_string : string -> t option
+(** [of_string s] returns [Some ing] if the Levenshtein distance 
+    between s and [to_string ing] is the lowest between s and all 
+    possible ingredients, and is less than 3. 
+    - Returns [None] otherwise. *)
 
 val all_ingredients : t list
 (** A list of every ingredient in data/ingredients *)
