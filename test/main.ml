@@ -46,6 +46,10 @@ open Ingredient
     and checking for specific quantities. After completing the functions, we wrote
     additional tests to ensure that edge cases were handled properly and that we
     were achieving branch coverage.
+    - Ingredient tests primarily utilized black box testing, focusing on the 
+    autocorrect feature of the of_string function. Although we needed to know the 
+    general autocorrect algorithm used, black box testing was used from there
+    to verify the correctness of the implementation Levenshtein distance calculations.
 
     Omitted Unit Tests:
     - Certain complex integration scenarios involving simultaneous interactions
