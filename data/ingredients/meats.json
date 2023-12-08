@@ -18,5 +18,9 @@
     {
         "name": "Sirloin",
         "default_units": "Ounce"
+    },
+    {
+        "name": "Eggs",
+        "default_units": "Whole"
     }
 ]
