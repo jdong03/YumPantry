@@ -4,20 +4,7 @@ open Quantity
 open Ingredient
 open Match
 
-(* TODO Write Test Plan explaning approach to testing: what you tested, anything
-        you omitted testing, and why you believe that your test suite demonstrates
-        the correctness of your system
-
-        Deductions:
-       -4: The test plan is missing.
-       -1: The test plan does not explain which parts of the system were automatically
-        tested by OUnit vs. manually tested.
-       -1: The test plan does not explain what modules were tested by OUnit and how
-       test cases were developed (black box, glass box, randomized, etc.).
-       -1: The test plan does not provide an argument for why the testing approach
-       demonstrates the correctness of the system.
-
-
+(* 
        Test Plan Explanation:
 
        Our testing strategy encompassed both black box and glass box testing
@@ -41,6 +28,9 @@ open Match
                    pantry, and resetting the pantry. Special attention was given to
                    edge cases like handling empty pantries or removing more
                    ingredients than available.
+       - Ingredient: We created tests for the Ingredient module's of_string
+                    function to verify the functionality of our autocorrecting 
+                    algorithm and the correctness of matching a string to an Ingredient.
 
        ----------------------------------------------------------------------------
 
