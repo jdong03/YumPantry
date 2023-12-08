@@ -5,82 +5,106 @@ open Ingredient
 open Match
 
 (* TODO Write Test Plan explaning approach to testing: what you tested, anything
-     you omitted testing, and why you believe that your test suite demonstrates
-     the correctness of your system
+        you omitted testing, and why you believe that your test suite demonstrates
+        the correctness of your system
 
-     Deductions:
-    -4: The test plan is missing.
-    -1: The test plan does not explain which parts of the system were automatically
-     tested by OUnit vs. manually tested.
-    -1: The test plan does not explain what modules were tested by OUnit and how
-    test cases were developed (black box, glass box, randomized, etc.).
-    -1: The test plan does not provide an argument for why the testing approach
-    demonstrates the correctness of the system.
+        Deductions:
+       -4: The test plan is missing.
+       -1: The test plan does not explain which parts of the system were automatically
+        tested by OUnit vs. manually tested.
+       -1: The test plan does not explain what modules were tested by OUnit and how
+       test cases were developed (black box, glass box, randomized, etc.).
+       -1: The test plan does not provide an argument for why the testing approach
+       demonstrates the correctness of the system.
 
 
-    Test Plan Explanation:
+       Test Plan Explanation:
 
-    Our testing strategy encompassed both black box and glass box testing methods
-    to ensure comprehensive coverage of the system's functionality. This approach
-    allowed us to test the system from an external perspective (black box) and
-    also use the internal logic (glass box) for more thorough testing.
+       Our testing strategy encompassed both black box and glass box testing
+       methods to ensure comprehensive coverage of the system's functionality.
+       This approach allowed us to test the system from an external perspective
+       (black box) and also use the internal logic (glass box) for more thorough
+       testing.
 
-    Modules Tested with OUnit:
-    - Quantity: We developed a series of tests to verify the functionality of
-    quantity conversions, comparisons, and operations like addition, subtraction,
-     scaling, etc. These tests were designed to handle various edge cases and
-     ensure the robustness of the quantity operations.
-    - Pantry: The Pantry module was tested to ensure proper management of
-    ingredients, including adding, removing, finding, checking quantities, the
-    number of distinct ingredients, displaying the pantry, and resetting the
-    pantry. Special attention was given to edge cases like handling empty
-    pantries or removing more ingredients than available.
+       ----------------------------------------------------------------------------
 
-    Test Case Development:
-    - For Quantity tests, we used a combination of glass box and black box
-    techniques. Glass box testing was utilized to ensure coverage of all code
-    paths, especially for functions with multiple branches. Black box testing was
-    employed to test the system from the user's perspective, without considering
-    the internal implementation.
-    - Pantry tests primarily utilized black box testing, focusing on the user's
-    interaction with the pantry system, such as adding and removing ingredients,
-    and checking for specific quantities. After completing the functions, we wrote
-    additional tests to ensure that edge cases were handled properly and that we
-    were achieving branch coverage.
-    - Ingredient tests primarily utilized black box testing, focusing on the
-    autocorrect feature of the of_string function. Although we needed to know the
-    general autocorrect algorithm used, black box testing was used from there
-    to verify the correctness of the implementation Levenshtein distance calculations.
+       Modules Tested with OUnit:
 
-    Omitted Unit Tests:
-    - Certain complex integration scenarios involving simultaneous interactions
-    between multiple modules were not extensively tested due to time constraints.
-    However, individual module tests provide a high level of confidence in the
-    system's reliability.
+       - Quantity: We developed a series of tests to verify the functionality of
+                   quantity conversions, comparisons, and operations like addition,
+                   subtraction, scaling, etc. These tests were designed to handle
+                   various edge cases and ensure the robustness of the quantity
+                   operations.
+       - Pantry:   The Pantry module was tested to ensure proper management of
+                   ingredients, including adding, removing, finding, checking
+                   quantities, the number of distinct ingredients, displaying the
+                   pantry, and resetting the pantry. Special attention was given to
+                   edge cases like handling empty pantries or removing more
+                   ingredients than available.
 
-    Command Line and GUI Testing:
-    - In addition to OUnit tests, we manually tested the system by running the
-     command line interface and GUI. This allowed us to test the system from the
-     user's perspective and ensure that the system was functioning as expected.
-    - For the CLI, direct user simulation was employed, where typical user commands
-     were inputted to observe the system’s responses, alongside scripted test cases
-     for automated scenario testing. This provided a technical perspective on user
-     experience.
-    - The GUI testing involved manual user interaction, such as clicking
-     buttons and entering data, focusing on usability aspects like intuitiveness
-     and responsiveness of the interface.
-   - We utilized both black and glass box testing methods for the CLI and GUI.
-     Black box testing was used to test the system from the user's perspective,
-     without considering the internal implementation. Glass box testing was
-     employed to ensure coverage of all code paths, especially for functions with
-     multiple branches.
+       ----------------------------------------------------------------------------
 
-    Justification for Correctness:
-    - The extensive test cases developed for each module along with the thourough
-    Command Line and GUI Testing, covering a wide range of scenarios and edge
-    cases, provide strong evidence for the system's correctness. The combination
-    of black box and glass box testing methods ensures that both the external
-    behavior and internal logic of the system are sound and reliable.
+       Test Case Development:
+
+       - Quantity: For Quantity tests, we used a combination of glass box and black
+                   box techniques. Glass box testing was utilized to ensure
+                   coverage of all code paths, especially for functions with
+                   multiple branches. Black box testing was employed to test the
+                   system from the user's perspective, without considering the
+                   internal implementation.
+       - Pantry:   Pantry tests primarily utilized black box testing, focusing on
+                   the user's interaction with the pantry system, such as adding
+                   and removing ingredients, and checking for specific quantities.
+                   After completing the functions, we wrote additional tests to
+                   ensure that edge cases were handled properly and that we were
+                   achieving branch coverage.
+       - Ingredient: Ingredient tests primarily utilized black box testing,
+                     focusing on the autocorrect feature of the of_string function.
+                     Although we needed to know the general autocorrect algorithm
+                     used, black box testing was used from there to verify the
+                     correctness of the implementation Levenshtein distance
+                     calculations.
+
+       ----------------------------------------------------------------------------
+
+       Omitted Unit Tests:
+
+       - Certain complex integration scenarios involving simultaneous interactions
+         between multiple modules were not extensively tested due to time
+         constraints. However, individual module tests provide a high level of
+         confidence in the system's reliability.
+
+       ----------------------------------------------------------------------------
+
+       Command Line and GUI Testing:
+
+       - In addition to OUnit tests, we manually tested the system by running the
+         command line interface and GUI. This allowed us to test the system from
+         the user's perspective and ensure that the system was functioning as
+         expected.
+       - For the CLI, direct user simulation was employed, where typical user
+         commands were inputted to observe the system’s responses, alongside
+         scripted test cases for automated scenario testing. This provided a
+         technical perspective on user experience.
+       - The GUI testing involved manual user interaction, such as clicking buttons
+         and entering data, focusing on usability aspects like intuitiveness and
+         responsiveness of the interface.
+       - We utilized both black and glass box testing methods for the CLI and GUI.
+         Black box testing was used to test the system from the user's perspective,
+         without considering the internal implementation. Glass box testing was
+         employed to ensure coverage of all code paths, especially for functions
+         with multiple branches.
+
+        ----------------------------------------------------------------------------
+
+       Justification for Correctness:
+
+       - The extensive test cases developed for each module along with the
+         thourough Command Line and GUI Testing, covering a wide range of
+         scenarios and edge cases, provide strong evidence for the system's
+         correctness. The combination of black box and glass box testing methods
+         ensures that both the external behavior and internal logic of the
+         system are sound and reliable.
 *)
 
 let pp_string s = "\"" ^ s ^ "\""
