@@ -20,7 +20,7 @@ val of_string : string -> t option
     Returns [None] otherwise. *)
 
 val all_ingredients : t list
-(** A list of every ingredient in data/ingredients *)
+(** A list of every ingredient in data/ingredients. *)
 
 val default_units : t -> Quantity.units
 (** [default_units ing] returns the default units for [ing]. *)

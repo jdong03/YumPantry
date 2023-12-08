@@ -13,7 +13,7 @@ val add : t -> Ingredient.t -> Quantity.t -> t
 (** [add p i a] adds [a] of ingredient [i] to pantry [p]. *)
 
 val remove : t -> Ingredient.t -> Quantity.t -> t
-(** [remove p i a] removes [a] of ingredient [i] from pantry [p] *)
+(** [remove p i a] removes [a] of ingredient [i] from pantry [p]. *)
 
 val find : t -> Ingredient.t -> Quantity.t option
 (** [find p i] returns the quantity of ingredient [i] in pantry [p]
