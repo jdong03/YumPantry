@@ -6,5 +6,9 @@
     {
         "name": "Spaghetti",
         "default_units": "Ounce"
+    },
+    {
+        "name": "Bread",
+        "default_units": "Slice"
     }
 ]

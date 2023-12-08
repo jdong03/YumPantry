@@ -823,7 +823,7 @@ let pantry_tests =
         |> Match.can_make_recipe fst_recipe) );
     (* TODO: this will change size depending on how many recipes there are...???*)
     ( "get_all_recipes gets all recipes" >:: fun _ ->
-      assert_equal 3 (Recipe.all_recipes |> List.length) );
+      assert_equal 5 (Recipe.all_recipes |> List.length) );
     ( "display_all_matches displays no matches if pantry is empty" >:: fun _ ->
       assert_equal [] (Match.display_all_matches Pantry.empty all_recipes) );
     ( "display_all_matches displays no matches if pantry does not have enough \
