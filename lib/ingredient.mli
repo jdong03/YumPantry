@@ -1,3 +1,9 @@
+(** 
+    The Ingredient module provides a representation and manipulation of
+    ingredients. It defines a type [t] to represent an ingredient, and offers a 
+    range of functions for working with this type.
+*)
+
 type t
 (** The type representing an ingredient. *)
 
