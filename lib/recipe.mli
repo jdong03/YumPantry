@@ -1,5 +1,11 @@
-(** Module for managing recipes. *)
+(** 
+    The Recipe module provides a comprehensive structure for managing and
+    representing recipes in a cooking or culinary context.  It introduces a type
+    [t] to encapsulate the details of a recipe, along with a suite of functions
+    to interact with and retrieve information from this type.
+*)
 
+(* Type definition for a recipe *)
 type t
 (** The type representing a recipe *)
 
