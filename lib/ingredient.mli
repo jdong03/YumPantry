@@ -17,7 +17,7 @@ val of_string : string -> t option
 (** [of_string s] returns [Some ing] if the Levenshtein distance 
     between s and [to_string ing] is the lowest between s and all 
     possible ingredients, and is less than 3. 
-    - Returns [None] otherwise. *)
+    Returns [None] otherwise. *)
 
 val all_ingredients : t list
 (** A list of every ingredient in data/ingredients *)
