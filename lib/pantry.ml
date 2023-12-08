@@ -14,13 +14,16 @@ let correct_measurement_type ing q =
     (Ingredient.default_units ing)
     (Quantity.units_of_quantity q)
 
-let incorrect_measurement_warning ing =
+let incorrect_measurement_warning ing q =
   "Expected an amount of type "
   ^ Quantity.measurement_type (Ingredient.default_units ing)
+  ^ " with ingredient " ^ Ingredient.to_string ing ^ ". Got "
+  ^ Quantity.measurement_type (Quantity.units_of_quantity q)
+  ^ " instead."
 
 let add (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
   if not (correct_measurement_type ing q) then
-    failwith (incorrect_measurement_warning ing)
+    failwith (incorrect_measurement_warning ing q)
   else
     match List.assoc_opt ing pantry with
     | Some old_q -> (
@@ -33,7 +36,7 @@ let add (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
 
 let remove (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : t =
   if not (correct_measurement_type ing q) then
-    failwith (incorrect_measurement_warning ing)
+    failwith (incorrect_measurement_warning ing q)
   else
     match List.assoc_opt ing pantry with
     | Some old_q -> (
@@ -54,17 +57,16 @@ let find (pantry : t) (ing : Ingredient.t) : Quantity.t option =
 let distinct_ingredients (pantry : t) : int =
   List.fold_left (fun acc _ -> acc + 1) 0 pantry
 
-let rec lookup (pantry : t) (ingred : Ingredient.t * Quantity.t) : bool =
-  match ingred with
-  | ing, q -> (
-      match List.assoc_opt ing pantry with
-      | Some old_q -> (
-          (* There already is a binding  *)
-          match Quantity.subtract old_q q with
-          | Some new_q -> not (Quantity.is_neg new_q)
-          | None -> failwith "This should not be possible ")
-      (* There is no binding *)
-      | None -> false)
+let rec lookup (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : bool =
+  if not (correct_measurement_type ing q) then
+    failwith (incorrect_measurement_warning ing q)
+  else
+    match List.assoc_opt ing pantry with
+    | Some old_q -> (
+        match Quantity.subtract old_q q with
+        | Some new_q -> not (Quantity.is_neg new_q)
+        | None -> failwith "Quantity calculation error")
+    | None -> false
 
 let display pantry =
   List.fold_left

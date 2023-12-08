@@ -47,8 +47,8 @@ open Match
     and checking for specific quantities. After completing the functions, we wrote
     additional tests to ensure that edge cases were handled properly and that we
     were achieving branch coverage.
-    - Ingredient tests primarily utilized black box testing, focusing on the 
-    autocorrect feature of the of_string function. Although we needed to know the 
+    - Ingredient tests primarily utilized black box testing, focusing on the
+    autocorrect feature of the of_string function. Although we needed to know the
     general autocorrect algorithm used, black box testing was used from there
     to verify the correctness of the implementation Levenshtein distance calculations.
 
@@ -371,7 +371,6 @@ let apple = Ingredient.of_string "Apple" |> construct_ingredient
 let beef = Ingredient.of_string "Beef" |> construct_ingredient
 let ribeye = Ingredient.of_string "Ribeye" |> construct_ingredient
 let baguette = Ingredient.of_string "Baguette" |> construct_ingredient
-
 let all_recipes = Recipe.all_recipes
 let fst_recipe = List.hd all_recipes
 
@@ -622,24 +621,24 @@ let pantry_tests =
     ( "Lookup empty pantry" >:: fun _ ->
       assert_equal false
         ( Pantry.empty |> fun pantry ->
-          Pantry.lookup pantry
-            (apple, Quantity.of_string "1.0" |> construct_quantity) ) );
+          Pantry.lookup pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity) ) );
     ( "Lookup one ingredient" >:: fun _ ->
       assert_equal true
         ( ( Pantry.empty |> fun pantry ->
             Pantry.add pantry apple
               (Quantity.of_string "1.0" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.lookup pantry
-            (apple, Quantity.of_string "1.0" |> construct_quantity) ) );
+          Pantry.lookup pantry apple
+            (Quantity.of_string "1.0" |> construct_quantity) ) );
     ( "Lookup one ingredient beef" >:: fun _ ->
       assert_equal true
         ( ( Pantry.empty |> fun pantry ->
             Pantry.add pantry beef
               (Quantity.of_string "12.0 Ounce" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.lookup pantry
-            (beef, Quantity.of_string "8.0 Ounce" |> construct_quantity) ) );
+          Pantry.lookup pantry beef
+            (Quantity.of_string "8.0 Ounce" |> construct_quantity) ) );
     ( "Lookup for pantry with two ingredients" >:: fun _ ->
       assert_equal true
         ( ( ( Pantry.empty |> fun pantry ->
@@ -649,8 +648,8 @@ let pantry_tests =
             Pantry.add pantry beef
               (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.lookup pantry
-            (apple, Quantity.of_string "0.5" |> construct_quantity) ) );
+          Pantry.lookup pantry apple
+            (Quantity.of_string "0.5" |> construct_quantity) ) );
     ( "Lookup for pantry with two ingredients of same type added" >:: fun _ ->
       assert_equal true
         ( ( ( Pantry.empty |> fun pantry ->
@@ -660,8 +659,8 @@ let pantry_tests =
             Pantry.add pantry apple
               (Quantity.of_string "1.0" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.lookup pantry
-            (apple, Quantity.of_string "2.0" |> construct_quantity) ) );
+          Pantry.lookup pantry apple
+            (Quantity.of_string "2.0" |> construct_quantity) ) );
     ( "Lookup for pantry with two ingredients of same type in different \
        amounts added"
     >:: fun _ ->
@@ -673,8 +672,8 @@ let pantry_tests =
             Pantry.add pantry apple
               (Quantity.of_string "1.0" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.lookup pantry
-            (apple, Quantity.of_string "3.0" |> construct_quantity) ) );
+          Pantry.lookup pantry apple
+            (Quantity.of_string "3.0" |> construct_quantity) ) );
     ( "Lookup ingredient with multiple ingredient in pantry" >:: fun _ ->
       assert_equal false
         ( ( ( Pantry.empty |> fun pantry ->
@@ -684,8 +683,8 @@ let pantry_tests =
             Pantry.add pantry beef
               (Quantity.of_string "8.0 Ounce" |> construct_quantity) )
         |> fun pantry ->
-          Pantry.lookup pantry
-            (apple, Quantity.of_string "2.0" |> construct_quantity) ) );
+          Pantry.lookup pantry apple
+            (Quantity.of_string "2.0" |> construct_quantity) ) );
     (* Distinct Ingredients tests *)
     ( "Distinct Ingredients empty pantry" >:: fun _ ->
       assert_equal 0 (Pantry.empty |> Pantry.distinct_ingredients) );
@@ -798,84 +797,97 @@ let pantry_tests =
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
     (*Match: can_make_recipe tests*)
-    ("Cannot make recipe if pantry is empty" >:: fun _ ->
-      assert_equal false (Pantry.empty |> Match.can_make_recipe fst_recipe));
-    ("Cannot make recipe if pantry does not have enough ingredients" >:: fun _ ->
+    ( "Cannot make recipe if pantry is empty" >:: fun _ ->
+      assert_equal false (Pantry.empty |> Match.can_make_recipe fst_recipe) );
+    ( "Cannot make recipe if pantry does not have enough ingredients"
+    >:: fun _ ->
       assert_equal false
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry baguette
                (Quantity.of_string "1.0" |> construct_quantity))
-        |> Match.can_make_recipe fst_recipe));
-    ("Can make recipe if pantry has enough ingredients" >:: fun _ ->
+        |> Match.can_make_recipe fst_recipe) );
+    ( "Can make recipe if pantry has enough ingredients" >:: fun _ ->
       assert_equal true
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry baguette
                (Quantity.of_string "2.0" |> construct_quantity))
-        |> Match.can_make_recipe fst_recipe));
-    ("Cannot make recipe if pantry has the wrong ingredients" >:: fun _ ->
+        |> Match.can_make_recipe fst_recipe) );
+    ( "Cannot make recipe if pantry has the wrong ingredients" >:: fun _ ->
       assert_equal false
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
                (Quantity.of_string "2.0" |> construct_quantity))
-        |> Match.can_make_recipe fst_recipe));
-    ("get_all_recipes gets all recipes" >:: fun _ ->
-      assert_equal 1 (Recipe.all_recipes |> List.length));
-    ("display_all_matches displays no matches if pantry is empty" >:: fun _ ->
-      assert_equal []
-        (Match.display_all_matches Pantry.empty all_recipes));
-    ("display_all_matches displays no matches if pantry does not have enough \
-      ingredients"
+        |> Match.can_make_recipe fst_recipe) );
+    (* TODO: this will change size depending on how many recipes there are...???*)
+    ( "get_all_recipes gets all recipes" >:: fun _ ->
+      assert_equal 1 (Recipe.all_recipes |> List.length) );
+    ( "display_all_matches displays no matches if pantry is empty" >:: fun _ ->
+      assert_equal [] (Match.display_all_matches Pantry.empty all_recipes) );
+    ( "display_all_matches displays no matches if pantry does not have enough \
+       ingredients"
     >:: fun _ ->
       assert_equal []
-        (let pantry = Pantry.add Pantry.empty baguette 
-        (Quantity.of_string "1.0" |> construct_quantity) in
-         Match.display_all_matches pantry all_recipes));
-    ("display_all_matchess displays matches if pantry has enough ingredients" 
-      >:: fun _ ->
-      assert_equal ["Chocolate Chip Cookies"]
-        (let pantry = Pantry.add Pantry.empty baguette 
-        (Quantity.of_string "2.0" |> construct_quantity) in
-         Match.display_all_matches pantry all_recipes));
-    ("display_all_matches displays matches if pantry has the wrong ingredients" 
-      >:: fun _ ->
+        (let pantry =
+           Pantry.add Pantry.empty baguette
+             (Quantity.of_string "1.0" |> construct_quantity)
+         in
+         Match.display_all_matches pantry all_recipes) );
+    ( "display_all_matchess displays matches if pantry has enough ingredients"
+    >:: fun _ ->
+      assert_equal
+        [ "Chocolate Chip Cookies" ]
+        (let pantry =
+           Pantry.add Pantry.empty baguette
+             (Quantity.of_string "2.0" |> construct_quantity)
+         in
+         Match.display_all_matches pantry all_recipes) );
+    ( "display_all_matches displays matches if pantry has the wrong ingredients"
+    >:: fun _ ->
       assert_equal []
-        (let pantry = Pantry.add Pantry.empty apple 
-        (Quantity.of_string "2.0" |> construct_quantity) in
-         Match.display_all_matches pantry all_recipes));
-    ("get_selected_recipe returns None if no recipe is selected" >:: fun _ ->
-      assert_equal None (Match.get_selected_recipe "" all_recipes));
-    ("get_selected_recipe returns None if recipe does not exist" >:: fun _ ->
-      assert_equal None (Match.get_selected_recipe "Ratatouille" all_recipes));
-    ("get_selected_recipe returns Some recipe if recipe exists" >:: fun _ ->
-      assert_equal (Some fst_recipe) 
-      (Match.get_selected_recipe "Chocolate Chip Cookies" all_recipes));
+        (let pantry =
+           Pantry.add Pantry.empty apple
+             (Quantity.of_string "2.0" |> construct_quantity)
+         in
+         Match.display_all_matches pantry all_recipes) );
+    ( "get_selected_recipe returns None if no recipe is selected" >:: fun _ ->
+      assert_equal None (Match.get_selected_recipe "" all_recipes) );
+    ( "get_selected_recipe returns None if recipe does not exist" >:: fun _ ->
+      assert_equal None (Match.get_selected_recipe "Ratatouille" all_recipes) );
+    ( "get_selected_recipe returns Some recipe if recipe exists" >:: fun _ ->
+      assert_equal (Some fst_recipe)
+        (Match.get_selected_recipe "Chocolate Chip Cookies" all_recipes) );
   ]
 
-let ingredient_autocorrect_tests = 
+let ingredient_autocorrect_tests =
   [
-  ("to_string |> of_string yields the same ingredient that was inputted" >:: 
-  (fun _ -> assert_equal (Some apple) (apple |> Ingredient.to_string 
-    |> Ingredient.of_string)));
-  ("of_string |> to_string yields the same string that was inputted with the 
-  first letter capitalized" >::
-  fun _ -> assert_equal "Apple" ("apple" |> Ingredient.of_string |> Option.get 
-    |> Ingredient.to_string)
-  ~printer: pp_string );
-  ("of_string autocorrect with Levenshtein distance of 1" >::
-  fun _ -> assert_equal ("Apple") ("appl" |> Ingredient.of_string |> Option.get 
-    |> Ingredient.to_string)
-  ~printer: pp_string);
-  ("of_string autocorrect with Levenshtein distance of 2" >::
-  fun _ -> assert_equal ("Apple") ("appel" |> Ingredient.of_string |> Option.get
-    |> Ingredient.to_string)
-  ~printer: pp_string);
-  ("of_string autocorrect fails with Levenshtein distance of 3" >::
-  fun _ -> assert_equal None (Ingredient.of_string "ppelp"));
+    ( "to_string |> of_string yields the same ingredient that was inputted"
+    >:: fun _ ->
+      assert_equal (Some apple)
+        (apple |> Ingredient.to_string |> Ingredient.of_string) );
+    ( "of_string |> to_string yields the same string that was inputted with the \n\
+      \  first letter capitalized"
+    >:: fun _ ->
+      assert_equal "Apple"
+        ("apple" |> Ingredient.of_string |> Option.get |> Ingredient.to_string)
+        ~printer:pp_string );
+    ( "of_string autocorrect with Levenshtein distance of 1" >:: fun _ ->
+      assert_equal "Apple"
+        ("appl" |> Ingredient.of_string |> Option.get |> Ingredient.to_string)
+        ~printer:pp_string );
+    ( "of_string autocorrect with Levenshtein distance of 2" >:: fun _ ->
+      assert_equal "Apple"
+        ("appel" |> Ingredient.of_string |> Option.get |> Ingredient.to_string)
+        ~printer:pp_string );
+    ( "of_string autocorrect fails with Levenshtein distance of 3" >:: fun _ ->
+      assert_equal None (Ingredient.of_string "ppelp") );
   ]
 
-let suite = "test suite" >::: List.flatten [ quantity_tests; pantry_tests; 
-  ingredient_autocorrect_tests]
+let suite =
+  "test suite"
+  >::: List.flatten
+         [ quantity_tests; pantry_tests; ingredient_autocorrect_tests ]
+
 let () = run_test_tt_main suite

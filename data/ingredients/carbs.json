@@ -2,5 +2,9 @@
     {
         "name": "Baguette",
         "default_units": "Whole"
+    },
+    {
+        "name": "Spaghetti",
+        "default_units": "Ounce"
     }
 ]

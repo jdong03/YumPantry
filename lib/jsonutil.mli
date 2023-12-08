@@ -1,4 +1,4 @@
-(** Module with utils for parsing JASON
+(** Module with utils for parsing JSON
 *)
 
 val string_of_mem : Yojson.Basic.t -> string
