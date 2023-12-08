@@ -1,5 +1,7 @@
-(* Type definition for a recipe *)
+(** Module for managing recipes. *)
+
 type t
+(** The type representing a recipe *)
 
 val to_string : t -> string
 (** Convert a recipe to a string representation *)

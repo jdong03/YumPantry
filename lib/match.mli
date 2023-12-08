@@ -1,6 +1,8 @@
 open Pantry
 open Recipe
 
+(** Module for matching recipes with available ingredients in a pantry. *)
+
 val can_make_recipe : Recipe.t -> Pantry.t -> bool
 (** [can_make r p] is true if the ingredients in [p] can make the recipe [r] *)
 
