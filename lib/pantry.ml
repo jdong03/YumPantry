@@ -54,16 +54,6 @@ let find (pantry : t) (ing : Ingredient.t) : Quantity.t option =
 let distinct_ingredients (pantry : t) : int =
   List.fold_left (fun acc _ -> acc + 1) 0 pantry
 
-let display pantry =
-  List.fold_left
-    (fun acc (ing, amount) ->
-      let amount_string = Quantity.to_string amount in
-      let ingredient_string = Ingredient.to_string ing in
-      "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
-    "" pantry
-
-let reset pantry = empty
-
 let rec lookup (pantry : t) (ingred : Ingredient.t * Quantity.t) : bool =
   match ingred with
   | ing, q -> (
@@ -75,3 +65,13 @@ let rec lookup (pantry : t) (ingred : Ingredient.t * Quantity.t) : bool =
           | None -> failwith "This should not be possible ")
       (* There is no binding *)
       | None -> false)
+
+let display pantry =
+  List.fold_left
+    (fun acc (ing, amount) ->
+      let amount_string = Quantity.to_string amount in
+      let ingredient_string = Ingredient.to_string ing in
+      "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
+    "" pantry
+
+let reset pantry = empty
