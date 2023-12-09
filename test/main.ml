@@ -810,6 +810,10 @@ let pantry_tests =
                (Quantity.of_string "8.0 Ounce" |> construct_quantity))
         |> Pantry.reset |> Pantry.display)
         ~printer:pp_string );
+  ]
+
+let recipe_match_tests =
+  [
     (*Match: can_make_recipe tests*)
     ( "Cannot make recipe if pantry is empty" >:: fun _ ->
       assert_equal false (Pantry.empty |> Match.can_make_recipe fst_recipe) );
@@ -902,6 +906,11 @@ let ingredient_autocorrect_tests =
 let suite =
   "test suite"
   >::: List.flatten
-         [ quantity_tests; pantry_tests; ingredient_autocorrect_tests ]
+         [
+           quantity_tests;
+           pantry_tests;
+           ingredient_autocorrect_tests;
+           recipe_match_tests;
+         ]
 
 let () = run_test_tt_main suite
