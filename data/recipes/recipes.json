@@ -23,18 +23,22 @@
     "ingredients": [
       {
         "name": "Spaghetti",
+        "default_units": "Ounce",
         "quantity": "8.0 Ounces"
       },
       {
         "name": "Garlic",
+        "default_units": "Whole",
         "quantity": "4"
       },
       {
         "name": "Olive Oil",
+        "default_units": "Tablespoon",
         "quantity": "4 Tablespoons"
       },
       {
         "name": "Red Pepper Flakes",
+        "default_units": "Teaspoon",
         "quantity": "1 Teaspoon"
       }
     ],
@@ -49,18 +53,22 @@
     "ingredients": [
       {
         "name": "Eggs",
+        "default_units": "Whole",
         "quantity": "2"
       },
       {
         "name": "Butter",
+        "default_units": "Tablespoon",
         "quantity": "1 Tablespoon"
       },
       {
         "name": "Salt",
+        "default_units": "Teaspoon",
         "quantity": "1 Teaspoon"
       },
       {
         "name": "Pepper",
+        "default_units": "Teaspoon",
         "quantity": "1 Teaspoon"
       }
     ],
@@ -75,14 +83,17 @@
     "ingredients": [
       {
         "name": "Bread",
+        "default_units": "Slice",
         "quantity": "2"
       },
       {
         "name": "Cheese",
+        "default_units": "Slice",
         "quantity": "2"
       },
       {
         "name": "Butter",
+        "default_units": "Tablespoon",
         "quantity": "1 Tablespoon"
       }
     ],
@@ -97,14 +108,17 @@
     "ingredients": [
       {
         "name": "Apple",
+        "default_units": "Whole",
         "quantity": "3"
       },
       {
         "name": "Green Grape",
+        "default_units": "Whole",
         "quantity": "20"
       },
       {
         "name": "Red Grape",
+        "default_units": "Whole",
         "quantity": "20"
       }
     ],
