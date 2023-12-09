@@ -9,7 +9,7 @@ open Match
     that ingredient if it is valid. Otherwise, it prompts the user again.
     [action] is a string that is either "add" or "remove". *)
 let rec getValidIngredient (action : string) =
-  print_endline ("\nWhat food would you like to " ^action ^ ": ");
+  print_endline ("\nWhat food would you like to " ^ action ^ ": ");
   match read_line () |> Ingredient.of_string with
   | None ->
       print_endline "Invalid ingredient. Please try again.\n";
@@ -33,7 +33,11 @@ let rec print_all_string lst =
       print_all_string t
 
 let print_all_ingredients () = print_all all_ingredients Ingredient.to_string
-let print_all_recipes () = print_all all_recipes Recipe.to_string
+
+let print_all_recipes () =
+  print_all all_recipes (fun r ->
+      Recipe.to_string r
+      ^ "\n\n---------------------------------------------------------------\n")
 
 (** [getValidQuantity action] prompts the user for a quantity and returns
     that quantity if it is valid. Otherwise, it prompts the user again.
@@ -55,7 +59,7 @@ let rec getValidQuantity (ingredient : Ingredient.t) (action : string) =
     that recipe if it is valid. Otherwise, it prompts the user again. *)
 let rec getValidRecipe () =
   print_endline "\nWhat recipe would you like to cook: ";
-  match Match.get_selected_recipe (read_line ()) all_recipes  with
+  match Match.get_selected_recipe (read_line ()) all_recipes with
   | None ->
       print_endline "Invalid recipe. Please try again.\n";
       getValidRecipe ()
@@ -101,9 +105,9 @@ let rec action pantry =
       print_endline "Pantry reset.";
       action (Pantry.reset pantry)
   | "possible recipes" ->
-        let possible_recipes = Match.display_all_matches pantry all_recipes in
-        if possible_recipes = [] then noPossibleRecipes pantry
-        else chooseRecipe possible_recipes pantry
+      let possible_recipes = Match.display_all_matches pantry all_recipes in
+      if possible_recipes = [] then noPossibleRecipes pantry
+      else chooseRecipe possible_recipes pantry
   | "quit" ->
       print_endline "Goodbye!\n";
       ()
@@ -116,12 +120,12 @@ and noPossibleRecipes pantry =
   action pantry
 
 and chooseRecipe possible_recipes pantry =
-    print_endline "Possible recipes:\n";
-    print_all_string possible_recipes;
-    let recipe = getValidRecipe () in
-    print_endline "\nHere is the recipe:\n";
-    print_endline (Recipe.to_string recipe);
-    action pantry
+  print_endline "Possible recipes:\n";
+  print_all_string possible_recipes;
+  let recipe = getValidRecipe () in
+  print_endline "\nHere is the recipe:\n";
+  print_endline (Recipe.to_string recipe);
+  action pantry
 
 (*********** command line interface ***********)
 let () =
