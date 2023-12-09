@@ -411,7 +411,7 @@ let pantry_tests =
           |> Pantry.display) );
     (*Add tests*)
     ( "Add one ingredient" >:: fun _ ->
-      assert_equal "\n1. of Apple"
+      assert_equal "\n1. Apple(s)"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
@@ -419,7 +419,7 @@ let pantry_tests =
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients" >:: fun _ ->
-      assert_equal "\n1. of Apple\n8. Ounces of Beef"
+      assert_equal "\n1. Apple(s)\n8. Ounces of Beef"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
@@ -430,7 +430,7 @@ let pantry_tests =
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients of same type" >:: fun _ ->
-      assert_equal "\n2. of Apple"
+      assert_equal "\n2. Apple(s)"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
@@ -441,7 +441,7 @@ let pantry_tests =
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredients of same type with different amounts" >:: fun _ ->
-      assert_equal "\n3. of Apple"
+      assert_equal "\n3. Apple(s)"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
@@ -452,7 +452,7 @@ let pantry_tests =
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add two ingredient in alternating order" >:: fun _ ->
-      assert_equal "\n8. Ounces of Beef\n2. of Apple"
+      assert_equal "\n8. Ounces of Beef\n2. Apple(s)"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
@@ -466,7 +466,7 @@ let pantry_tests =
         |> Pantry.display)
         ~printer:pp_string );
     ( "Add ingredient with multiple ingredient in pantry" >:: fun _ ->
-      assert_equal "\n1. of Apple\n8. Ounces of Beef\n1000. Ounces of Ribeye"
+      assert_equal "\n1. Apple(s)\n8. Ounces of Beef\n1000. Ounces of Ribeye"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
@@ -481,7 +481,7 @@ let pantry_tests =
         ~printer:pp_string );
     (*Remove tests*)
     ( "Remove one ingredient" >:: fun _ ->
-      assert_equal "\n2. of Apple"
+      assert_equal "\n2. Apple(s)"
         (Pantry.empty
         |> (fun pantry ->
              Pantry.add pantry apple
