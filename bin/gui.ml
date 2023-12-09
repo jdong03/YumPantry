@@ -8,10 +8,10 @@ open Bogue
 module L = Layout
 module W = Widget
 
-(* The main page of the program. It provides various buttons that performs 
-  various actions. The default page that every action returns to after 
-  completely executing. Contains nested code for all pages within the GUI. *)
-  let rec action_choice pantry =
+(* The main page of the program. It provides various buttons that performs
+   various actions. The default page that every action returns to after
+   completely executing. Contains nested code for all pages within the GUI. *)
+let rec action_choice pantry =
   (* A shared page for adding and removing an ingredient from the pantry.*)
   let rec add_remove_input (action : string) (invalid : bool) pantry =
     let rec add_remove_function (action : string) pantry ingredient quantity =
@@ -19,14 +19,14 @@ module W = Widget
       let quantity = Quantity.of_string quantity in
       match (ingredient, quantity) with
       | None, _ | _, None -> add_remove_input action true pantry
-      | Some ingredient, Some quantity ->
-        try (
-          let new_pantry =
-            if action = "add" then Pantry.add pantry ingredient quantity
-            else Pantry.remove pantry ingredient quantity
-          in
-          action_choice new_pantry) with 
-          | Failure _ -> add_remove_input action true pantry
+      | Some ingredient, Some quantity -> (
+          try
+            let new_pantry =
+              if action = "add" then Pantry.add pantry ingredient quantity
+              else Pantry.remove pantry ingredient quantity
+            in
+            action_choice new_pantry
+          with Failure _ -> add_remove_input action true pantry)
     in
 
     let invalid_label =
@@ -39,8 +39,8 @@ module W = Widget
     let amount_label = W.label ("How much would you like to " ^ action ^ "?") in
     let submit = W.button "Submit" in
     let quit_button = W.button "Quit" in
-    let home_button = W.button "Home" in 
-    let nav_buttons = L.flat_of_w [submit; home_button; quit_button] in
+    let home_button = W.button "Home" in
+    let nav_buttons = L.flat_of_w [ submit; home_button; quit_button ] in
     let row1 = L.flat_of_w [ food_label; food_input ] in
     let row2 = L.flat_of_w [ amount_label; amount_input ] in
     let layout =
@@ -48,16 +48,21 @@ module W = Widget
     in
     if action = "add" then
       W.on_click submit ~click:(fun _ ->
-        L.hide_window layout; add_remove_function action pantry 
-          (W.get_text food_input) (W.get_text amount_input); raise Bogue.Exit)
+          L.hide_window layout;
+          add_remove_function action pantry (W.get_text food_input)
+            (W.get_text amount_input);
+          raise Bogue.Exit)
     else
       W.on_click submit ~click:(fun _ ->
-        L.hide_window layout; add_remove_function action pantry 
-            (W.get_text food_input) (W.get_text amount_input); 
-            raise Bogue.Exit);
+          L.hide_window layout;
+          add_remove_function action pantry (W.get_text food_input)
+            (W.get_text amount_input);
+          raise Bogue.Exit);
     W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
-    W.on_click home_button ~click: (fun _ -> L.hide_window layout; 
-      action_choice pantry; raise Bogue.Exit);
+    W.on_click home_button ~click:(fun _ ->
+        L.hide_window layout;
+        action_choice pantry;
+        raise Bogue.Exit);
     let board = Bogue.of_layout layout in
     Bogue.run board
   in
@@ -70,16 +75,29 @@ module W = Widget
       if display_text = "" then W.label "Your pantry is empty."
       else W.text_display display_text
     in
-    let num_ingredients = W.label ("You have " ^ string_of_int 
-    (Pantry.distinct_ingredients pantry) ^ " distinct ingredients.") in 
+    let num_ingredients =
+      W.label
+        ("You have "
+        ^ string_of_int (Pantry.distinct_ingredients pantry)
+        ^ " distinct ingredients.")
+    in
     let quit_button = W.button "Quit" in
-    let home_button = W.button "Home" in 
-    let nav_buttons = L.flat_of_w [home_button; quit_button] in
-    let layout = L.tower ~align:Draw.Center [ L.resident label; 
-      L.resident contents; L.resident num_ingredients; nav_buttons] in
+    let home_button = W.button "Home" in
+    let nav_buttons = L.flat_of_w [ home_button; quit_button ] in
+    let layout =
+      L.tower ~align:Draw.Center
+        [
+          L.resident label;
+          L.resident contents;
+          L.resident num_ingredients;
+          nav_buttons;
+        ]
+    in
     W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
-    W.on_click home_button ~click: 
-      (fun _ -> L.hide_window layout; action_choice pantry; raise Bogue.Exit;);
+    W.on_click home_button ~click:(fun _ ->
+        L.hide_window layout;
+        action_choice pantry;
+        raise Bogue.Exit);
     let board = Bogue.of_layout layout in
     Bogue.run board
   in
@@ -90,118 +108,142 @@ module W = Widget
     let recipe_text = Recipe.get_information_from_name recipe in
     let contents = L.resident (W.text_display recipe_text) in
     let quit_button = W.button "Quit" in
-    let home_button = W.button "Home" in 
-    let nav_buttons = L.flat_of_w [home_button; quit_button] in    
-    let layout = L.tower ~align:Draw.Center [ L.resident label; contents; 
-      nav_buttons] in
+    let home_button = W.button "Home" in
+    let nav_buttons = L.flat_of_w [ home_button; quit_button ] in
+    let layout =
+      L.tower ~align:Draw.Center [ L.resident label; contents; nav_buttons ]
+    in
     Layout.set_size layout (300, 500);
     W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
-    W.on_click home_button ~click: (fun _ -> L.hide_window layout; 
-      action_choice pantry; raise Bogue.Exit;);
+    W.on_click home_button ~click:(fun _ ->
+        L.hide_window layout;
+        action_choice pantry;
+        raise Bogue.Exit);
     let board = Bogue.of_layout layout in
     Bogue.run board
   in
 
-  (* The page that displays all possible recipes that can be made with the 
-    current pantry. The recipes are displayed as buttons that can be clicked to 
-    display the recipe. *)
+  (* The page that displays all possible recipes that can be made with the
+     current pantry. The recipes are displayed as buttons that can be clicked to
+     display the recipe. *)
   let rec possible_recipes pantry recipes =
     let label = W.label "Possible Recipes" in
     let quit_button = W.button "Quit" in
     let home_button = W.button "Home" in
-    let nav_buttons = L.flat_of_w [home_button; quit_button] in
+    let nav_buttons = L.flat_of_w [ home_button; quit_button ] in
     W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
 
     let possible_recipe_list = Match.display_all_matches pantry recipes in
-    if possible_recipe_list = [] then 
-      let no_recipes = W.label "No recipes can be made with your current 
-        pantry." in
-      let layout = L.tower ~align:Draw.Center [ L.resident label; 
-        L.resident no_recipes; nav_buttons] in
+    if possible_recipe_list = [] then (
+      let no_recipes =
+        W.label "No recipes can be made with your current \n        pantry."
+      in
+      let layout =
+        L.tower ~align:Draw.Center
+          [ L.resident label; L.resident no_recipes; nav_buttons ]
+      in
       let board = Bogue.of_layout layout in
-      W.on_click home_button ~click: (fun _ -> L.hide_window layout; 
-        action_choice pantry; raise Bogue.Exit;);
-      Bogue.run board
+      W.on_click home_button ~click:(fun _ ->
+          L.hide_window layout;
+          action_choice pantry;
+          raise Bogue.Exit);
+      Bogue.run board)
     else
-    (* For each item in the list, create a button with the string inside*)
-    let rec create_buttons (recipe_list : string list) (acc : W.t list) =
-      match recipe_list with
-      | [] -> acc
-      | h :: t ->
-          let button = W.button h in
-          create_buttons t (button :: acc)
+      (* For each item in the list, create a button with the string inside*)
+      let rec create_buttons (recipe_list : string list) (acc : W.t list) =
+        match recipe_list with
+        | [] -> acc
+        | h :: t ->
+            let button = W.button h in
+            create_buttons t (button :: acc)
       in
-    let button_list = create_buttons possible_recipe_list [] in
-    let button_layout = L.flat_of_w button_list in
-    let layout = L.tower ~align:Draw.Center [ L.resident label; button_layout; 
-      nav_buttons] in
-    (* For each button, add a click event that displays the recipe *)
-    let rec add_clicks (button_list : W.t list) =
-      match button_list with
-      | [] -> ()
-      | h :: t ->
-          W.on_click h ~click:(fun _ -> L.hide_window layout; 
-            recipe (W.get_text h); raise Bogue.Exit);
-          add_clicks t
+      let button_list = create_buttons possible_recipe_list [] in
+      let button_layout = L.flat_of_w button_list in
+      let layout =
+        L.tower ~align:Draw.Center
+          [ L.resident label; button_layout; nav_buttons ]
       in
-    add_clicks button_list;
-    W.on_click home_button ~click: (fun _ -> L.hide_window layout; 
-      action_choice pantry; raise Bogue.Exit;);
+      (* For each button, add a click event that displays the recipe *)
+      let rec add_clicks (button_list : W.t list) =
+        match button_list with
+        | [] -> ()
+        | h :: t ->
+            W.on_click h ~click:(fun _ ->
+                L.hide_window layout;
+                recipe (W.get_text h);
+                raise Bogue.Exit);
+            add_clicks t
+      in
+      add_clicks button_list;
+      W.on_click home_button ~click:(fun _ ->
+          L.hide_window layout;
+          action_choice pantry;
+          raise Bogue.Exit);
+      let board = Bogue.of_layout layout in
+      Bogue.run board
+  in
+
+  (* The page where you can search for ingredients.
+     The results page will display the amount you have of the ingredient you
+     searched for. *)
+  let rec find pantry invalid =
+    let result_page pantry ingredient =
+      match ingredient with
+      | None -> find pantry true
+      | Some ingredient ->
+          let label =
+            match Pantry.find pantry ingredient with
+            | Some q ->
+                W.label
+                  ("You currently have " ^ Quantity.to_string q ^ " of "
+                  ^ Ingredient.to_string ingredient)
+            | None ->
+                W.label
+                  ("You currently have none of "
+                  ^ Ingredient.to_string ingredient)
+          in
+          let back = W.button "Back" in
+          let quit_button = W.button "Quit" in
+          let home_button = W.button "Home" in
+          let nav_buttons = L.flat_of_w [ back; home_button; quit_button ] in
+          let layout = L.tower [ L.resident label; nav_buttons ] in
+          W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
+          W.on_click home_button ~click:(fun _ ->
+              L.hide_window layout;
+              action_choice pantry;
+              raise Bogue.Exit);
+          W.on_click back ~click:(fun _ ->
+              L.hide_window layout;
+              find pantry false;
+              raise Bogue.Exit);
+          let board = Bogue.of_layout layout in
+          Bogue.run board
+    in
+    let invalid_label =
+      if invalid = true then W.label "Invalid input. Try again."
+      else W.label "Find Food"
+    in
+    let food_input = W.text_input ~prompt:"Enter a valid food" () in
+    let food_label = W.label "What food would you like to search for?" in
+    let submit = W.button "Submit" in
+    let quit_button = W.button "Quit" in
+    let home_button = W.button "Home" in
+    let nav_buttons = L.flat_of_w [ submit; home_button; quit_button ] in
+    let row = L.flat_of_w [ food_label; food_input ] in
+    let layout = L.tower [ L.resident invalid_label; row; nav_buttons ] in
+    W.on_click submit ~click:(fun _ ->
+        L.hide_window layout;
+        result_page pantry (Ingredient.of_string (W.get_text food_input));
+        raise Bogue.Exit);
+    W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
+    W.on_click home_button ~click:(fun _ ->
+        L.hide_window layout;
+        action_choice pantry;
+        raise Bogue.Exit);
     let board = Bogue.of_layout layout in
     Bogue.run board
   in
 
-  (* The page where you can search for ingredients. 
-     The results page will display the amount you have of the ingredient you 
-     searched for. *)
-  let rec find pantry invalid = 
-    let result_page pantry ingredient = 
-      (
-        match ingredient with 
-          | None -> find pantry true
-          | Some ingredient -> begin
-            let label = match (Pantry.find pantry ingredient) with 
-              | Some q -> W.label ("You currently have " ^ 
-                (Quantity.to_string q) ^ " of " ^ 
-                (Ingredient.to_string ingredient))
-              | None -> W.label ("You currently have none of " ^ 
-                (Ingredient.to_string ingredient)) in 
-            let back = W.button "Back" in 
-            let quit_button = W.button "Quit" in
-            let home_button = W.button "Home" in 
-            let nav_buttons = L.flat_of_w [back; home_button; quit_button] in
-            let layout = L.tower [L.resident label; nav_buttons] in 
-            W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
-            W.on_click home_button ~click: (fun _ -> L.hide_window layout; 
-              action_choice pantry; raise Bogue.Exit);
-            W.on_click back ~click: (fun _ -> L.hide_window layout; 
-              find pantry false; raise Bogue.Exit);
-            let board = Bogue.of_layout layout in 
-            Bogue.run board
-          end
-      )
-    in
-    let invalid_label = 
-      if invalid = true then W.label "Invalid input. Try again."
-      else W.label "Find Food" in 
-    let food_input = W.text_input ~prompt:"Enter a valid food" () in
-    let food_label = W.label ("What food would you like to search for?") in
-    let submit = W.button "Submit" in
-    let quit_button = W.button "Quit" in
-    let home_button = W.button "Home" in 
-    let nav_buttons = L.flat_of_w [submit; home_button; quit_button] in
-    let row = L.flat_of_w [food_label; food_input] in 
-    let layout = L.tower [L.resident invalid_label; row; nav_buttons] in 
-    W.on_click submit ~click: (fun _ -> L.hide_window layout; 
-      result_page pantry (Ingredient.of_string(W.get_text food_input)); 
-      raise Bogue.Exit);
-    W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
-    W.on_click home_button ~click: (fun _ -> L.hide_window layout; 
-      action_choice pantry; raise Bogue.Exit);
-    let board = Bogue.of_layout layout in 
-    Bogue.run board
-  in
-  
   (* This begins the code for the main page of the GUI. *)
   let label = W.label "What would you like to do?" in
   let add_button = W.button "Add" in
@@ -224,18 +266,27 @@ module W = Widget
         quit_button;
       ]
   in
-  W.on_click add_button ~click:(fun _ -> L.hide_window layout; 
-    add_remove_input "add" false pantry; raise Bogue.Exit);
-  W.on_click remove_button ~click:(fun _ ->
-    L.hide_window layout; add_remove_input "remove" false pantry; 
+  W.on_click add_button ~click:(fun _ ->
+      L.hide_window layout;
+      add_remove_input "add" false pantry;
       raise Bogue.Exit);
-  W.on_click display_button ~click:(fun __ -> L.hide_window layout; 
-    display pantry; raise Bogue.Exit);
-  W.on_click find_button ~click: (fun _ -> L.hide_window layout; 
-    find pantry false; raise Bogue.Exit);
+  W.on_click remove_button ~click:(fun _ ->
+      L.hide_window layout;
+      add_remove_input "remove" false pantry;
+      raise Bogue.Exit);
+  W.on_click display_button ~click:(fun __ ->
+      L.hide_window layout;
+      display pantry;
+      raise Bogue.Exit);
+  W.on_click find_button ~click:(fun _ ->
+      L.hide_window layout;
+      find pantry false;
+      raise Bogue.Exit);
   W.on_click reset_button ~click:(fun _ -> action_choice (Pantry.reset pantry));
-  W.on_click possible_recipes_button ~click:(fun _ -> L.hide_window layout; 
-    possible_recipes pantry Recipe.all_recipes; raise Bogue.Exit);
+  W.on_click possible_recipes_button ~click:(fun _ ->
+      L.hide_window layout;
+      possible_recipes pantry Recipe.all_recipes;
+      raise Bogue.Exit);
   W.on_click quit_button ~click:(fun _ -> raise Bogue.Exit);
   let board = Bogue.of_layout layout in
   Bogue.run board
