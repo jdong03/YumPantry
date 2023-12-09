@@ -71,9 +71,13 @@ let rec lookup (pantry : t) (ing : Ingredient.t) (q : Quantity.t) : bool =
 let display pantry =
   List.fold_left
     (fun acc (ing, amount) ->
-      let amount_string = Quantity.to_string amount in
       let ingredient_string = Ingredient.to_string ing in
-      "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc)
+      let amount_string = Quantity.to_string amount in
+      match Quantity.measurement_type (Quantity.units_of_quantity amount) with
+      | "Count" -> "\n" ^ amount_string ^ " " ^ ingredient_string ^ "(s)" ^ acc
+      | "Volume" -> "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc
+      | "Mass" -> "\n" ^ amount_string ^ " of " ^ ingredient_string ^ acc
+      | _ -> "None" (*Should not be possible*))
     "" pantry
 
 let reset pantry = empty
