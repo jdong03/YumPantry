@@ -84,24 +84,27 @@ let prep_time r = r.prep_time
 let cook_time r = r.cook_time
 let instructions r = r.instructions
 let ingredients r = r.ingredients
+
 let get_information_from_name name =
   let rec get_information_from_name_helper name recipes =
     match recipes with
     | [] -> failwith "Recipe not found"
     | h :: t ->
-        if h.title = name then 
-          let string_of_ingredients = 
-            List.map (fun (ing, amount) -> 
-                Ingredient.to_string ing ^ " - " ^ Quantity.to_string amount) 
+        if h.title = name then
+          let string_of_ingredients =
+            List.map
+              (fun (ing, amount) ->
+                Ingredient.to_string ing ^ " - " ^ Quantity.to_string amount)
               h.ingredients
             |> String.concat "\n"
-            in
-          "Name: " ^ h.title ^ "\n" ^ 
-          "Servings: " ^ string_of_int h.servings ^ "\n" ^
-          "Prep Time: " ^ string_of_float h.prep_time ^ "\n" ^
-          "Cook Time: " ^ string_of_float h.cook_time ^ "\n" ^
-          "Ingredients: " ^ string_of_ingredients ^ "\n" ^
-          "Instructions: " ^ h.instructions
+          in
+          "Name: " ^ h.title ^ "\n" ^ "Servings: " ^ string_of_int h.servings
+          ^ "\n" ^ "Prep Time: "
+          ^ string_of_float h.prep_time
+          ^ "\n" ^ "Cook Time: "
+          ^ string_of_float h.cook_time
+          ^ "\n" ^ "Ingredients: " ^ string_of_ingredients ^ "\n"
+          ^ "Instructions: " ^ h.instructions
         else get_information_from_name_helper name t
   in
   get_information_from_name_helper name all_recipes
