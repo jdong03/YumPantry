@@ -51,6 +51,11 @@ open Match
     autocorrect feature of the of_string function. Although we needed to know the 
     general autocorrect algorithm used, black box testing was used from there
     to verify the correctness of the implementation Levenshtein distance calculations.
+    - Recipe matching tests primarily utilized black box testing, focusing on the 
+    intended outcomes of the functions in the Match module. We tested whether the code
+    was able to accurately identify whether recipes could be made based on ingredients
+    and quantities in the pantry, and whether the code could extract information about 
+    preparing recipes from the recipe instructions. 
 
     Omitted Unit Tests:
     - Certain complex integration scenarios involving simultaneous interactions
