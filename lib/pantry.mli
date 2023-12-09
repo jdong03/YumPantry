@@ -23,8 +23,9 @@ val distinct_ingredients : t -> int
 (** [distinct_ingredients p] returns the number of distinct ingredients
    in pantry [p]. *)
 
-val lookup : t -> Ingredient.t * Quantity.t -> bool
-(** [lookup p (i, a)] returns true if [p] contains [a] of ingredient [i]. *)
+val lookup : t -> Ingredient.t -> Quantity.t -> bool
+(** [lookup p (i, a)] returns true if [p] contains at least [a] of ingredient
+    [i]. *)
 
 val display : t -> string
 (** [display p] returns a string representation of pantry [p]. *)

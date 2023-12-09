@@ -1,5 +1,5 @@
 [
-    {
+  {
     "title": "Chocolate Chip Cookies",
     "servings": 4,
     "prep_time": 15.0,
@@ -11,9 +11,117 @@
         "default_units": "Whole",
         "quantity": "2"
       }
-      
     ],
     "instructions": "Preheat oven to 375 degrees F (190 degrees C). In a small bowl, stir together flour, baking soda, and salt; set aside. In a large bowl, cream together the butter, white sugar, and brown sugar until smooth. Beat in the vanilla and eggs until light and fluffy. Gradually blend in the dry ingredients."
-      
-    }
+  },
+  {
+    "title": "Pasta Aglio e Olio",
+    "servings": 2,
+    "prep_time": 10.0,
+    "cook_time": 15.0,
+    "total_time": 25.0,
+    "ingredients": [
+      {
+        "name": "Spaghetti",
+        "default_units": "Ounce",
+        "quantity": "8.0 Ounces"
+      },
+      {
+        "name": "Garlic",
+        "default_units": "Whole",
+        "quantity": "4"
+      },
+      {
+        "name": "Olive Oil",
+        "default_units": "Tablespoon",
+        "quantity": "4 Tablespoons"
+      },
+      {
+        "name": "Red Pepper Flakes",
+        "default_units": "Teaspoon",
+        "quantity": "1 Teaspoon"
+      }
+    ],
+    "instructions": "Cook spaghetti according to package instructions. Meanwhile, sauté garlic in olive oil until golden, then add red pepper flakes. Drain spaghetti and add to the pan with garlic and oil, toss until well coated."
+  },
+  {
+    "title": "Scrambled Eggs",
+    "servings": 1,
+    "prep_time": 5.0,
+    "cook_time": 5.0,
+    "total_time": 10.0,
+    "ingredients": [
+      {
+        "name": "Eggs",
+        "default_units": "Whole",
+        "quantity": "2"
+      },
+      {
+        "name": "Butter",
+        "default_units": "Tablespoon",
+        "quantity": "1 Tablespoon"
+      },
+      {
+        "name": "Salt",
+        "default_units": "Teaspoon",
+        "quantity": "1 Teaspoon"
+      },
+      {
+        "name": "Pepper",
+        "default_units": "Teaspoon",
+        "quantity": "1 Teaspoon"
+      }
+    ],
+    "instructions": "Beat eggs with salt and pepper. Melt butter in a non-stick skillet over medium heat. Add eggs and stir until cooked to desired doneness."
+  },
+  {
+    "title": "Grilled Cheese",
+    "servings": 1,
+    "prep_time": 5.0,
+    "cook_time": 5.0,
+    "total_time": 10.0,
+    "ingredients": [
+      {
+        "name": "Bread",
+        "default_units": "Slice",
+        "quantity": "2"
+      },
+      {
+        "name": "Cheese",
+        "default_units": "Slice",
+        "quantity": "2"
+      },
+      {
+        "name": "Butter",
+        "default_units": "Tablespoon",
+        "quantity": "1 Tablespoon"
+      }
+    ],
+    "instructions": "Butter one side of each slice of bread. Place one slice of bread, buttered side down, in a skillet over medium heat. Top with cheese, then remaining slice of bread, buttered side up. Cook until golden on both sides."
+  },
+  {
+    "title": "Apple Grape Salad",
+    "servings": 4,
+    "prep_time": 10.0,
+    "cook_time": 0.0,
+    "total_time": 10.0,
+    "ingredients": [
+      {
+        "name": "Apple",
+        "default_units": "Whole",
+        "quantity": "3"
+      },
+      {
+        "name": "Green Grape",
+        "default_units": "Whole",
+        "quantity": "20"
+      },
+      {
+        "name": "Red Grape",
+        "default_units": "Whole",
+        "quantity": "20"
+      }
+    ],
+    "instructions": "Chop apples and grapes into bite-sized pieces. Combine in a bowl and serve."
+  }
 ]

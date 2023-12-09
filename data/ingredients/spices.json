@@ -18,5 +18,13 @@
     {
         "name": "Garlic Powder",
         "default_units": "Teaspoon"
+    },
+    {
+        "name": "Red Pepper Flakes",
+        "default_units": "Teaspoon"
+    },
+    {
+        "name": "Olive Oil",
+        "default_units": "Tablespoon"
     }
 ]

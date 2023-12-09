@@ -6,5 +6,9 @@
     {
         "name": "Lettuce",
         "default_units": "Whole"
+    },
+    {
+        "name": "Garlic",
+        "default_units": "Whole"
     }
 ]

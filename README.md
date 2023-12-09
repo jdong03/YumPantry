@@ -50,6 +50,10 @@
     cloc --by-file --include-lang=OCaml .
     ```
     
+## [Demo Plan](https://docs.google.com/document/d/1-ZhjeN8IY0uvJLSqNvl0T1y04bVGAgijMMVdawAWykw/edit?usp=sharing)
+
+## [MS3 Report](https://docs.google.com/document/d/1Io5gyc-MZLV1laxnKsWnB233hYNzaCGRQgO3Iz9oB5M/edit?usp=sharing)
+
 ## [Team Contract](/CONTRACT.md)
 
 ## [Roadmap](/ROADMAP.md)
