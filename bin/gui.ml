@@ -20,11 +20,13 @@ module W = Widget
       match (ingredient, quantity) with
       | None, _ | _, None -> add_remove_input action true pantry
       | Some ingredient, Some quantity ->
+        try (
           let new_pantry =
             if action = "add" then Pantry.add pantry ingredient quantity
             else Pantry.remove pantry ingredient quantity
           in
-          action_choice new_pantry
+          action_choice new_pantry) with 
+          | Failure _ -> add_remove_input action true pantry
     in
 
     let invalid_label =
